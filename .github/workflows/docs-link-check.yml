@@ -40,7 +40,15 @@ jobs:
             --exclude 'localhost'
             'docs/**/*.md'
           fail: true
+          output: ./lychee/out.md
 
+
+      - name: Show what the link checker rejected
+        if: failure()
+        run: |
+          echo "::group::lychee report"
+          cat ./lychee/out.md 2>/dev/null || echo "(no lychee/out.md produced)"
+          echo "::endgroup::"
       - name: Images referenced by a page exist on disk
         run: |
           python3 - <<'PY'
