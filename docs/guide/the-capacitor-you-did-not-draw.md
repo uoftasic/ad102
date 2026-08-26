@@ -44,8 +44,9 @@ purpose-built capacitor should beat the accident. But "78 times less dense" is n
 
 ## The fringe wins, and that surprises everyone
 
-Take a met1 wire at minimum width. The PDK gives the minimum in the same file:
-`wminm1 = 0.14u`. Run it 1000 µm across the chip.
+Take a met1 wire at minimum width. The PDK states it one directory up, in
+`libs.tech/ngspice/sky130_fd_pr__model__r+c.model.spice`, as `wminm1= 0.14u`. Run it
+1000 µm across the chip.
 
 - **Plate area:** $1000 \times 0.14 = 140$ µm², times 0.0258 fF/µm² = **3.61 fF**
 - **Fringe:** two edges, 1000 µm each, times 0.107 fF/µm = **214.0 fF**

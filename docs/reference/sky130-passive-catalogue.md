@@ -288,10 +288,18 @@ ratios — [Matching beats accuracy](guide/matching-beats-accuracy.md).
 
 ## Re-run everything on this page
 
+Two commands, because the numbers come from two decks:
+
 ```bash
 cd labs/passives-decks
-make
+make            # the guide pages' decks: head/body, corners, MIM, spirals, mismatch
+make catalogue  # this page's extra devices: the seven materials at one square,
+                # both fixed-width families, 10 kΩ four ways, and the MIM/varactor rows
 ```
+
+`make` ends in a `PASS`/`FAIL` verdict against 45 stored values. `make catalogue` prints
+`spice/catalogue.spice`'s numbers for you to read against the tables above; it takes about a
+minute.
 
 No environment setup: every deck names the model library by absolute path, so a bare
 container works. Related labs:

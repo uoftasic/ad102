@@ -48,7 +48,7 @@ Two ngspice runs, about **two and a half minutes**.
 ### Step 1 — the circuit you already know, and a five-picosecond mystery
 
 Part A of `spice/rc.spice` is
-[ECE334](https://ece334.github.io/ece334-docs/)'s lab-1 RC deck, unchanged.
+[ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck, unchanged.
 Part B is an ideal 10 kΩ and an ideal 1 pF, so $\tau$ is 10 ns by
 construction.
 
@@ -266,7 +266,11 @@ you may and may not do that.)
   ph_real             =  -7.85359e-01
   --- decade of roll-off: the real filter, dB at 10x the corner ---
   g_10x               =  -2.00426e+01
+    wrote results/ad102-rc-bode.png
   ```
+
+  That PNG is your own copy of the figure below, drawn from your own
+  `results/bode.txt`, so the picture and the printed numbers cannot drift apart.
 
 $$\frac{1}{2\pi \times 10.0362\ \text{ns}} = 15.858088\ \text{MHz}$$
 

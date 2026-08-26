@@ -185,26 +185,32 @@ micron wide as `W=1u`.
 plain micron numbers. `W=1` *means* one micron. `W=1u` means one micron × 10⁻⁶, which is smaller
 than an atom.
 
-Here is one device line — a SKY130 high-sheet poly resistor, one micron wide and ten long —
-written the right way and the wrong way. **This is an excerpt, not a file to save.** You do not
-need to run it; you will run the complete deck in
-[Lab 01](labs/lab-01-a-resistor-you-designed-overview.md), which ships as
-`labs/lab-01-a-resistor-you-designed/spice/sheet.spice`.
+Here are the two device lines — a SKY130 high-sheet poly resistor, one micron wide and ten
+long — written the right way and the wrong way. **This is an excerpt, not a file to save.**
+The complete deck ships as
+`labs/lab-01-a-resistor-you-designed/spice/u_trap.spice`, and
+[Lab 01](labs/lab-01-a-resistor-you-designed-overview.md) runs it for you.
 
 ```spice
 Xa a 0 0 sky130_fd_pr__res_high_po W=1  L=10
 Xb b 0 0 sky130_fd_pr__res_high_po W=1u L=10u
 ```
 
-Put both in one deck, push exactly 1 µA through each, and read the resistance off as $V/I$:
+Both are in one deck, with exactly 1 µA pushed through each, and the resistance read off as
+$V/I$. When you get to Lab 01:
+
+```bash
+cd labs/lab-01-a-resistor-you-designed && make utrap
+```
 
 ```
+--- the same device, written two ways (ohms) ---
 good = 3.550443e+03
 bad = 3.193812e+03
-```
 
-```
-EXIT=0
+   and the one line that told you, buried in the log:
+Warning: r.xb.rbody: resistance too low or not given, set to 1 mOhm
+   ngspice exit status: 0
 ```
 
 **3550.443 Ω and 3193.812 Ω.** Look at what the wrong one did. It did not blow up. It did not
@@ -212,13 +218,9 @@ return zero, or infinity, or a negative number you would have spotted across the
 returned a perfectly ordinary resistance **10 % away from the right answer** — exactly the
 size of error you would blame on a model, a corner, or yourself.
 
-There is one line that tells you, and it is buried in the middle of the run:
-
-```
-Warning: r.xb.rbody: resistance too low or not given, set to 1 mOhm
-```
-
-ngspice still **exits 0**.
+There is one line that tells you, and it is the one `make utrap` digs out of the middle of the
+run — `Warning: r.xb.rbody: resistance too low or not given, set to 1 mOhm`. ngspice still
+**exits 0**.
 
 Transistors fail louder. The same mistake on a MOSFET — which is where you meet it again in
 [AD103](https://uoftasic.com/ad103/) — stops the simulator outright:

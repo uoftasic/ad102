@@ -85,8 +85,8 @@ C)$.
 From `labs/lab-02-how-big-is-a-picofarad/spice/picofarad.spice`:
 
 ```spice
-V4 n4 0 dc 0 ac 1
-X4 n4 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10 MF=1 m=1
+V4 a4 0 dc 0 ac 1
+X4 a4 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10
 ```
 
 ```spice
@@ -154,18 +154,25 @@ a number you can print without a warning.
 From `labs/lab-03-a-time-constant-in-silicon/spice/rc.spice`:
 
 ```spice
-Vb bi 0 pulse(0 1.8 1n 10p 10p 200n 400n)
+Vb bi 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
 ```
 
 ```spice
+.tran 2p 80n
+
 .control
-tran 2p 80n
-meas tran t_ideal when v(bo)=1.137816 rise=1
+run
+meas tran t_ideal  WHEN v(bo)=1.137816 RISE=1
 .endc
 ```
 
 1.137816 V is $0.632120 \times 1.8$, so the crossing time *is* $\tau$ — by definition, not by
 approximation.
+
+**The `.tran` is a card, not a control command, and `run` executes it.** That looks like extra
+ceremony until you want the same analysis at another temperature: `set temp` only takes effect
+on the next `run`, so a `tran` typed inside `.control` runs immediately and ignores any
+temperature you set afterwards. `rc.spice` sweeps −40 °C and +125 °C off this one card.
 
 **Two traps live in that one line, and both cost the same 1.005 ns.**
 
@@ -248,14 +255,15 @@ op
 Every AD102 deck spends about a minute doing nothing visible before it prints. It is reading
 model cards, and there are two files it could read:
 
-| `.lib` line | measured, `spice/sheet.spice` |
+| `.lib` line | wall clock, `spice/sheet.spice` |
 |---|---:|
-| `sky130.lib.spice tt` | **66.24 s** |
-| `sky130.lib.spice.tt.red tt` | **2.04 s** |
+| `sky130.lib.spice tt` | **55–66 s** |
+| `sky130.lib.spice.tt.red tt` | **2.1 s** |
 
-Same deck, same twenty-two resistors, **identical output to the last digit** — the `.red` file
-is the same tree of `.include`s already flattened into one file, so ngspice opens one 12 MB
-file instead of walking hundreds. Thirty-two times faster.
+Those are wall-clock seconds on one machine, so they move with load — unlike the resistances,
+which do not. The ratio is the durable part: **about thirty times faster**, with **identical
+output to the last digit**. The `.red` file is the same tree of `.include`s already flattened
+into one file, so ngspice opens one 12 MB file instead of walking hundreds.
 
 **AD102's decks deliberately use the slow one anyway, and you should understand why before you
 change it.**

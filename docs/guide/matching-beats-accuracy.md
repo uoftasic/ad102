@@ -100,14 +100,17 @@ and **D** drawn 10 µm × 10 µm — one hundred times the area, same recipe, sa
 foundry.
 
 ```
+== 5/5  mismatch: 200 wafers, four resistors ==================
+   800 measurements recorded
+
   Monte Carlo: 200 runs, seed 12345
-  sigma/mean A (1x1)       2.7930 %
-  sigma/mean B (1x1)       2.8775 %
-  sigma/mean C (10x10)     0.3045 %
-  sigma/mean D (10x10)     0.3479 %
-  sigma/mean A/B ratio     3.7695 %
-  sigma/mean C/D ratio     0.4496 %
-           100x the area bought 8.38x better matching
+  ok       sigma/mean A (1x1)       2.7930 %   (reference  2.7930 %)
+  ok       sigma/mean B (1x1)       2.8775 %   (reference  2.8775 %)
+  ok       sigma/mean C (10x10)     0.3045 %   (reference  0.3045 %)
+  ok       sigma/mean D (10x10)     0.3479 %   (reference  0.3479 %)
+  ok       sigma/mean A/B ratio     3.7695 %   (reference  3.7695 %)
+  ok       sigma/mean C/D ratio     0.4496 %   (reference  0.4496 %)
+           100x the area bought 8.38x better matching   (Pelgrom's square root of 100 would be 10x)
 ```
 
 ![Mismatch between a drawn-identical pair, 1x1 vs 10x10](../assets/img/ad102-mismatch.png)

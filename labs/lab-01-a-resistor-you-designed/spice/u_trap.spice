@@ -1,0 +1,35 @@
+* AD102 Lab 01 -- u_trap.spice
+* The whole of "Getting started, step 5", as a deck you can run.
+*
+* One device -- sky130_fd_pr__res_high_po, one micron wide and ten long --
+* written the right way and the wrong way, side by side. 1 uA through each,
+* and the resistance is V/I.
+*
+* In an ngspice deck most numbers take SI suffixes: `1k` is a thousand ohms,
+* `0.7p` is 0.7 picofarads. SKY130 device widths and lengths do NOT work that
+* way -- W and L are already plain micron numbers, so `W=1` MEANS one micron
+* and `W=1u` means one micron times 10^-6.
+*
+* Watch what the wrong one does. It does not blow up, return zero, or go
+* negative. It returns a perfectly ordinary resistance about 10 % off, with
+* one 'resistance too low' warning buried in the middle of the run, and
+* ngspice still exits 0.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/u_trap.spice
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+Ia 0 a dc 1u
+Xa a 0 0 sky130_fd_pr__res_high_po W=1  L=10
+Ib 0 b dc 1u
+Xb b 0 0 sky130_fd_pr__res_high_po W=1u L=10u
+
+.control
+op
+let good = v(a)/1u
+let bad  = v(b)/1u
+echo "--- the same device, written two ways (ohms) ---"
+print good
+print bad
+.endc
+.end

@@ -53,8 +53,10 @@ cd labs/lab-01-a-resistor-you-designed
 make
 ```
 
-Two ngspice runs, about **two and a half minutes**, most of it silent —
+Two ngspice runs, about **two minutes**, most of it silent —
 see [What is not a bug](#what-is-not-a-bug) below before you reach for Ctrl-C.
+There is a third, optional run: `make utrap`, the deck behind
+[Getting started, step 5](guide/getting-started.md#5-the-trap-that-will-cost-you-an-afternoon-u).
 
 ### Step 1 — measure the material
 
@@ -268,8 +270,8 @@ PASS -- every number matches the reference run.
 
 **Roughly a minute of silence per ngspice run.** `.lib sky130.lib.spice tt`
 pulls in 12 MB of model cards covering every device in SKY130 — mostly
-MOSFETs you are not using. Measured on the pinned image: **61 s** before the
-first line of output. `make` runs the simulator twice.
+MOSFETs you are not using. Measured on the pinned image: **55–65 s** before the
+first line of output, depending on machine load. `make` runs the simulator twice.
 
 **170 `unrecognized parameter` lines, in 34 blocks.** `grep -c` them in
 `results/sheet.log` and you get exactly those two numbers.
@@ -295,11 +297,12 @@ run and your log will contain no `r_` lines at all — which is exactly what
 `check_res.py` tells you to look for.
 
 **`W=1`, never `W=1u`.** On a SKY130 device the geometry parameters are plain
-micron numbers. Writing `W=1u` means one **metre**, which is outside every bin
-the model was fitted over. On a MOSFET that stops the run with
-`could not find a valid modelname`; on a resistor it quietly returns a number
-that is wrong by a factor of a million. There is no `u` suffix anywhere in
-this package.
+micron numbers. Writing `W=1u` means one micron × 10⁻⁶, which is outside every
+bin the model was fitted over. On a MOSFET that stops the run with
+`could not find a valid modelname`; on a resistor it does not stop at all —
+`make utrap` runs both spellings of the same device side by side and prints
+**3550.443 Ω** and **3193.812 Ω**, 10 % apart, exit status 0. There is no `u`
+suffix anywhere in this package.
 
 ## Expected results
 

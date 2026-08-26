@@ -93,14 +93,20 @@ def grab(path, var):
 
 
 def main(argv):
+    argv = list(argv)
+    # --mc: only the Monte Carlo section, for `make mismatch` on its own.
+    mc_only = "--mc" in argv
+    if mc_only:
+        argv.remove("--mc")
     res = Path(argv[1] if len(argv) > 1 else "results")
     fails, missing = [], []
 
-    print("=" * 70)
-    print(" AD102 passives-decks -- checking your numbers against the reference run")
-    print("=" * 70)
+    if not mc_only:
+        print("=" * 70)
+        print(" AD102 passives-decks -- checking your numbers against the reference run")
+        print("=" * 70)
 
-    for logname, var, want, unit, what in CHECKS:
+    for logname, var, want, unit, what in ([] if mc_only else CHECKS):
         got = grab(res / logname, var)
         if got is None:
             missing.append((logname, var))
@@ -116,7 +122,8 @@ def main(argv):
 
     # ---- mismatch statistics -------------------------------------------------
     mclog = res / "mismatch.log"
-    print("-" * 70)
+    if not mc_only:
+        print("-" * 70)
     if not mclog.exists():
         missing.append(("mismatch.log", "*"))
         print("  MISSING  mismatch.log")
@@ -155,7 +162,8 @@ def main(argv):
             print(f"           100x the area bought {impr:.2f}x better matching"
                   f"   (Pelgrom's square root of 100 would be 10x)")
 
-    print("=" * 70)
+    if not mc_only:
+        print("=" * 70)
     if missing:
         print(f"  {len(missing)} value(s) never appeared in a log.")
         print("  Run `make` from labs/passives-decks/ inside the workbench first.")
@@ -166,9 +174,10 @@ def main(argv):
         print("  library moved, not that you did something wrong. Check")
         print("  `ngspice -v` says 46 and that /foss/pdks/sky130A exists.")
         return 1
-    print("  PASS -- every number matches the reference run.")
-    print("  The guide pages quote exactly these values; you can now read them")
-    print("  knowing the arithmetic on the page is the arithmetic on your screen.")
+    if not mc_only:
+        print("  PASS -- every number matches the reference run.")
+        print("  The guide pages quote exactly these values; you can now read them")
+        print("  knowing the arithmetic on the page is the arithmetic on your screen.")
     return 0
 
 

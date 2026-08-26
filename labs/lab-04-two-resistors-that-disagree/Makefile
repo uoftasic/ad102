@@ -7,10 +7,10 @@
 #   make check    re-run the verdict on logs you already have
 #   make clean    delete results/, keep sources
 #
-# TIMING: this is the slow lab. Each deck spends ~60 s loading the SKY130
-# model cards and then re-evaluates the whole netlist 200 times, once per
-# imaginary die -- about 100 s more. Budget five and a half minutes for a full
-# `make`. It prints nothing while it works. It is not hung.
+# TIMING: each deck spends ~55 s loading the SKY130 model cards and then
+# re-evaluates the whole netlist 200 times, once per imaginary die. Measured
+# twice on the pinned image: 106 s and 128 s for a full `make`. Budget two and a
+# half minutes. It prints nothing while it works. It is not hung.
 
 RES   := results
 CHECK := python3 src/check_mm.py
@@ -22,7 +22,7 @@ all: mm mine check
 ## mm -- 200 dies: four resistor sizes, four dividers
 mm: | $(RES)
 	@echo "=============================================================="
-	@echo " 1. TWO HUNDRED DIES          (~2.5 minutes, silent)"
+	@echo " 1. TWO HUNDRED DIES          (~80 s, silent)"
 	@echo "=============================================================="
 	ngspice -b spice/mismatch.spice > $(RES)/mismatch.log 2>&1
 	@printf "operating points (200 dies + 1 nominal) : "; grep -c "^v(s1)" $(RES)/mismatch.log
@@ -32,7 +32,7 @@ mm: | $(RES)
 mine: | $(RES)
 	@echo ""
 	@echo "=============================================================="
-	@echo " 2. YOUR DIVIDER              (~2.5 minutes, silent)"
+	@echo " 2. YOUR DIVIDER              (~50 s, silent)"
 	@echo "=============================================================="
 	ngspice -b spice/my_divider.spice > $(RES)/my_divider.log 2>&1
 	@printf "operating points (200 dies + 1 nominal) : "; grep -c "^v(tap)" $(RES)/my_divider.log
