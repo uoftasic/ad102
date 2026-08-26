@@ -1,0 +1,30 @@
+- [Home](README.md)
+- **Guide**
+  - [Getting started](guide/getting-started.md)
+  - **I. A value is a shape**
+    - [A resistor you cannot buy](guide/a-resistor-you-cannot-buy.md)
+    - [Ohms per square](guide/ohms-per-square.md)
+    - [What a value costs in area](guide/what-a-value-costs-in-area.md)
+  - **II. Two plates and a gap**
+    - [A capacitor is a sandwich](guide/a-capacitor-is-a-sandwich.md)
+    - [What a picofarad costs](guide/what-a-picofarad-costs.md)
+    - [The capacitor you did not draw](guide/the-capacitor-you-did-not-draw.md)
+  - **III. The one you don't build**
+    - [The inductor problem](guide/the-inductor-problem.md)
+    - [What analog builds instead](guide/what-analog-builds-instead.md)
+  - **IV. Nothing comes out the value you drew**
+    - [The value you drew is not what you get](guide/the-value-you-drew-is-not-what-you-get.md)
+    - [Matching beats accuracy](guide/matching-beats-accuracy.md)
+  - **Capstone**
+    - [From schematic to cross-section](guide/from-schematic-to-cross-section.md)
+- **Labs**
+  - [Lab 01 — A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md)
+  - [Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md)
+  - [Lab 03 — A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md)
+  - [Lab 04 — Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md)
+- **Reference**
+  - [The SKY130 passive catalogue](reference/sky130-passive-catalogue.md)
+  - [ngspice decks that actually run](reference/ngspice-decks-that-run.md)
+- **Repo**
+  - [Lab packages](https://github.com/uoftasic/ad102/tree/main/labs)
+  - [Scripts](https://github.com/uoftasic/ad102/tree/main/scripts)

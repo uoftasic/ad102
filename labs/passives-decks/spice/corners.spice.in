@@ -1,0 +1,60 @@
+* AD102 -- corners.spice, corner @CORNER@
+* Guide pages: "The value you drew is not what you get" / "Matching beats accuracy"
+*
+* One circuit, three process corners. sky130.lib.spice has a section for
+* each: `tt` is the middle of the distribution, `ll` is the low-resistance
+* low-capacitance edge, `hh` is the high edge. They are not opinions --
+* they are shipped .param files under
+*   /foss/pdks/sky130A/libs.tech/ngspice/r+c/
+*
+* Watch which printed numbers move and which do not.
+*
+* The Makefile writes this file for each corner. Do not edit
+* corners_tt.spice / corners_ll.spice / corners_hh.spice; edit this one.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.
+* W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice @CORNER@
+
+* ---- two resistors drawn 1:4, measured one at a time
+Va a 0 1m
+Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=10
+Vb b 0 1m
+Xb b 0 0 sky130_fd_pr__res_high_po W=1 L=40
+
+* ---- the same two, wired as a divider off the 1.8 V rail
+Vdd d 0 1.8
+Xtop d mid 0 sky130_fd_pr__res_high_po W=1 L=40
+Xbot mid 0 0 sky130_fd_pr__res_high_po W=1 L=10
+
+* ---- a MIM capacitor on its own
+Vc n1 0 dc 0 ac 1
+Xc n1 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10
+
+* ---- an RC low-pass built from one of each
+Vin in 0 dc 0 ac 1
+Xr in out 0 sky130_fd_pr__res_high_po W=1 L=10
+Xcf out 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10
+
+.control
+op
+let R_A     = 1m/(-i(va))
+let R_B     = 1m/(-i(vb))
+let ratio   = R_B/R_A
+let divider = v(mid)
+echo "--- @CORNER@ : absolute (moves) ---"
+print R_A R_B
+echo "--- @CORNER@ : ratio and divider (do not move) ---"
+print ratio divider
+
+ac lin 1 1k 1k
+let C_mim = imag(-i(vc))/(2*pi*1e3)
+echo "--- @CORNER@ : MIM capacitance, farads ---"
+print C_mim
+
+ac dec 500 1e6 1e12
+echo "--- @CORNER@ : RC corner frequency, Hz ---"
+meas ac f3db when vdb(out)=-3.0103
+.endc
+.end

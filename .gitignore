@@ -1,0 +1,7 @@
+runs/
+**/results/*
+!**/results/.gitkeep
+__pycache__/
+*.pyc
+*.raw
+*.log

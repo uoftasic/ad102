@@ -1,0 +1,125 @@
+* AD102 Lab 01 -- sheet.spice
+* What is a resistor on a chip? A strip of doped poly-silicon.
+* Its value is set by GEOMETRY: how many squares long you draw it.
+*
+* This deck builds twenty-two strips of sky130_fd_pr__res_high_po, forces
+* exactly 1 uA through each, and prints the voltage across it. V/I = R.
+* Nothing here is measured with an instrument -- the resistance IS the
+* answer to Ohm's law, one division.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/sheet.spice
+*
+* NOTE: W and L are PLAIN MICRON NUMBERS. W=1 means one micrometre.
+*       Write W=1, not W=1u. The suffix means metres, and what happens next
+*       depends on the device, which is what makes it nasty:
+*         - a MOSFET refuses to bin and ngspice stops with
+*           "could not find a valid modelname" -- loud, and easy to fix.
+*         - this resistor does NOT stop. It returns a plausible value about
+*           10 % off, with one 'resistance too low' warning buried in the log.
+*       The silent one is the dangerous one.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* ---------------------------------------------------------------- A. the
+* length ladder. W is fixed at 1 um; L walks from 1 um to 100 um.
+* If R were simply Rsheet * L/W, these would fall on a line through
+* the origin. Check whether they do.
+Il1 0 l1 dc 1u
+Xl1 l1 0 0 sky130_fd_pr__res_high_po W=1 L=1
+Il2 0 l2 dc 1u
+Xl2 l2 0 0 sky130_fd_pr__res_high_po W=1 L=2
+Il3 0 l3 dc 1u
+Xl3 l3 0 0 sky130_fd_pr__res_high_po W=1 L=5
+Il4 0 l4 dc 1u
+Xl4 l4 0 0 sky130_fd_pr__res_high_po W=1 L=10
+Il5 0 l5 dc 1u
+Xl5 l5 0 0 sky130_fd_pr__res_high_po W=1 L=20
+Il6 0 l6 dc 1u
+Xl6 l6 0 0 sky130_fd_pr__res_high_po W=1 L=50
+Il7 0 l7 dc 1u
+Xl7 l7 0 0 sky130_fd_pr__res_high_po W=1 L=100
+
+* ---------------------------------------------------------------- B. the
+* worked 10 kohm example from the writeup.
+* naive : L = 10000 / 317.3885 = 31.5074 um   (Rsheet straight off the model card)
+* fixed : L = (10000 - 378.2448) / 317.2198 = 30.3315 um
+In1 0 n1 dc 1u
+Xn1 n1 0 0 sky130_fd_pr__res_high_po W=1 L=31.5074
+In2 0 n2 dc 1u
+Xn2 n2 0 0 sky130_fd_pr__res_high_po W=1 L=30.3315
+
+* ---------------------------------------------------------------- C. the
+* width ladder, L fixed at 10 um. 0.35 um is the narrowest this device is
+* allowed to be; 0.69 um is the width the model itself treats as a
+* boundary (grep mm_const in the model card).
+Iw1 0 w1 dc 1u
+Xw1 w1 0 0 sky130_fd_pr__res_high_po W=0.35 L=10
+Iw2 0 w2 dc 1u
+Xw2 w2 0 0 sky130_fd_pr__res_high_po W=0.69 L=10
+Iw3 0 w3 dc 1u
+Xw3 w3 0 0 sky130_fd_pr__res_high_po W=2 L=10
+Iw4 0 w4 dc 1u
+Xw4 w4 0 0 sky130_fd_pr__res_high_po W=5 L=10
+* the same four widths again at half the length, so you can fit a slope
+* for each width instead of taking the model card's word for it.
+Iv1 0 v1 dc 1u
+Xv1 v1 0 0 sky130_fd_pr__res_high_po W=0.35 L=5
+Iv2 0 v2 dc 1u
+Xv2 v2 0 0 sky130_fd_pr__res_high_po W=0.69 L=5
+Iv3 0 v3 dc 1u
+Xv3 v3 0 0 sky130_fd_pr__res_high_po W=2 L=5
+Iv4 0 v4 dc 1u
+Xv4 v4 0 0 sky130_fd_pr__res_high_po W=5 L=5
+
+
+* ---------------------------------------------------------------- D. a
+* different recipe. sky130_fd_pr__res_xhigh_po is the SAME poly strip with a
+* different implant dose. Same drawing rules, same layer, ~6x the sheet
+* resistance. This is the one knob a foundry gives you that geometry cannot.
+Ix1 0 x1 dc 1u
+Xx1 x1 0 0 sky130_fd_pr__res_xhigh_po W=1 L=1
+Ix2 0 x2 dc 1u
+Xx2 x2 0 0 sky130_fd_pr__res_xhigh_po W=1 L=10
+Ix4 0 x4 dc 1u
+Xx4 x4 0 0 sky130_fd_pr__res_xhigh_po W=1 L=2
+Ix5 0 x5 dc 1u
+Xx5 x5 0 0 sky130_fd_pr__res_xhigh_po W=1 L=50
+Ix3 0 x3 dc 1u
+Xx3 x3 0 0 sky130_fd_pr__res_xhigh_po W=1 L=100
+
+.control
+op
+let r_L1     = v(l1)/1u
+let r_L2     = v(l2)/1u
+let r_L5     = v(l3)/1u
+let r_L10    = v(l4)/1u
+let r_L20    = v(l5)/1u
+let r_L50    = v(l6)/1u
+let r_L100   = v(l7)/1u
+let r_naive  = v(n1)/1u
+let r_fixed  = v(n2)/1u
+let r_W0p35  = v(w1)/1u
+let r_W0p69  = v(w2)/1u
+let r_W2     = v(w3)/1u
+let r_W5     = v(w4)/1u
+let r_V0p35  = v(v1)/1u
+let r_V0p69  = v(v2)/1u
+let r_V2     = v(v3)/1u
+let r_V5     = v(v4)/1u
+let r_X1     = v(x1)/1u
+let r_X2     = v(x4)/1u
+let r_X10    = v(x2)/1u
+let r_X50    = v(x5)/1u
+let r_X100   = v(x3)/1u
+echo "--- A. length ladder, W = 1 um (ohms) ---"
+print r_L1 r_L2 r_L5 r_L10 r_L20 r_L50 r_L100
+echo "--- B. the 10 kohm design, naive vs fixed (ohms) ---"
+print r_naive r_fixed
+echo "--- C. width ladder, L = 10 um (ohms) ---"
+print r_W0p35 r_W0p69 r_W2 r_W5
+echo "--- C2. the same four widths at L = 5 um (ohms) ---"
+print r_V0p35 r_V0p69 r_V2 r_V5
+echo "--- D. res_xhigh_po, W = 1 um (ohms) ---"
+print r_X1 r_X2 r_X10 r_X50 r_X100
+.endc
+.end

@@ -1,0 +1,46 @@
+* AD102 Lab 02 -- my_cap.spice   <-- THIS IS THE FILE YOU EDIT
+*
+* Three capacitors to size. Change ONLY the three W=/L= pairs; keep each
+* plate square (W and L equal).
+*
+*   C1 : 250 fF as sky130_fd_pr__cap_mim_m3_1
+*   C2 :  20 fF as sky130_fd_pr__cap_mim_m3_1
+*   C3 : 250 fF as an nfet_01v8 gate, biased at 1.8 V
+*
+* The values shipped below are the NAIVE answers -- area = C / density, with
+* the density read straight off part C of your picofarad.log and no fringe
+* term at all:
+*
+*   C1 : A = 250 / 2.0000 = 125.0000 um^2  -> side 11.1803 um
+*   C2 : A =  20 / 2.0000 =  10.0000 um^2  -> side  3.1623 um
+*   C3 : A = 250 / 7.8769 =  31.7343 um^2  -> side  5.6333 um
+*
+* Two of those are wrong and one of them is fine. Run `make mine` and find
+* out which, then work out why before you fix anything.
+*
+* PASS is within 1 % of target.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+V1 c1 0 dc 0 ac 1
+X1 c1 0 sky130_fd_pr__cap_mim_m3_1 W=11.1803 L=11.1803
+*                                    ^^^^^^^   ^^^^^^^ C1: 250 fF
+
+V2 c2 0 dc 0 ac 1
+X2 c2 0 sky130_fd_pr__cap_mim_m3_1 W=3.1623 L=3.1623
+*                                    ^^^^^^  ^^^^^^ C2: 20 fF
+
+V3 c3 0 dc 1.8 ac 1
+X3 0 c3 0 0 sky130_fd_pr__nfet_01v8 W=5.6333 L=5.6333
+*                                     ^^^^^^  ^^^^^^ C3: 250 fF
+
+.control
+ac lin 1 1e6 1e6
+let k = 1/(2*pi*1e6)
+let c_mine1 = abs(i(v1))*k
+let c_mine2 = abs(i(v2))*k
+let c_mine3 = abs(i(v3))*k
+echo "--- your three capacitors (farads) ---"
+print c_mine1 c_mine2 c_mine3
+.endc
+.end

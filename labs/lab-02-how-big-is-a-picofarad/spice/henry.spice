@@ -1,0 +1,54 @@
+* AD102 Lab 02 -- henry.spice
+* And the inductor? SKY130 ships models for exactly three of them.
+*
+* The inductor models are NOT in the tt corner library -- they are separate
+* files, included by name below. That by itself is a hint about how much the
+* foundry expects you to use them.
+*
+* Everything here is one AC sweep. Drive one terminal with a 1 A AC current
+* source and ground the other, and the node voltage IS the impedance:
+*   Z = V/I = V/1 = V.
+* From Z:   L = imag(Z) / (2*pi*f)      Q = imag(Z) / real(Z)
+*
+*   ngspice -b spice/henry.spice
+* Fast -- no MOSFET models are loaded, so this one starts immediately.
+
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_05_220.model.spice
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_05_125.model.spice
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_03_90.model.spice
+
+* ports are  a  b  ct  sub   -- ct is the centre tap, sub the substrate
+I1 0 a dc 0 ac 1
+Xi1 a 0 ct1 0 sky130_fd_pr__ind_05_220
+I2 0 b dc 0 ac 1
+Xi2 b 0 ct2 0 sky130_fd_pr__ind_05_125
+I3 0 c dc 0 ac 1
+Xi3 c 0 ct3 0 sky130_fd_pr__ind_03_90
+
+.control
+* --- the sweep: 100 MHz to 100 GHz, for the curves ---
+ac dec 51 1e8 1e11
+let L220 = real(imag(v(a))/(2*pi*frequency))
+let Q220 = real(imag(v(a))/real(v(a)))
+let L125 = real(imag(v(b))/(2*pi*frequency))
+let Q125 = real(imag(v(b))/real(v(b)))
+let L090 = real(imag(v(c))/(2*pi*frequency))
+let Q090 = real(imag(v(c))/real(v(c)))
+wrdata results/ind_sweep.txt L220 Q220 L125 Q125 L090 Q090
+
+* --- and single points, printed, so you have numbers to write down ---
+ac lin 1 1e8 1e8
+let l_220_100M = real(imag(v(a))/(2*pi*1e8))
+let l_125_100M = real(imag(v(b))/(2*pi*1e8))
+let l_090_100M = real(imag(v(c))/(2*pi*1e8))
+echo "--- A. inductance at 100 MHz (henries) ---"
+print l_220_100M l_125_100M l_090_100M
+
+ac lin 1 2.4e9 2.4e9
+let l_090_2G4 = real(imag(v(c))/(2*pi*2.4e9))
+let q_090_2G4 = real(imag(v(c))/real(v(c)))
+let r_090_2G4 = real(real(v(c)))
+echo "--- B. ind_03_90 at 2.4 GHz ---"
+print l_090_2G4 q_090_2G4 r_090_2G4
+.endc
+.end

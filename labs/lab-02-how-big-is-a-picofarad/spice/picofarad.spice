@@ -1,0 +1,94 @@
+* AD102 Lab 02 -- picofarad.spice
+* How much silicon does one picofarad cost, and which recipe is cheapest?
+*
+* A capacitor is two conductors with an insulator between them. On a chip you
+* do not get to choose the insulator thickness -- the process fixed that when
+* it deposited the layers -- so capacitance per square micrometre is a
+* CONSTANT of the technology, and the only thing you buy is area.
+*
+* Every capacitor here is measured the same way: hang it on a 1 V AC source at
+* 1 MHz and read the current. For an ideal capacitor I = 2*pi*f*C*V, so
+* C = |I| / (2*pi*f). One division, no curve fitting.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/picofarad.spice
+* W and L are PLAIN MICRON NUMBERS -- never W=1u.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* ---------------------------------------------------------------- A. the
+* area ladder. Five square MIM capacitors, sides 1 to 20 um. If C were
+* simply (F per um^2) x area, these would be a perfect parabola through the
+* origin. Check whether they are.
+V1 a1 0 dc 0 ac 1
+X1 a1 0 sky130_fd_pr__cap_mim_m3_1 W=1 L=1
+V2 a2 0 dc 0 ac 1
+X2 a2 0 sky130_fd_pr__cap_mim_m3_1 W=2 L=2
+V3 a3 0 dc 0 ac 1
+X3 a3 0 sky130_fd_pr__cap_mim_m3_1 W=5 L=5
+V4 a4 0 dc 0 ac 1
+X4 a4 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10
+V5 a5 0 dc 0 ac 1
+X5 a5 0 sky130_fd_pr__cap_mim_m3_1 W=20 L=20
+
+* ---------------------------------------------------------------- B. one
+* picofarad, twice.
+* naive : area = 1000 fF / 2.00 fF-per-um^2 = 500 um^2  -> side sqrt(500) = 22.3607
+* fixed : solve the two-term fit you extract in part A
+V6 a6 0 dc 0 ac 1
+X6 a6 0 sky130_fd_pr__cap_mim_m3_1 W=22.3607 L=22.3607
+V7 a7 0 dc 0 ac 1
+X7 a7 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
+
+* ---------------------------------------------------------------- C. three
+* different ways to store charge, all in the same process.
+*
+* C1  MIM      -- a plate of capm metal over metal3, thin oxide between.
+*                 Sits ABOVE the transistors. Linear, and that is why you
+*                 pay for it.
+* C2  MOS      -- the gate of an ordinary transistor, channel and bulk tied
+*                 together. Gate oxide is the thinnest insulator in the whole
+*                 process, so this is the densest capacitor available. It is
+*                 also a transistor, with everything that implies.
+* C3  VPP      -- vertical parallel plate: interdigitated metal fingers on
+*                 m1-m4 using ordinary wiring layers and ordinary spacing.
+*                 Needs no special mask at all.
+Vn1 n1 0 dc 1.8 ac 1
+Xn1 0 n1 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vn2 n2 0 dc 1.8 ac 1
+Xn2 0 n2 0 0 sky130_fd_pr__nfet_01v8 W=11.2699 L=11.2699
+Vp1 p1 0 dc 1.8 ac 1
+Xp1 0 p1 0 0 sky130_fd_pr__pfet_01v8 W=10 L=10
+Vv1 v1 0 dc 0 ac 1
+Xv1 v1 0 0 sky130_fd_pr__cap_vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap
+
+* ---------------------------------------------------------------- D. the
+* MOS capacitor with the bias taken away. Same device as Xn1, gate at 0 V
+* instead of 1.8 V. Nothing about the layout changed.
+Vn0 n0 0 dc 0 ac 1
+Xn0 0 n0 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+
+.control
+ac lin 1 1e6 1e6
+let k = 1/(2*pi*1e6)
+let c_s1     = abs(i(v1))*k
+let c_s2     = abs(i(v2))*k
+let c_s5     = abs(i(v3))*k
+let c_s10    = abs(i(v4))*k
+let c_s20    = abs(i(v5))*k
+let c_naive  = abs(i(v6))*k
+let c_fixed  = abs(i(v7))*k
+let c_nmos10 = abs(i(vn1))*k
+let c_nmos11 = abs(i(vn2))*k
+let c_pmos10 = abs(i(vp1))*k
+let c_vpp    = abs(i(vv1))*k
+let c_nmos_off = abs(i(vn0))*k
+echo "--- A. MIM area ladder, square plates (farads) ---"
+print c_s1 c_s2 c_s5 c_s10 c_s20
+echo "--- B. one picofarad, naive vs fixed (farads) ---"
+print c_naive c_fixed
+echo "--- C. three technologies (farads) ---"
+print c_nmos10 c_nmos11 c_pmos10 c_vpp
+echo "--- D. the same MOS cap with the gate at 0 V (farads) ---"
+print c_nmos_off
+.endc
+.end

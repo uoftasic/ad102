@@ -1,0 +1,36 @@
+* AD102 Lab 03 -- my_rc.spice   <-- THIS IS THE FILE YOU EDIT
+*
+* Build a 20.0 ns time constant out of one sky130_fd_pr__res_high_po at
+* W = 1 um and one square sky130_fd_pr__cap_mim_m3_1.
+*
+*   TAU must land within 1 % of 20.0 ns
+*   TOTAL DRAWN AREA (resistor body + capacitor plate) must be under 400 um^2
+*
+* There are infinitely many R,C pairs whose product is 20 ns. They do not
+* cost the same. Area is
+*      L_resistor * 1 um   +   side^2
+* and you have both formulas already:
+*      R = 378.2448 + 317.2198 * L                    (Lab 01)
+*      C[fF] = 2.000000 s^2 + 0.659991 s - 0.017742   (Lab 02)
+*
+* The values shipped below make a perfectly good 20 ns time constant out of
+* 2 kohm and 10 pF. Run `make mine` and look at what it costs.
+*
+* Change ONLY the two L= numbers on the resistor and the W=/L= pair on the
+* capacitor. Keep the capacitor square.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+Vm mi 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Xrm mi mo 0 sky130_fd_pr__res_high_po W=1 L=5.1124
+*                                            ^^^^^^ resistor length
+Xcm mo 0 sky130_fd_pr__cap_mim_m3_1 W=70.5459 L=70.5459
+*                                     ^^^^^^^   ^^^^^^^ capacitor side
+
+.tran 2p 120n
+
+.control
+run
+meas tran t_mine WHEN v(mo)=1.137816 RISE=1
+.endc
+.end

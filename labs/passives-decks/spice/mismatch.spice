@@ -1,0 +1,42 @@
+* AD102 -- mismatch.spice
+* Guide page: "Matching beats accuracy"
+*
+* Corners move every device on the wafer the same way. Mismatch is the
+* part that does NOT: two resistors drawn identically, a few microns
+* apart, still differ, because dopant atoms land at random.
+*
+* mc_mm_switch=1 turns the mismatch terms in the SKY130 models on.
+* `setseed 12345` makes the whole run reproducible to the last digit --
+* re-run it and you get this file's numbers back.
+*
+* Four devices. A and B are drawn 1 um x 1 um. C and D are drawn
+* 10 um x 10 um -- one hundred times the area, same recipe.
+* Two hundred fabricated wafers each.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/mismatch.spice
+* Roughly 90 s of model loading, then 200 fast operating points.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.param mc_mm_switch=1
+
+Va a 0 1m
+Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=1
+Vb b 0 1m
+Xb b 0 0 sky130_fd_pr__res_high_po W=1 L=1
+Vc c 0 1m
+Xc c 0 0 sky130_fd_pr__res_high_po W=10 L=10
+Vd d 0 1m
+Xd d 0 0 sky130_fd_pr__res_high_po W=10 L=10
+
+.control
+setseed 12345
+reset
+let n = 0
+dowhile n < 200
+  op
+  print 1m/(-i(va)) 1m/(-i(vb)) 1m/(-i(vc)) 1m/(-i(vd))
+  reset
+  let n = n + 1
+end
+.endc
+.end

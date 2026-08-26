@@ -1,0 +1,90 @@
+* AD102 -- r_head_and_body.spice
+* Guide page: "Ohms per square"
+*
+* A resistor on a chip is a strip of doped poly-silicon with a fat
+* contact head at each end. The strip obeys R = Rsheet * L/W. The heads
+* do not: they cost the same no matter how long you draw the strip.
+*
+* sky130_fd_pr__res_high_po is a .subckt with an internal node, `rb`,
+* sitting between the head and the body. Probing it splits one measured
+* resistance into its two halves.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/r_head_and_body.spice
+* W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* 1 mV across each strip. Small enough that the model's voltage
+* coefficients contribute nothing, so the answer is pure geometry.
+V1 a 0 1m
+Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=1
+V2 b 0 1m
+Xb b 0 0 sky130_fd_pr__res_high_po W=1 L=10
+* the same device drawn 10x bigger in both directions -- 100x the area.
+* mismatch.spice needs the head and body of this one too.
+V9 i 0 1m
+Xi i 0 0 sky130_fd_pr__res_high_po W=10 L=10
+
+* Three target values, sized from R = 378.2448 + 317.2198 * L  (W = 1 um)
+V3 c 0 1m
+Xc c 0 0 sky130_fd_pr__res_high_po W=1 L=1.960036
+V4 d 0 1m
+Xd d 0 0 sky130_fd_pr__res_high_po W=1 L=30.331608
+V5 e 0 1m
+Xe e 0 0 sky130_fd_pr__res_high_po W=1 L=314.046454
+
+* The same 314 um strip, three other recipes. Same drawing, same area,
+* four different values -- because the implant is different.
+V6 f 0 1m
+Xf f 0 0 sky130_fd_pr__res_xhigh_po W=1 L=314.046454
+V7 g 0 1m
+Xg g 0 0 sky130_fd_pr__res_generic_pd W=1 L=314.046454
+V8 h 0 1m
+Xh h 0 0 sky130_fd_pr__res_generic_nd W=1 L=314.046454
+
+* ---- 100 kohm four times over, at four different widths. Same value,
+* wildly different area, because A = W*L and L has to grow with W.
+* Slopes and end resistances measured per width in Lab 01's sheet.spice.
+Vq1 q1 0 1m
+Xq1 q1 0 0 sky130_fd_pr__res_high_po W=0.35 L=101.9319
+Vq2 q2 0 1m
+Xq2 q2 0 0 sky130_fd_pr__res_high_po W=0.69 L=216.2792
+Vq3 q3 0 1m
+Xq3 q3 0 0 sky130_fd_pr__res_high_po W=2    L=629.5313
+Vq4 q4 0 1m
+Xq4 q4 0 0 sky130_fd_pr__res_high_po W=5    L=1576.1560
+
+.control
+op
+echo "--- A. one strip, split into head and body (ohms) ---"
+let R_L1        = 1m/(-i(v1))
+let R_L10       = 1m/(-i(v2))
+let head_L1     = R_L1  * (1m - v(xa.rb))/1m
+let body_L1     = R_L1  * v(xa.rb)/1m
+let head_L10    = R_L10 * (1m - v(xb.rb))/1m
+let body_L10    = R_L10 * v(xb.rb)/1m
+print R_L1 head_L1 body_L1
+print R_L10 head_L10 body_L10
+let R_10x10    = 1m/(-i(v9))
+let head_10x10 = R_10x10 * (1m - v(xi.rb))/1m
+let body_10x10 = R_10x10 * v(xi.rb)/1m
+print R_10x10 head_10x10 body_10x10
+echo "--- B. sized to 1 k, 10 k, 100 k (ohms) ---"
+let R_1k   = 1m/(-i(v3))
+let R_10k  = 1m/(-i(v4))
+let R_100k = 1m/(-i(v5))
+print R_1k R_10k R_100k
+echo "--- C. one 314 um x 1 um strip, four implants (ohms) ---"
+let R_high  = 1m/(-i(v5))
+let R_xhigh = 1m/(-i(v6))
+let R_pdiff = 1m/(-i(v7))
+let R_ndiff = 1m/(-i(v8))
+print R_high R_xhigh R_pdiff R_ndiff
+echo "--- D. 100 k at four widths (ohms), and the area each one costs ---"
+let R_w0p35 = 1m/(-i(vq1))
+let R_w0p69 = 1m/(-i(vq2))
+let R_w2    = 1m/(-i(vq3))
+let R_w5    = 1m/(-i(vq4))
+print R_w0p35 R_w0p69 R_w2 R_w5
+.endc
+.end

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AD102 — Linear Circuits & Fabrication</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Linear analysis, folded together with how passives are actually built on a chip." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+  <script>
+    (function () {
+      try {
+        var key = 'course-theme';
+        var stored = localStorage.getItem(key);
+        var dark = stored === 'dark' ||
+          (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
+  <link rel="stylesheet" href=".docsify/custom.css" />
+</head>
+<body>
+  <div id="app">Loading…</div>
+
+  <!-- MathJax 3: inline $...$ / \(...\), display $$...$$ / \[...\] -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script>
+    window.$docsify = {
+      name: 'AD102 — Linear Circuits & Fabrication',
+      repo: 'uoftasic/ad102',
+      loadSidebar: true,
+      loadNavbar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      homepage: 'README.md',
+      search: {
+        paths: 'auto',
+        placeholder: 'Search docs',
+        noData: 'No results',
+        depth: 3
+      },
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
+      copyCode: {
+        buttonText: 'Copy',
+        errorText: 'Error',
+        successText: 'Copied'
+      },
+      pagination: {
+        previousText: 'Previous',
+        nextText: 'Next',
+        crossChapter: true,
+        crossChapterText: true
+      },
+      plugins: [
+        function (hook) {
+          hook.doneEach(function () {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+              window.MathJax.typesetPromise();
+            }
+          });
+        },
+        function (hook) {
+          var STORAGE_KEY = 'course-theme';
+          var SUN =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+          var MOON =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+          function isDark() {
+            return document.documentElement.classList.contains('dark');
+          }
+
+          function applyTheme(dark) {
+            document.documentElement.classList.toggle('dark', dark);
+            document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+            try {
+              localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
+            } catch (e) { /* ignore */ }
+            syncButton();
+          }
+
+          function syncButton() {
+            var btn = document.getElementById('theme-toggle');
+            if (!btn) return;
+            var dark = isDark();
+            btn.innerHTML = dark ? SUN : MOON;
+            btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+            btn.setAttribute('title', dark ? 'Switch to light mode' : 'Switch to dark mode');
+          }
+
+          function ensureToggle() {
+            var nav = document.querySelector('nav.app-nav') || document.querySelector('.app-nav');
+            if (!nav) return;
+
+            var btn = document.getElementById('theme-toggle');
+            if (!btn) {
+              btn = document.createElement('button');
+              btn.id = 'theme-toggle';
+              btn.type = 'button';
+              btn.className = 'theme-toggle';
+              btn.addEventListener('click', function () {
+                applyTheme(!isDark());
+              });
+            }
+
+            var item = btn.closest('li.theme-toggle-item');
+            if (!item) {
+              item = document.createElement('li');
+              item.className = 'theme-toggle-item';
+              item.appendChild(btn);
+            }
+
+            var list = nav.querySelector('ul');
+            if (list) {
+              if (item.parentElement !== list) list.appendChild(item);
+            } else if (item.parentElement !== nav) {
+              nav.appendChild(item);
+            }
+
+            syncButton();
+          }
+
+          function watchNavbar() {
+            var nav = document.querySelector('nav.app-nav') || document.querySelector('.app-nav');
+            if (!nav || nav.getAttribute('data-theme-toggle-watch') === '1') return;
+            nav.setAttribute('data-theme-toggle-watch', '1');
+            if (window.MutationObserver) {
+              new MutationObserver(function () {
+                if (!document.getElementById('theme-toggle')) ensureToggle();
+              }).observe(nav, { childList: true, subtree: true });
+            }
+          }
+
+          hook.ready(function () {
+            ensureToggle();
+            watchNavbar();
+          });
+          hook.mounted(function () {
+            ensureToggle();
+            watchNavbar();
+          });
+          hook.doneEach(function () {
+            ensureToggle();
+            watchNavbar();
+          });
+        }
+      ]
+    };
+  </script>
+
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+</body>
+</html>

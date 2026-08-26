@@ -1,0 +1,103 @@
+* AD102 -- c_moscap_cv.spice
+* Guide page: "A capacitor is a sandwich"
+*
+* The same 10 um x 10 um MOS capacitor, nineteen times over, each copy
+* held at a different gate voltage. A MIM capacitor would report the same
+* number at every one of them. This one does not, and that is the whole
+* reason MIM exists.
+*
+* Each copy: an nfet with drain, source and body tied to ground, an AC
+* voltage source on the gate, and a DC source setting the bias.
+* C = Im(I) / (2*pi*f) with a 1 V AC drive.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/c_moscap_cv.spice
+* W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+Vac00 g00 n00 dc 0 ac 1
+Vdc00 n00 0 dc 0.0
+Xm00 0 g00 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac01 g01 n01 dc 0 ac 1
+Vdc01 n01 0 dc 0.1
+Xm01 0 g01 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac02 g02 n02 dc 0 ac 1
+Vdc02 n02 0 dc 0.2
+Xm02 0 g02 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac03 g03 n03 dc 0 ac 1
+Vdc03 n03 0 dc 0.3
+Xm03 0 g03 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac04 g04 n04 dc 0 ac 1
+Vdc04 n04 0 dc 0.4
+Xm04 0 g04 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac05 g05 n05 dc 0 ac 1
+Vdc05 n05 0 dc 0.5
+Xm05 0 g05 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac06 g06 n06 dc 0 ac 1
+Vdc06 n06 0 dc 0.6
+Xm06 0 g06 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac07 g07 n07 dc 0 ac 1
+Vdc07 n07 0 dc 0.7
+Xm07 0 g07 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac08 g08 n08 dc 0 ac 1
+Vdc08 n08 0 dc 0.8
+Xm08 0 g08 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac09 g09 n09 dc 0 ac 1
+Vdc09 n09 0 dc 0.9
+Xm09 0 g09 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac10 g10 n10 dc 0 ac 1
+Vdc10 n10 0 dc 1.0
+Xm10 0 g10 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac11 g11 n11 dc 0 ac 1
+Vdc11 n11 0 dc 1.1
+Xm11 0 g11 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac12 g12 n12 dc 0 ac 1
+Vdc12 n12 0 dc 1.2
+Xm12 0 g12 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac13 g13 n13 dc 0 ac 1
+Vdc13 n13 0 dc 1.3
+Xm13 0 g13 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac14 g14 n14 dc 0 ac 1
+Vdc14 n14 0 dc 1.4
+Xm14 0 g14 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac15 g15 n15 dc 0 ac 1
+Vdc15 n15 0 dc 1.5
+Xm15 0 g15 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac16 g16 n16 dc 0 ac 1
+Vdc16 n16 0 dc 1.6
+Xm16 0 g16 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac17 g17 n17 dc 0 ac 1
+Vdc17 n17 0 dc 1.7
+Xm17 0 g17 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+Vac18 g18 n18 dc 0 ac 1
+Vdc18 n18 0 dc 1.8
+Xm18 0 g18 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+
+.control
+ac lin 1 1k 1k
+echo "--- MOS cap, 10 um x 10 um gate: C in farads at Vg = 0.0 .. 1.8 V ---"
+let C_000mV = imag(-i(vac00))/(2*pi*1e3)
+let C_010mV = imag(-i(vac01))/(2*pi*1e3)
+let C_020mV = imag(-i(vac02))/(2*pi*1e3)
+let C_030mV = imag(-i(vac03))/(2*pi*1e3)
+let C_040mV = imag(-i(vac04))/(2*pi*1e3)
+let C_050mV = imag(-i(vac05))/(2*pi*1e3)
+let C_060mV = imag(-i(vac06))/(2*pi*1e3)
+let C_070mV = imag(-i(vac07))/(2*pi*1e3)
+let C_080mV = imag(-i(vac08))/(2*pi*1e3)
+let C_090mV = imag(-i(vac09))/(2*pi*1e3)
+let C_100mV = imag(-i(vac10))/(2*pi*1e3)
+let C_110mV = imag(-i(vac11))/(2*pi*1e3)
+let C_120mV = imag(-i(vac12))/(2*pi*1e3)
+let C_130mV = imag(-i(vac13))/(2*pi*1e3)
+let C_140mV = imag(-i(vac14))/(2*pi*1e3)
+let C_150mV = imag(-i(vac15))/(2*pi*1e3)
+let C_160mV = imag(-i(vac16))/(2*pi*1e3)
+let C_170mV = imag(-i(vac17))/(2*pi*1e3)
+let C_180mV = imag(-i(vac18))/(2*pi*1e3)
+print C_000mV C_010mV C_020mV C_030mV C_040mV
+print C_050mV C_060mV C_070mV C_080mV C_090mV
+print C_100mV C_110mV C_120mV C_130mV C_140mV
+print C_150mV C_160mV C_170mV C_180mV
+.endc
+.end

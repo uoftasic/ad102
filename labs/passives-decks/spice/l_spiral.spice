@@ -1,0 +1,73 @@
+* AD102 -- l_spiral.spice
+* Guide page: "The inductor problem"
+*
+* SKY130 ships electrical models for exactly three on-die spiral
+* inductors. This deck drives each one with a 1 V AC source, reads the
+* impedance looking into it, and reports the two numbers that matter:
+*
+*     L(f) = Im(Z) / (2*pi*f)        the inductance you actually get
+*     Q(f) = Im(Z) / Re(Z)           how close it is to an ideal inductor
+*
+* Q is the whole story. An ideal inductor has Q = infinity. A resistor
+* has Q = 0. Watch which one these are closer to below 1 GHz.
+*
+* The inductor models are NOT part of sky130.lib.spice -- they must be
+* included by hand. If you forget, ngspice says
+*     Error: unknown subckt: x1 a 0 ct 0 sky130_fd_pr__ind_05_220
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/l_spiral.spice
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_03_90.model.spice
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_05_125.model.spice
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_05_220.model.spice
+
+* port a, other end grounded, centre tap floating, substrate grounded
+V1 a 0 dc 0 ac 1
+X1 a 0 ct1 0 sky130_fd_pr__ind_03_90
+V2 b 0 dc 0 ac 1
+X2 b 0 ct2 0 sky130_fd_pr__ind_05_125
+V3 c 0 dc 0 ac 1
+X3 c 0 ct3 0 sky130_fd_pr__ind_05_220
+
+.control
+ac dec 400 1e3 1e10
+let L1 = real(imag(1/(-i(v1)))/(2*pi*frequency))
+let Q1 = real(imag(1/(-i(v1)))/real(1/(-i(v1))))
+let L2 = real(imag(1/(-i(v2)))/(2*pi*frequency))
+let Q2 = real(imag(1/(-i(v2)))/real(1/(-i(v2))))
+let L3 = real(imag(1/(-i(v3)))/(2*pi*frequency))
+let Q3 = real(imag(1/(-i(v3)))/real(1/(-i(v3))))
+let R3 = real(real(1/(-i(v3))))
+let Zm1 = real(mag(1/(-i(v1))))
+let Zm2 = real(mag(1/(-i(v2))))
+let Zm3 = real(mag(1/(-i(v3))))
+wrdata results/l_spiral.txt L1 Q1 L2 Q2 L3 Q3 R3
+
+echo "--- ind_05_220: L (H), Q, series R (ohm) at four frequencies ---"
+meas ac L_1kHz    find L3 at=1e3
+meas ac Q_1kHz    find Q3 at=1e3
+meas ac R_1kHz    find R3 at=1e3
+meas ac L_1MHz    find L3 at=1e6
+meas ac Q_1MHz    find Q3 at=1e6
+meas ac L_100MHz  find L3 at=1e8
+meas ac Q_100MHz  find Q3 at=1e8
+meas ac L_1GHz    find L3 at=1e9
+meas ac Q_1GHz    find Q3 at=1e9
+echo "--- best Q each spiral ever reaches, and where ---"
+meas ac Qpeak_03_90  max Q1
+meas ac Fpeak_03_90  max_at Q1
+meas ac Qpeak_05_125 max Q2
+meas ac Fpeak_05_125 max_at Q2
+meas ac Qpeak_05_220 max Q3
+meas ac Fpeak_05_220 max_at Q3
+echo "--- self-resonance: the frequency where it stops being an inductor ---"
+meas ac SRF_05_125 max_at Zm2
+meas ac SRF_05_220 max_at Zm3
+echo "--- the other two at 1 kHz ---"
+meas ac L1_1kHz   find L1 at=1e3
+meas ac Q1_1kHz   find Q1 at=1e3
+meas ac L2_1kHz   find L2 at=1e3
+meas ac Q2_1kHz   find Q2 at=1e3
+.endc
+.end

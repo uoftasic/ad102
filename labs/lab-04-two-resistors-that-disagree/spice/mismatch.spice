@@ -1,0 +1,80 @@
+* AD102 Lab 04 -- mismatch.spice
+* Two resistors drawn from the same mask, side by side on the same die, are
+* not the same resistor. This deck measures by how much.
+*
+* SKY130's models carry a mismatch term, switched by one parameter:
+*
+*     .param mc_mm_switch=1
+*
+* With it on, every device instance picks its own AGAUSS() sample when the
+* netlist is evaluated -- so re-evaluating the netlist gives you a different
+* imaginary die off the same imaginary wafer. `mc_source` does exactly that,
+* and `setseed 1` makes the whole sequence reproducible, so your numbers match
+* the ones in the writeup to the digit.
+*
+* Two hundred dies, one operating point each.
+*
+*   ngspice -b spice/mismatch.spice    (~60 s to load, then ~100 s of runs)
+* W and L are PLAIN MICRON NUMBERS -- never W=1u.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.param mc_mm_switch=1
+
+Vdd vdd 0 1.8
+
+* ---------------------------------------------------------------- A. four
+* single resistors, 1 uA each, areas 1, 4, 16 and 64 um^2. The model card
+* says the body mismatch is  body_pelgrom / sqrt(W*L)  with
+* body_pelgrom = 0.03552, so sigma should halve every time area quadruples.
+Is1 0 s1 dc 1u
+Xs1 s1 0 0 sky130_fd_pr__res_high_po W=1 L=1
+Is2 0 s2 dc 1u
+Xs2 s2 0 0 sky130_fd_pr__res_high_po W=1 L=4
+Is3 0 s3 dc 1u
+Xs3 s3 0 0 sky130_fd_pr__res_high_po W=2 L=8
+Is4 0 s4 dc 1u
+Xs4 s4 0 0 sky130_fd_pr__res_high_po W=4 L=16
+
+* ---------------------------------------------------------------- B. the
+* same 1:1 divider twice. Identical ratio, identical schematic, 48x the area.
+Xa vdd ta 0 sky130_fd_pr__res_high_po W=0.42 L=2
+Xb ta 0 0 sky130_fd_pr__res_high_po W=0.42 L=2
+Xc vdd tb 0 sky130_fd_pr__res_high_po W=2 L=20
+Xd tb 0 0 sky130_fd_pr__res_high_po W=2 L=20
+
+* ---------------------------------------------------------------- C. a 3:1
+* divider, built two ways, out of exactly the same 24 um^2 of poly.
+*   tc : one short device and one long one     (6 + 18)
+*   td : four identical unit devices in series (6 + 6 + 6 + 6)
+* Same ratio on paper. Same area. Watch both the average and the spread.
+Xe vdd tc 0 sky130_fd_pr__res_high_po W=1 L=6
+Xf tc 0 0 sky130_fd_pr__res_high_po W=1 L=18
+Xg vdd td 0 sky130_fd_pr__res_high_po W=1 L=6
+Xh td u1 0 sky130_fd_pr__res_high_po W=1 L=6
+Xi u1 u2 0 sky130_fd_pr__res_high_po W=1 L=6
+Xj u2 0 0 sky130_fd_pr__res_high_po W=1 L=6
+
+.control
+setseed 1
+
+* ---- two hundred different dies ------------------------------------------
+* `run` has to be created before the first mc_source, or mc_source will
+* discard it along with the rest of the previous analysis and the loop stops
+* after one pass with "vector run is not available".
+let run = 0
+echo "--- 200 MONTE CARLO DIES ---"
+dowhile run < 200
+  mc_source
+  op
+  print v(s1) v(s2) v(s3) v(s4) v(ta) v(tb) v(tc) v(td)
+  let run = run + 1
+end
+
+* ---- and the nominal die: mismatch switched off, one operating point ------
+alterparam mc_mm_switch=0
+mc_source
+op
+echo "--- NOMINAL (mismatch off) ---"
+print v(s1) v(s2) v(s3) v(s4) v(ta) v(tb) v(tc) v(td)
+.endc
+.end
