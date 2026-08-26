@@ -43,7 +43,7 @@ check:
 	@echo ""
 	@$(CHECK) --mm $(RES)/mismatch.log --mine $(RES)/my_divider.log; \
 	  st=$$?; \
-	  if [ $$st -ne 0 ]; then \
+	  if [ $$st -ne 0 ] && [ -f $(RES)/my_divider.log ]; then \
 	    echo "  ^ On a fresh clone this FAIL is the lab, not a broken"; \
 	    echo "    package. spice/my_divider.spice ships with the divider"; \
 	    echo "    everybody draws first, and it fails two of three checks."; \

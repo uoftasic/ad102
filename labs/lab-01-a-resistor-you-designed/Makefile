@@ -55,7 +55,7 @@ check:
 	@echo ""
 	@$(CHECK) --sheet $(RES)/sheet.log --mine $(RES)/mine.log; \
 	  st=$$?; \
-	  if [ $$st -ne 0 ]; then \
+	  if [ $$st -ne 0 ] && [ -f $(RES)/mine.log ]; then \
 	    echo "  ^ On a fresh clone this FAIL is the lab, not a broken"; \
 	    echo "    package. spice/my_resistor.spice ships with the naive"; \
 	    echo "    sizing on purpose. Edit the two L= numbers and run"; \

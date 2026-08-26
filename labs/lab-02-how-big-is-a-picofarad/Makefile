@@ -63,7 +63,7 @@ check:
 	          --henry $(RES)/henry.log --sweep $(RES)/ind_sweep.txt \
 	          --tank $(RES)/tank.log; \
 	  st=$$?; \
-	  if [ $$st -ne 0 ]; then \
+	  if [ $$st -ne 0 ] && [ -f $(RES)/my_cap.log ]; then \
 	    echo "  ^ On a fresh clone this FAIL is the lab, not a broken"; \
 	    echo "    package. spice/my_cap.spice ships with the naive sizing"; \
 	    echo "    on purpose. Fix it and run \`make mine check\` again."; \
