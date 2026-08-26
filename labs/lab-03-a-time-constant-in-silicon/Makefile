@@ -44,7 +44,7 @@ check:
 	@echo ""
 	@$(CHECK) --rc $(RES)/rc.log --mine $(RES)/my_rc.log; \
 	  st=$$?; \
-	  if [ $$st -ne 0 ]; then \
+	  if [ $$st -ne 0 ] && [ -f $(RES)/my_rc.log ]; then \
 	    echo "  ^ On a fresh clone this FAIL is the lab, not a broken"; \
 	    echo "    package. spice/my_rc.spice ships with a 20 ns RC that"; \
 	    echo "    costs twelve times the area budget. Make it smaller."; \
