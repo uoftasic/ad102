@@ -14,25 +14,6 @@ Org: [github.com/uoftasic](https://github.com/uoftasic)
 
 **Prerequisites:** [IC101](https://uoftasic.com/ic101/) then [AD101](https://uoftasic.com/ad101/), in that order.
 
-## Template provenance
-
-AD102 was created from [uoftasic/course-template](https://github.com/uoftasic/course-template). The rest of this
-section is the template's own bootstrap documentation, kept for maintainers.
-
-1. On [uoftasic/course-template](https://github.com/uoftasic/course-template), click **Use this template** → create a repo named after the course id (e.g. `dd103`, `serdes-lab`).
-2. Clone and bootstrap:
-
-```bash
-python3 scripts/init-template.py \
-  --id ad102 \
-  --title "AD102 — Linear Circuits & Fabrication" \
-  --description "Linear analysis, folded together with how passives are actually built on a chip."
-```
-
-3. Enable **Settings → Pages → Deploy from a branch → `main` / `/docs`**.
-
-See [TEMPLATE.md](TEMPLATE.md) for the checklist. Org is always `uoftasic` — only course id / title / description are filled in.
-
 ## Quick start
 
 Every package under `labs/` runs with `make` alone, in a bare container, with no environment setup. On a fresh clone every lab's first `make` ends in `FAIL` — **that FAIL is the lab**, not a broken package.
