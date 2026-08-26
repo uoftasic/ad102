@@ -1,0 +1,119 @@
+* AD102 Lab 03 -- rc.spice
+* The RC circuit you met in ECE110, built three times: out of ideal parts,
+* out of the silicon you designed in Labs 01 and 02, and out of the silicon
+* you would have designed if you had skipped those labs.
+*
+* Everything is measured the same way. Step the input, and find the moment the
+* output crosses 63.2 % of its final value -- that is one time constant, by
+* definition, because 1 - exp(-1) = 0.632120.
+*
+*   0.632120 * 1.8 V = 1.137816 V     <- the trip point below
+*
+* The step happens at t = 1 ns, so every measured time is (tau + 1 ns).
+*
+*   ngspice -b spice/rc.spice        (~60 s of silence, then five analyses)
+* W and L are PLAIN MICRON NUMBERS -- never W=1u.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* ---------------------------------------------------------------- A. the
+* circuit you already know. This is the ECE334 lab-1 RC deck, unchanged:
+* a 1k/2k divider with 0.7 pF hanging off the tap.
+* Thevenin says the capacitor sees 1k||2k = 666.67 ohm and charges toward
+* 1.8 * 2/3 = 1.2 V, so tau = 666.67 * 0.7p = 466.67 ps.
+Va ai 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Ra1 ai ao 1k
+Ra2 ao 0 2k
+Ca ao 0 0.7p
+
+* ---------------------------------------------------------------- B. ideal
+* 10 kohm and 1 pF. tau = 10 ns exactly, by construction.
+Vb bi 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Rb bi bo 10k
+Cb bo 0 1p
+
+* ---------------------------------------------------------------- C. your
+* Lab 01 resistor, still with an ideal capacitor.
+* L = (10000 - 378.2448) / 317.2198 = 30.3315 um
+Vc ci 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Xrc ci co 0 sky130_fd_pr__res_high_po W=1 L=30.3315
+Cc co 0 1p
+
+* ---------------------------------------------------------------- D. your
+* Lab 02 capacitor, still with an ideal resistor.
+* side = 22.1965 um from  2.000000 s^2 + 0.659991 s - 0.017742 = 1000 fF
+Vd di 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Rd di do 10k
+Xcd do 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
+
+* ---------------------------------------------------------------- E. both
+* of them. No ideal components anywhere.
+Ve ei 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Xre ei eo 0 sky130_fd_pr__res_high_po W=1 L=30.3315
+Xce eo 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
+
+* ---------------------------------------------------------------- F. the
+* same circuit sized the way you would have sized it before Lab 01 and
+* Lab 02: length straight off the sheet resistance, area straight off the
+* capacitance density, no end resistance and no fringe.
+* L = 10000/317.3885 = 31.5074 um   side = sqrt(1000/2.00) = 22.3607 um
+Vf fi 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
+Xrf fi fo 0 sky130_fd_pr__res_high_po W=1 L=31.5074
+Xcf fo 0 sky130_fd_pr__cap_mim_m3_1 W=22.3607 L=22.3607
+
+* ---------------------------------------------------------------- G. one
+* microsecond, ideal and real. 1 Mohm x 1 pF.
+* xhigh_po: L = (1000000 - 34.2111) / 2118.7619 = 471.9814 um of poly.
+Vg gi 0 PULSE(0 1.8 100n 10p 10p 20u 40u)
+Rg gi go 1meg
+Cg go 0 1p
+Vh hi 0 PULSE(0 1.8 100n 10p 10p 20u 40u)
+Xrh hi ho 0 sky130_fd_pr__res_xhigh_po W=1 L=471.9814
+Xch ho 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
+
+* ---------------------------------------------------------------- H. what
+* a long strip of poly weighs, all by itself. Far end left open, so the only
+* current the source supplies is the strip's capacitance to the substrate.
+Vp1 p1 0 dc 0 ac 1
+Xp1 p1 q1 0 sky130_fd_pr__res_high_po W=1 L=30.3315
+Vp2 p2 0 dc 0 ac 1
+Xp2 p2 q2 0 sky130_fd_pr__res_xhigh_po W=1 L=471.9814
+
+* The fast analysis lives on a card rather than inside .control, because
+* `set temp` only takes effect on the next `run`, and `run` executes the card.
+.tran 2p 80n
+
+.control
+* ---- 1. everything fast, at the default 27 C ----------------------------
+run
+meas tran t_ece334 WHEN v(ao)=0.7585440 RISE=1
+meas tran t_ideal  WHEN v(bo)=1.137816 RISE=1
+meas tran t_realR  WHEN v(co)=1.137816 RISE=1
+meas tran t_realC  WHEN v(do)=1.137816 RISE=1
+meas tran t_real   WHEN v(eo)=1.137816 RISE=1
+meas tran t_naive  WHEN v(fo)=1.137816 RISE=1
+meas tran v_ece334 FIND v(ao) AT=60n
+
+* ---- 2. the same real RC, cold and hot ----------------------------------
+set temp = -40
+run
+meas tran t_cold WHEN v(eo)=1.137816 RISE=1
+set temp = 125
+run
+meas tran t_hot  WHEN v(eo)=1.137816 RISE=1
+set temp = 27
+
+* ---- 3. one microsecond, back at 27 C ------------------------------------
+tran 200p 6u
+meas tran t_us_ideal WHEN v(go)=1.137816 RISE=1
+meas tran t_us_real  WHEN v(ho)=1.137816 RISE=1
+
+* ---- 4. and what the strip alone weighs -----------------------------------
+ac lin 1 1e6 1e6
+let k = 1/(2*pi*1e6)
+let cpar_10k = abs(i(vp1))*k
+let cpar_1M  = abs(i(vp2))*k
+echo "--- H. the resistor's own capacitance to substrate (farads) ---"
+print cpar_10k cpar_1M
+.endc
+.end

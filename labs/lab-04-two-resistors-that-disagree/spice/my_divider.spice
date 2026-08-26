@@ -1,0 +1,41 @@
+* AD102 Lab 04 -- my_divider.spice   <-- THIS IS THE FILE YOU EDIT
+*
+* Build a divider that puts 0.4500 V on node `tap` from a 1.8 V supply,
+* out of sky130_fd_pr__res_high_po, meeting all three of these at once:
+*
+*   1. nominal tap within 0.2 % of 0.4500 V   (mismatch switched off)
+*   2. sigma of the tap under 3.0 mV          (200 Monte Carlo dies)
+*   3. total drawn area under 150 um^2        (sum of W*L over every device)
+*
+* The shipped answer is the one everybody draws first: one resistor of three
+* squares' worth on top, one of one square's worth underneath, ratio 3:1,
+* 24 um^2 all in. Run `make mine` and watch it fail two of the three.
+*
+* You may use as many devices as you like. Name them all X-something, keep
+* the output node called `tap`, and keep the supply node called `vdd` --
+* the grader reads your geometry back out of this file.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.param mc_mm_switch=1
+
+Vdd vdd 0 1.8
+
+Xtop vdd tap 0 sky130_fd_pr__res_high_po W=1 L=18
+Xbot tap 0   0 sky130_fd_pr__res_high_po W=1 L=6
+
+.control
+setseed 1
+let run = 0
+dowhile run < 200
+  mc_source
+  op
+  print v(tap)
+  let run = run + 1
+end
+alterparam mc_mm_switch=0
+mc_source
+op
+echo "--- NOMINAL (mismatch off) ---"
+print v(tap)
+.endc
+.end

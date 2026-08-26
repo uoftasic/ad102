@@ -1,0 +1,26 @@
+* AD102 Lab 01 -- reference sizing.   DO NOT OPEN THIS FIRST.
+*
+* Read solutions/README.md before you copy anything out of here.
+*
+*   R1 = 2200 ohm in sky130_fd_pr__res_high_po at W = 1 um
+*        L = (2200 - 378.2448) / 317.2198 = 5.7429 um
+*
+*   R2 = 50000 ohm in sky130_fd_pr__res_xhigh_po at W = 1 um
+*        L = (50000 - 34.2111) / 2118.7619 = 23.5825 um
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+I1 0 r1 dc 1u
+X1 r1 0 0 sky130_fd_pr__res_high_po  W=1 L=5.7429
+
+I2 0 r2 dc 1u
+X2 r2 0 0 sky130_fd_pr__res_xhigh_po W=1 L=23.5825
+
+.control
+op
+let r_mine1 = v(r1)/1u
+let r_mine2 = v(r2)/1u
+echo "--- your two resistors (ohms) ---"
+print r_mine1 r_mine2
+.endc
+.end

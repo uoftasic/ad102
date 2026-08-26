@@ -1,0 +1,51 @@
+* AD102 -- c_area.spice
+* Guide pages: "A capacitor is a sandwich" / "What a picofarad costs"
+*
+* Three ways SKY130 lets you build a capacitor, measured the same way:
+* drive each one with a 1 A AC current source at 1 kHz and read the
+* current the model actually draws.  C = Im(I) / (2*pi*f) with a 1 V
+* AC drive.  No approximations, no hand-fitted formulas.
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/c_area.spice
+* W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* ---- 1. MIM: a dedicated metal plate over met3, 2.00 fF/um^2 by spec.
+V1 p1 0 dc 0 ac 1
+X1 p1 0 sky130_fd_pr__cap_mim_m3_1 W=1  L=1
+V2 p2 0 dc 0 ac 1
+X2 p2 0 sky130_fd_pr__cap_mim_m3_1 W=10 L=10
+V3 p3 0 dc 0 ac 1
+X3 p3 0 sky130_fd_pr__cap_mim_m3_1 W=30 L=30
+
+* ---- 2. VPP: no special layer at all. Interleaved metal fingers using
+* the sidewall capacitance between wires you were going to draw anyway.
+* The name carries the footprint: 11.5 um x 11.7 um.
+V4 p4 0 dc 0 ac 1
+X4 p4 0 0 0 sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5
+
+* ---- 3. MOS: a transistor with source, drain and body shorted, used as
+* a plate against its own gate oxide. Densest of the three -- and the
+* only one whose value depends on the voltage across it.
+V5 g5 n5 dc 0 ac 1
+Vb5 n5 0 dc 1.8
+X5 0 g5 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+V6 g6 n6 dc 0 ac 1
+Vb6 n6 0 dc 0
+X6 0 g6 0 0 sky130_fd_pr__nfet_01v8 W=10 L=10
+
+.control
+ac lin 1 1k 1k
+let C_mim_1x1   = imag(-i(v1))/(2*pi*1e3)
+let C_mim_10x10 = imag(-i(v2))/(2*pi*1e3)
+let C_mim_30x30 = imag(-i(v3))/(2*pi*1e3)
+let C_vpp       = imag(-i(v4))/(2*pi*1e3)
+let C_mos_1v8   = imag(-i(v5))/(2*pi*1e3)
+let C_mos_0v0   = imag(-i(v6))/(2*pi*1e3)
+echo "--- capacitance in farads ---"
+print C_mim_1x1 C_mim_10x10 C_mim_30x30
+print C_vpp
+print C_mos_1v8 C_mos_0v0
+.endc
+.end

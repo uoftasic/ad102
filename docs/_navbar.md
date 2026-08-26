@@ -1,0 +1,4 @@
+- [Guide](guide/getting-started.md)
+- [Labs](labs/lab-01-a-resistor-you-designed-overview.md)
+- [Discord](https://discord.gg/hrJnP5UsGz)
+- [GitHub](https://github.com/uoftasic/ad102)

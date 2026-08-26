@@ -1,0 +1,6 @@
+results/*.log
+results/*.txt
+!results/.gitkeep
+spice/corners_tt.spice
+spice/corners_ll.spice
+spice/corners_hh.spice

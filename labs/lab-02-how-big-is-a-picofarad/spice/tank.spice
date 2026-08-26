@@ -1,0 +1,30 @@
+* AD102 Lab 02 -- tank.spice
+* One LC resonator at 2.4 GHz, built out of the two real devices you just
+* measured, so you can see what a tuned circuit costs in silicon.
+*
+* From henry.spice: ind_03_90 presents L = 1.554019 nH at 2.4 GHz.
+* Resonance needs   C = 1 / ((2*pi*f)^2 * L) = 2829.85 fF.
+* From picofarad.spice the MIM fit is C[fF] = 2.0000 s^2 + 0.66 s - 0.0178,
+* so the square plate that gives 2829.85 fF has side
+*   s = 37.4508 um   ->   1402.56 um^2 of drawn plate.
+*
+* Drive the parallel combination with 1 A AC and the node voltage is the
+* impedance. At resonance the two currents cancel and |Z| peaks.
+*
+*   ngspice -b spice/tank.spice        (~60 s: this one does load the PDK)
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_03_90.model.spice
+
+It 0 t dc 0 ac 1
+Xl t 0 ctt 0 sky130_fd_pr__ind_03_90
+Xc t 0 sky130_fd_pr__cap_mim_m3_1 W=37.4508 L=37.4508
+
+.control
+ac lin 601 1.5e9 3.5e9
+let zmag = mag(v(t))
+wrdata results/tank.txt zmag
+meas ac zpeak MAX zmag FROM=1.5e9 TO=3.5e9
+meas ac fpeak MAX_AT zmag FROM=1.5e9 TO=3.5e9
+.endc
+.end

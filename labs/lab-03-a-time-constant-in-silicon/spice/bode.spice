@@ -1,0 +1,48 @@
+* AD102 Lab 03 -- the same RC, seen in the frequency domain
+*
+* Exactly the devices from part E of spice/rc.spice -- 30.3315 um of
+* high-sheet poly and a 22.1965 um square of MiM, no ideal components
+* anywhere -- but asked a different question.
+*
+* rc.spice steps the input and times the response. This deck wiggles the
+* input at every frequency from 100 kHz to 10 GHz and asks where the output
+* stops keeping up. The two measurements are the same fact:
+*
+*     f_-3dB = 1 / (2 * pi * tau)
+*
+* and if your tau and your f_-3dB do not satisfy that to three or four
+* figures, one of the two decks is wrong. That check is free; make it a habit.
+*
+* This is the plot you drew for an IDEAL R and C in AD101. Here it is again,
+* built out of a shape you designed.
+*
+* W and L are PLAIN MICRON NUMBERS -- never W=1u.
+*
+* Fast: this deck uses the pre-flattened tt corner (sky130.lib.spice.tt.red),
+* which is the same models as sky130.lib.spice and about thirty times quicker
+* to read. It can, because it needs no other corner and no mismatch.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice.tt.red tt
+
+* ---- the real one: your Lab 01 resistor and your Lab 02 capacitor
+Vr in 0 dc 0 ac 1
+Xr in out 0 sky130_fd_pr__res_high_po W=1 L=30.3315
+Xc out 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
+
+* ---- the ideal one you drew in AD101, for the overlay
+Vi ini 0 dc 0 ac 1
+Ri ini outi 10k
+Ci outi 0 1p
+
+.control
+ac dec 200 1e5 1e10
+wrdata results/bode.txt vdb(out) vdb(outi) vp(out) vp(outi)
+
+meas ac f3db_real  when vdb(out)=-3.0103  fall=1
+meas ac f3db_ideal when vdb(outi)=-3.0103 fall=1
+meas ac ph_real    find vp(out)  at=1.5857e7
+echo
+echo "--- decade of roll-off: the real filter, dB at 10x the corner ---"
+meas ac g_10x find vdb(out) at=1.5857e8
+.endc
+.end

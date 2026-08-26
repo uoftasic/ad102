@@ -1,0 +1,14 @@
+# AD102 project-local XSchem configuration.
+# XSchem reads ./xschemrc from the directory it is started in, so keep this
+# file next to your schematics and launch xschem from here.
+
+# Pull in the SKY130 device libraries. $env(PDK) must be sky130A; if it is not,
+# this line loads the IHP SG13G2 libraries instead and every sky130 symbol goes
+# missing. See docs/guide/getting-started.md.
+source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+
+# Write netlists to ./simulation/ next to the schematic instead of the
+# container-only default ~/.xschem/simulations/, which is wiped when the
+# container is removed. Same as Simulation -> "Use 'simulation' dir in
+# schematic dir" in the menu.
+set local_netlist_dir 1
