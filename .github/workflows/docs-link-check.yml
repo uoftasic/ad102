@@ -1,4 +1,4 @@
-# Optional: markdown link check for docs/**
+# Markdown link check for docs/**
 name: Docs link check
 
 on:
@@ -11,44 +11,39 @@ on:
     paths:
       - "docs/**"
       - ".github/workflows/docs-link-check.yml"
+  workflow_dispatch:
 
 jobs:
   link-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Link Checker
-        uses: lycheeverse/lychee-action@v2
-        with:
-          # lychee >=0.20: mail off by default (--exclude-mail removed)
-          # %7B%7B matches URL-encoded {{COURSE_*}} placeholders still in the template
-          # --base-url: docsify runs with relativePath:false, so a link written
-          #   `guide/x.md` is resolved from the docs root, not from the file's own
-          #   directory. Without this every internal link reads as a 404.
-          # --exclude '/assets/img/': images are the one thing docsify DOES resolve
-          #   relative to the file (`../assets/img/...`), which the base above would
-          #   break. The step after this one checks them instead.
-          # --exclude 'uoftasic.com/ad104': AD104 is written but not yet published.
-          #   Delete this line the day it goes live.
-          args: >-
-            --verbose
-            --no-progress
-            --base-url '${{ github.workspace }}/docs'
-            --exclude '/assets/img/'
-            --exclude 'uoftasic.com/ad104'
-            --exclude '%7B%7B'
-            --exclude 'localhost'
-            'docs/**/*.md'
-          fail: true
-          output: ./lychee/out.md
 
-
-      - name: Show what the link checker rejected
-        if: failure()
+      # Run lychee directly rather than through the action. The action puts its
+      # detail in a job summary and writes only a stub to stdout, so a red badge
+      # tells you an exit code and nothing else — which is how a broken link sat
+      # unnoticed. This prints every result in the log.
+      #
+      # --base-url: docsify runs with relativePath:false, so a .md link written
+      #   `guide/x.md` resolves from the docs root, not the file's own directory.
+      # --exclude '/assets/img/': IMAGES are the one thing docsify resolves
+      #   relative to the page (`../assets/img/...`); the next step checks those.
+      # --accept: 403 and 429 mean a host is refusing a datacentre IP or rate
+      #   limiting a bot. Neither means the link is broken, and treating them as
+      #   failures makes CI red for reasons no author can fix.
+      - name: Link check
         run: |
-          echo "::group::lychee report"
-          cat ./lychee/out.md 2>/dev/null || echo "(no lychee/out.md produced)"
-          echo "::endgroup::"
+          docker run --rm -v "$PWD:/w" -w /w lycheeverse/lychee:latest \
+            --verbose --no-progress \
+            --base-url '/w/docs' \
+            --exclude '/assets/img/' \
+            --exclude '%7B%7B' \
+            --exclude 'localhost' \
+            --max-retries 3 \
+            --timeout 20 \
+            --accept 200,206,301,302,303,307,308,403,429 \
+            'docs/**/*.md'
+
       - name: Images referenced by a page exist on disk
         run: |
           python3 - <<'PY'
