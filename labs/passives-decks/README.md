@@ -23,11 +23,17 @@ No environment setup. No `.designinit`, no `PDK` variable, no `mod`. Every deck
 names the model library by absolute path, so a bare container works.
 
 ```
-make          run all seven decks, then check every number
-make check    re-render the verdict from logs already on disk
-make figures  regenerate the three PNGs the guide pages embed
-make clean    delete results/, keep sources
+make            run all seven decks, then check every number
+make check      re-render the verdict from logs already on disk
+make catalogue  the extra devices the passive catalogue tabulates
+make figures    regenerate the three PNGs the guide pages embed
+make clean      delete results/, keep sources
 ```
+
+`catalogue` is not part of `make`, because nothing in the guide depends on it. It
+is there so that every number on
+[The SKY130 passive catalogue](https://uoftasic.com/ad102/#/reference/sky130-passive-catalogue)
+has a deck you can run.
 
 **Budget about eight minutes, most of it silent.** Each ngspice run spends roughly
 60 seconds reading 12 MB of SKY130 model cards before it prints anything. It is not
@@ -43,6 +49,7 @@ hung.
 | `spice/l_spiral.spice` | [The inductor problem](https://uoftasic.com/ad102/#/guide/the-inductor-problem) | L, Q and self-resonance of the three SKY130 spirals. |
 | `spice/corners.spice.in` | [The value you drew…](https://uoftasic.com/ad102/#/guide/the-value-you-drew-is-not-what-you-get) | One circuit, three process corners. `make` writes `corners_tt/ll/hh.spice` from it — **edit the `.in`, not the generated files.** |
 | `spice/mismatch.spice` | [Matching beats accuracy](https://uoftasic.com/ad102/#/guide/matching-beats-accuracy) | 200 Monte Carlo wafers, seed pinned, four resistors. |
+| `spice/catalogue.spice` | [The SKY130 passive catalogue](https://uoftasic.com/ad102/#/reference/sky130-passive-catalogue) | The devices no other deck here builds: seven resistor materials at one square, both fixed-width precision families, 10 kΩ four ways, and the MIM/varactor rows. Run it with `make catalogue`. |
 | `src/check_passives.py` | — | The verdict. 39 golden values plus six Monte Carlo standard deviations. |
 | `src/plot_figures.py` | — | Writes the three PNGs into `docs/assets/img/`. |
 
@@ -95,10 +102,11 @@ reports 46 and that `/foss/pdks/sky130A` exists.
 ## The trap
 
 `W` and `L` on a SKY130 device are **plain micron numbers with no unit suffix**.
-`W=1` is one micrometre; `W=1u` is one metre, which is outside every bin the model
-was fitted over. On a MOSFET that stops the run with
-`could not find a valid modelname`; on a resistor it silently returns an answer
-wrong by a factor of a million. There is no `u` in any deck here.
+`W=1` is one micrometre; `W=1u` is a millionth of that, which is outside every bin
+the model was fitted over. On a MOSFET that stops the run with
+`could not find a valid modelname`; on a resistor it does not stop at all -- the
+same strip reads 3550.443 ohm written `W=1 L=10` and 3193.812 ohm written
+`W=1u L=10u`, 10 % off with exit status 0. There is no `u` in any deck here.
 
 One more, specific to `l_spiral.spice`: the three inductor models are **not** part of
 `sky130.lib.spice`. They are `.include`d explicitly at the top of the deck. Leave one

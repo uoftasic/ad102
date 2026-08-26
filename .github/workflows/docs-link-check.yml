@@ -22,11 +22,55 @@ jobs:
         with:
           # lychee >=0.20: mail off by default (--exclude-mail removed)
           # %7B%7B matches URL-encoded {{COURSE_*}} placeholders still in the template
+          # --base-url: docsify runs with relativePath:false, so a link written
+          #   `guide/x.md` is resolved from the docs root, not from the file's own
+          #   directory. Without this every internal link reads as a 404.
+          # --exclude '/assets/img/': images are the one thing docsify DOES resolve
+          #   relative to the file (`../assets/img/...`), which the base above would
+          #   break. The step after this one checks them instead.
+          # --exclude 'uoftasic.com/ad104': AD104 is written but not yet published.
+          #   Delete this line the day it goes live.
           args: >-
             --verbose
             --no-progress
-            --root-dir 'docs'
+            --base-url '${{ github.workspace }}/docs'
+            --exclude '/assets/img/'
+            --exclude 'uoftasic.com/ad104'
             --exclude '%7B%7B'
             --exclude 'localhost'
             'docs/**/*.md'
           fail: true
+
+      - name: Images referenced by a page exist on disk
+        run: |
+          python3 - <<'PY'
+          import os, re, sys
+          # Markdown images are resolved by docsify relative to the page.
+          # Raw <video>/<img> HTML is resolved by the browser against the site
+          # root (docs/), because the hash route does not change the base URL.
+          md  = re.compile(r'!\[[^\]]*\]\(([^)]+\.(?:png|jpe?g|gif|svg|webp|mp4|webm))\)')
+          raw = re.compile(r'(?:src|poster|href)="([^"]+\.(?:png|jpe?g|gif|svg|webp|mp4|webm))"')
+          bad = []
+          for dp, _, fns in os.walk("docs"):
+              for fn in fns:
+                  if not fn.endswith(".md"):
+                      continue
+                  path = os.path.join(dp, fn)
+                  text = open(path, encoding="utf-8").read()
+                  for ref in md.findall(text):
+                      if ref.startswith(("http:", "https:", "data:")):
+                          continue
+                      t = os.path.normpath(os.path.join(dp, ref))
+                      if not os.path.isfile(t):
+                          bad.append(f"{path}: markdown image -> {t}")
+                  for ref in raw.findall(text):
+                      if ref.startswith(("http:", "https:", "data:")):
+                          continue
+                      t = os.path.normpath(os.path.join("docs", ref))
+                      if not os.path.isfile(t):
+                          bad.append(f"{path}: html asset -> {t}")
+          for b in bad:
+              print("MISSING", b)
+          print(f"{len(bad)} missing asset reference(s)")
+          sys.exit(1 if bad else 0)
+          PY

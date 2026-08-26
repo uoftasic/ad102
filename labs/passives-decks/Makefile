@@ -4,10 +4,11 @@
 #
 # Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
 #
-#   make          run every deck, then check the numbers
-#   make check    re-render the verdict from logs already on disk
-#   make figures  regenerate the three PNGs the guide pages embed
-#   make clean    delete results/, keep sources
+#   make            run every deck, then check the numbers
+#   make check      re-render the verdict from logs already on disk
+#   make catalogue  the extra devices the passive catalogue page tabulates
+#   make figures    regenerate the three PNGs the guide pages embed
+#   make clean      delete results/, keep sources
 #
 # TIMING: each ngspice run spends about 60 seconds reading 12 MB of SKY130
 # model cards before printing anything. There are seven runs, so `make`
@@ -17,7 +18,7 @@ RES     := results
 FIGS    := ../../docs/assets/img
 CORNERS := tt ll hh
 
-.PHONY: all resistor capacitor inductor corners mismatch check figures clean
+.PHONY: all resistor capacitor inductor corners mismatch check catalogue figures clean
 
 all: resistor capacitor inductor corners mismatch check
 
@@ -42,7 +43,7 @@ capacitor: | $(RES)
 inductor: | $(RES)
 	@echo "== 3/5  inductor: L, Q and series R of three spirals =========="
 	ngspice -b spice/l_spiral.spice > $(RES)/l_spiral.log 2>&1
-	@grep -E "^---|^[lqr][0-9_]" $(RES)/l_spiral.log
+	@grep -E "^---|^[lqrs][a-z0-9_]*  *=" $(RES)/l_spiral.log
 
 ## corners -- the same circuit at three process corners
 corners: | $(RES)
@@ -58,6 +59,18 @@ mismatch: | $(RES)
 	@echo "== 5/5  mismatch: 200 wafers, four resistors =================="
 	ngspice -b spice/mismatch.spice > $(RES)/mismatch.log 2>&1
 	@echo "   $$(grep -c '^1m/' $(RES)/mismatch.log) measurements recorded"
+# when `mismatch` is the goal there is no `check` coming, so print the four
+# standard deviations here; a full `make` gets them from `check` instead.
+ifneq (,$(filter mismatch,$(MAKECMDGOALS)))
+	@echo ""
+	@python3 src/check_passives.py $(RES) --mc
+endif
+
+## catalogue -- the devices the reference page tabulates and nothing else builds
+catalogue: | $(RES)
+	@echo "== catalogue: the rest of the passive catalogue ==============="
+	ngspice -b spice/catalogue.spice > $(RES)/catalogue.log 2>&1
+	@grep -E "^---|^[rcs][a-z0-9_]*  *=" $(RES)/catalogue.log
 
 ## check -- the verdict
 check:

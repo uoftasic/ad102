@@ -62,7 +62,12 @@ grep pelgrom /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__res_hi
 ```
 + body_pelgrom = 0.03552
 + head_pelgrom = 0.0761
++ rbody_match = {body_pelgrom/sqrt(w*l*mult)*MC_MM_SWITCH*AGAUSS(0,1.0,1)}
++ rend_match = {head_pelgrom/sqrt((w+0.525)*num_con_row*mult)*MC_MM_SWITCH*AGAUSS(0,1.0,1)}
++ res_match = {(body_pelgrom/sqrt(w*l*mult))*MC_MM_SWITCH*AGAUSS(0,1.0,1)}
 ```
+
+The first two lines are the coefficients; the last three are the model using them.
 
 Two coefficients, because a resistor has two parts that mismatch
 independently — the body, and the contact heads that Lab 01 measured at
@@ -75,9 +80,10 @@ cd labs/lab-04-two-resistors-that-disagree
 make
 ```
 
-**Five and a half minutes, silent throughout.** Two decks, each loading the
-SKY130 model cards (~60 s) and then re-evaluating the whole netlist two
-hundred times, once per imaginary die (~100 s).
+**About two and a half minutes, silent throughout.** Two decks, each loading the
+SKY130 model cards (~55 s) and then re-evaluating the whole netlist two hundred
+times, once per imaginary die (~23 s for the bigger of the two). Measured twice on
+the pinned image: 106 s and 128 s. Model loading, not Monte Carlo, is most of it.
 
 ### Step 1 — what one Monte Carlo run is
 
@@ -286,8 +292,9 @@ Two failures, two entirely different fixes. One of them is free.
 
 ## What is not a bug
 
-**Five and a half minutes of silence.** Two decks × (60 s of model loading +
-100 s of 200 operating points).
+**Two to two and a half minutes of silence.** Two decks, each about 55 s of model
+loading plus 200 operating points on top. If you were expecting the model cards to
+be the fast part, they are not — they are the slow part.
 
 **The loop counter must exist before the first `mc_source`.** `mc_source`
 discards the previous analysis's vectors, and a counter created after an
@@ -305,11 +312,11 @@ count first: you are looking for **201**, and if you see **2** you have found
 this. The shipped decks put `let run = 0` immediately after `setseed 1`, which
 is before anything has been simulated.
 
-**`unrecognized parameter (sw_et) - ignored`, 28,280 times.** Explained in
-Lab 01 — one set of model cards, several simulator dialects. Two hundred
-re-evaluations of the netlist means two hundred repeats of the whole wall, and
-`results/mismatch.log` is 1.8 MB as a result. `make` sends it to the log rather
-than your terminal.
+**28,280 `unrecognized parameter (...) - ignored` lines**, of which 5,656 are
+`(sw_et)`. Explained in Lab 01 — one set of model cards, several simulator
+dialects. Two hundred re-evaluations of the netlist means two hundred repeats of
+the whole wall, and `results/mismatch.log` is 1.8 MB as a result. `make` sends it
+to the log rather than your terminal.
 
 ## Expected results
 

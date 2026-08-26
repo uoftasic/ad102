@@ -235,7 +235,7 @@ the same question — *what is this component, physically?* — to devices where
 being linear. The MOS capacitor whose value moved by 3.57× with voltage on
 [A capacitor is a sandwich](guide/a-capacitor-is-a-sandwich.md) was a transistor turning on, and
 AD103 opens by explaining what you were actually looking at. It is also where **XSchem** stops
-being a one-step cameo — [Lab 03's step 7](labs/lab-03-a-time-constant-in-silicon-overview.md)
+being a one-step cameo — [Lab 03's step 8](labs/lab-03-a-time-constant-in-silicon-overview.md)
 was your introduction to it on purpose.
 
 **[AD104 — Layout](https://uoftasic.com/ad104/)** is where the cross-section stops being a

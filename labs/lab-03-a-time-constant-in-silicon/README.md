@@ -27,14 +27,14 @@ ships with a 20 ns RC that costs twelve times the budget, so that you get to shr
 | `spice/my_rc.spice` | **The file you edit.** One resistor length and one capacitor side. |
 | `spice/bode.spice` | The same devices as part E, asked a frequency-domain question. Simulates the ideal 10 kΩ × 1 pF alongside, so the Bode plot is the AD101 overlay. |
 | `src/check_rc.py` | The grader. Converts every `meas` into a time constant and prices your design. |
-| `src/plot_bode.py` | Draws `docs/assets/img/ad102-rc-bode.png` from `results/bode.txt`. |
+| `src/plot_bode.py` | Draws `results/ad102-rc-bode.png` from `results/bode.txt` — your own copy of the figure on the writeup. |
 | `xschem/rc.sch` | The same circuit as part E, **drawn**. `make netlist` turns it back into the two device lines it came from; `make edit` opens it in XSchem. This is AD102's one look at the tool AD103 is built on. |
 | `solutions/` | One good answer, and the argument about it. After yours passes. |
 
 ## Part A is somebody else's deck
 
 The first circuit in `spice/rc.spice` is
-[ECE334](https://ece334.github.io/ece334-docs/)'s lab-1 RC deck, unchanged: a
+[ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck, unchanged: a
 1 kΩ/2 kΩ divider with 0.7 pF on the tap, driven by a 1.8 V pulse. It is here
 because it is the version of this circuit a UofT student is most likely to
 have already run, and because its answer is a Thevenin exercise rather than a

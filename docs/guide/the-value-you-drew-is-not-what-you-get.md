@@ -156,11 +156,14 @@ make mismatch
 
 ```
   Monte Carlo: 200 runs, seed 12345
-  sigma/mean A (1x1)       2.7930 %
-  sigma/mean B (1x1)       2.8775 %
-  sigma/mean C (10x10)     0.3045 %
-  sigma/mean D (10x10)     0.3479 %
+  ok       sigma/mean A (1x1)       2.7930 %   (reference  2.7930 %)
+  ok       sigma/mean B (1x1)       2.8775 %   (reference  2.8775 %)
+  ok       sigma/mean C (10x10)     0.3045 %   (reference  0.3045 %)
+  ok       sigma/mean D (10x10)     0.3479 %   (reference  0.3479 %)
 ```
+
+(plus the two ratio rows and the area line, which
+[Matching beats accuracy](guide/matching-beats-accuracy.md) uses.)
 
 A and B are drawn identically, 1 µm × 1 µm, in the same simulation on the same
 wafer, and each carries **2.8 % of its own private randomness** on top of whatever

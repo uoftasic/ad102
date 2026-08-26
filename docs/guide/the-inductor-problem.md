@@ -122,9 +122,12 @@ capacitor:
 
 ```
 --- self-resonance: the frequency where it stops being an inductor ---
-srf_05_125          =  6.49382e+09
-srf_05_220          =  3.52777e+09
+srf_05_125          =  6.49382e+09 with=  1.99663e+03
+srf_05_220          =  3.52777e+09 with=  2.18171e+03
 ```
+
+(`meas ac` prints the value it was searching on as well; the frequency is the first
+number.)
 
 **3.52777 GHz.** Above it, `ind_05_220` is not a slightly worse inductor — its
 reactance has changed sign. On the Q plot you can see all three curves fall off a

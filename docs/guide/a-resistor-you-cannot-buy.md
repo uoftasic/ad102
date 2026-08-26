@@ -157,19 +157,25 @@ On a SKY130 device, `W` and `L` are **plain micron numbers with no unit suffix**
 
 ```
 Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=10       <- one micron by ten microns
-Xa a 0 0 sky130_fd_pr__res_high_po W=1u L=10u     <- one METRE by ten metres
+Xa a 0 0 sky130_fd_pr__res_high_po W=1u L=10u     <- a millionth of that, in both
 ```
 
-Every deck in this course is written the first way. The second way puts the device
-outside every bin its model was fitted over. On a MOSFET that stops the run with
+Every deck in this course is written the first way. The second way multiplies both
+numbers by 10⁻⁶ and puts the device outside every bin its model was fitted over. On
+a MOSFET that stops the run with
 
 ```
-Error: could not find a valid modelname
+could not find a valid modelname
+    Simulation interrupted due to error!
 ```
 
-On a resistor it does something worse: it quietly returns an answer that is wrong
-by a factor of a million. There is no `u` anywhere in any deck in this course, and
-there should be none in yours.
+On a resistor it does something worse: it does not stop. The same strip that reads
+**3550.443 Ω** written `W=1 L=10` reads **3193.812 Ω** written `W=1u L=10u` — an
+entirely ordinary-looking resistance **10 % off**, with ngspice still exiting `0`.
+The full autopsy is in
+[Getting started, step 5](guide/getting-started.md#5-the-trap-that-will-cost-you-an-afternoon-u).
+There is no `u` anywhere in any deck in this course, and there should be none in
+yours.
 
 ## Where this is going
 

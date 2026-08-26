@@ -1,0 +1,131 @@
+* AD102 -- catalogue.spice
+* Reference page: "The SKY130 passive catalogue".
+*
+* Every device that page tabulates but no other deck in this directory
+* instantiates: the seven resistor materials at one square, the two
+* fixed-width precision families, the same 10 kohm built four ways, and the
+* capacitors the c_area deck does not cover.
+*
+* Resistors are measured at 0.1 V across the device and R = V / I -- the same
+* one-division idiom as r_head_and_body.spice, at a bias high enough that the
+* five-digit values on the page are the ones you get.
+* Capacitors are measured with a 1 V AC source at 1 kHz, C = Im(I)/(2*pi*f).
+*
+* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/catalogue.spice
+* W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
+*
+* NOTE the two line types. res_high_po, res_xhigh_po, res_generic_pd,
+* res_generic_nd, res_generic_po and res_iso_pw are subcircuits -> `X` lines,
+* capital W=/L=.  res_generic_nw, res_generic_l1 and the metal resistors are
+* bare .model cards -> lower-case `r` lines, lower-case w=/l=.
+* res_generic_po is a TWO-node subcircuit; the others take three.
+
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* ---------------------------------------------------------------- A. one
+* square of each material: W = 1 um, L = 1 um.
+V1 a1 0 0.1
+Xa1 a1 0 0 sky130_fd_pr__res_xhigh_po W=1 L=1
+V2 a2 0 0.1
+Xa2 a2 0 0 sky130_fd_pr__res_generic_pd W=1 L=1
+V3 a3 0 0.1
+Xa3 a3 0 0 sky130_fd_pr__res_generic_nd W=1 L=1
+V4 a4 0 0.1
+Xa4 a4 0 sky130_fd_pr__res_generic_po W=1 L=1
+V5 a5 0 0.1
+ra5 a5 0 sky130_fd_pr__res_generic_nw w=1 l=1
+V6 a6 0 0.1
+ra6 a6 0 sky130_fd_pr__res_generic_l1 w=1 l=1
+V7 a7 0 0.1
+ra7 a7 0 sky130_fd_pr__res_generic_m1 w=1 l=1
+V8 a8 0 0.1
+ra8 a8 0 sky130_fd_pr__res_generic_m3 w=1 l=1
+* the isolated p-well resistor has a minimum width of its own
+V10 a10 0 0.1
+Xa10 a10 0 0 sky130_fd_pr__res_iso_pw W=2.65 L=10
+
+* ---------------------------------------------------------------- B. the
+* same res_high_po ten squares longer: the slope is the sheet resistance and
+* the intercept is the two contact heads.
+V9 a9 0 0.1
+Xa9 a9 0 0 sky130_fd_pr__res_high_po W=1 L=11
+
+* ---------------------------------------------------------------- C. 10 kohm
+* four ways -- same value, four materials, and the area each one costs.
+V11 b1 0 0.1
+Xb1 b1 0 0 sky130_fd_pr__res_xhigh_po_0p35 W=0.35 L=1.647
+V12 b2 0 0.1
+Xb2 b2 0 0 sky130_fd_pr__res_high_po_0p35 W=0.35 L=8.351
+V13 b3 0 0.1
+Xb3 b3 0 0 sky130_fd_pr__res_generic_nd W=1 L=85.1
+V14 b4 0 0.1
+Xb4 b4 0 sky130_fd_pr__res_generic_po W=1 L=196.4
+
+* ---------------------------------------------------------------- D. the
+* fixed-width precision family, narrowest member. Two lengths ten squares
+* apart, so the contact heads subtract out of the slope.
+V15 c1 0 0.1
+Xc1 c1 0 0 sky130_fd_pr__res_xhigh_po_0p35 W=0.35 L=1
+V16 c2 0 0.1
+Xc2 c2 0 0 sky130_fd_pr__res_xhigh_po_0p35 W=0.35 L=11
+V17 c3 0 0.1
+Xc3 c3 0 0 sky130_fd_pr__res_high_po_0p35 W=0.35 L=1
+V18 c4 0 0.1
+Xc4 c4 0 0 sky130_fd_pr__res_high_po_0p35 W=0.35 L=11
+
+* ---------------------------------------------------------------- E. the
+* capacitors c_area.spice does not build: a small MIM, a one-picofarad MIM,
+* the m3_2 flavour, and the varactor at both ends of the supply.
+Vc1 d1 0 dc 0 ac 1
+Xd1 d1 0 sky130_fd_pr__cap_mim_m3_1 W=2 L=2
+Vc2 d2 0 dc 0 ac 1
+Xd2 d2 0 sky130_fd_pr__cap_mim_m3_1 W=22.2 L=22.2
+Vc3 d3 0 dc 0 ac 1
+Xd3 d3 0 sky130_fd_pr__cap_mim_m3_2 W=10 L=10
+* gate 1.8 V above the well, then flat: the whole point of a varactor
+Vc4 d4 0 dc 1.8 ac 1
+Xd4 d4 0 0 sky130_fd_pr__cap_var_lvt W=10 L=10
+Vc5 d5 0 dc 0 ac 1
+Xd5 d5 0 0 sky130_fd_pr__cap_var_lvt W=10 L=10
+
+.control
+op
+let r_xhigh_1sq = 0.1/(-i(v1))
+let r_pd_1sq    = 0.1/(-i(v2))
+let r_nd_1sq    = 0.1/(-i(v3))
+let r_po_1sq    = 0.1/(-i(v4))
+let r_nw_1sq    = 0.1/(-i(v5))
+let r_l1_1sq    = 0.1/(-i(v6))
+let r_m1_1sq    = 0.1/(-i(v7))
+let r_m3_1sq    = 0.1/(-i(v8))
+let r_isopw     = 0.1/(-i(v10))
+let r_high_l11  = 0.1/(-i(v9))
+let r_10k_xh035 = 0.1/(-i(v11))
+let r_10k_h035  = 0.1/(-i(v12))
+let r_10k_nd    = 0.1/(-i(v13))
+let r_10k_po    = 0.1/(-i(v14))
+let sl_xh035    = (0.1/(-i(v16)) - 0.1/(-i(v15)))/10
+let sl_h035     = (0.1/(-i(v18)) - 0.1/(-i(v17)))/10
+echo "--- A. one square of each material, W=1 L=1 (ohms) ---"
+print r_xhigh_1sq r_pd_1sq r_nd_1sq r_po_1sq
+print r_nw_1sq r_l1_1sq r_m1_1sq r_m3_1sq
+echo "--- A2. res_iso_pw, W=2.65 L=10 (ohms) ---"
+print r_isopw
+echo "--- B. res_high_po at L=11 (ohms) ---"
+print r_high_l11
+echo "--- C. 10 kohm four ways (ohms) ---"
+print r_10k_xh035 r_10k_h035 r_10k_nd r_10k_po
+echo "--- D. fixed-width family at 0.35 um (ohms per um of length) ---"
+print sl_xh035 sl_h035
+
+ac lin 1 1k 1k
+let c_mim_2x2     = imag(-i(vc1))/(2*pi*1e3)
+let c_mim_22p2    = imag(-i(vc2))/(2*pi*1e3)
+let c_mim_m3_2    = imag(-i(vc3))/(2*pi*1e3)
+let c_var_1v8     = imag(-i(vc4))/(2*pi*1e3)
+let c_var_0v0     = imag(-i(vc5))/(2*pi*1e3)
+echo "--- E. capacitance (farads) ---"
+print c_mim_2x2 c_mim_22p2 c_mim_m3_2
+print c_var_1v8 c_var_0v0
+.endc
+.end

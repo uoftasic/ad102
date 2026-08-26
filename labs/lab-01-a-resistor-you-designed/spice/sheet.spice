@@ -10,8 +10,8 @@
 * Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/sheet.spice
 *
 * NOTE: W and L are PLAIN MICRON NUMBERS. W=1 means one micrometre.
-*       Write W=1, not W=1u. The suffix means metres, and what happens next
-*       depends on the device, which is what makes it nasty:
+*       Write W=1, not W=1u. The suffix scales the number by 1e-6, and what
+*       happens next depends on the device, which is what makes it nasty:
 *         - a MOSFET refuses to bin and ngspice stops with
 *           "could not find a valid modelname" -- loud, and easy to fix.
 *         - this resistor does NOT stop. It returns a plausible value about

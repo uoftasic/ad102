@@ -6,6 +6,7 @@
 #   make mine     part 2: simulate spice/my_rc.spice, the file you edit
 #   make check    re-run the verdict on logs you already have
 #   make bode     the same RC in the frequency domain, and the AD101 overlay
+#   make figure   re-render that plot into docs/assets/img (maintainers only)
 #   make netlist  netlist xschem/rc.sch -- the same circuit, drawn
 #   make edit     open xschem/rc.sch in XSchem   (needs the noVNC desktop)
 #   make clean    delete results/, keep sources
@@ -17,7 +18,7 @@
 RES   := results
 CHECK := python3 src/check_rc.py
 
-.PHONY: all rc mine check bode netlist edit clean
+.PHONY: all rc mine check bode figure netlist edit clean
 
 all: rc mine check
 
@@ -58,6 +59,10 @@ bode: | $(RES)
 	@echo "=============================================================="
 	ngspice -b spice/bode.spice > $(RES)/bode.log 2>&1
 	@grep -E "^f3db|^ph_real|^g_10x|^---" $(RES)/bode.log
+	@python3 src/plot_bode.py $(RES)/bode.txt $(RES)
+
+## figure -- the same plot, written where the guide page embeds it (maintainers)
+figure: | $(RES)
 	@python3 src/plot_bode.py $(RES)/bode.txt ../../docs/assets/img
 
 ## netlist -- prove the drawn version is the same circuit as spice/rc.spice part E
@@ -78,5 +83,5 @@ $(RES):
 	@mkdir -p $(RES)
 
 clean:
-	rm -f $(RES)/*.log $(RES)/*.txt
+	rm -f $(RES)/*.log $(RES)/*.txt $(RES)/*.png
 	rm -rf xschem/simulation
