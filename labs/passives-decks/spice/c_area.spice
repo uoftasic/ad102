@@ -6,7 +6,7 @@
 * current the model actually draws.  C = Im(I) / (2*pi*f) with a 1 V
 * AC drive.  No approximations, no hand-fitted formulas.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/c_area.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/c_area.spice
 * W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt

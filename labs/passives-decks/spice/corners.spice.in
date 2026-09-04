@@ -12,7 +12,7 @@
 * The Makefile writes this file for each corner. Do not edit
 * corners_tt.spice / corners_ll.spice / corners_hh.spice; edit this one.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.
+* Runs inside hpretl/iic-osic-tools:2026.08.
 * W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice @CORNER@

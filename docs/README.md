@@ -44,12 +44,12 @@ That is the whole course: **a component value is a geometry, and geometry costs 
 | **Time** | 12–16 hours, self-paced |
 | **Math** | Algebra, $V=IR$, and the $R$ / $C$ / frequency reading you did in AD101. No calculus. |
 
-> **This course is pinned to the workbench image `hpretl/iic-osic-tools:2026.04`**, which ships
-> **ngspice-46** and **XSchem V3.4.8RC**. Tutorials online describe other versions with
+> **This course is pinned to the workbench image `hpretl/iic-osic-tools:2026.08`**, which ships
+> **ngspice-47** and **XSchem V3.4.8RC**. Tutorials online describe other versions with
 > different flags. When a command here disagrees with the internet, the command here is the one
 > that runs on your machine.
 >
-> Check yours: `ngspice -v | head -2` should say `ngspice-46`.
+> Check yours: `ngspice -v | head -2` should say `ngspice-47`.
 
 > **All four labs run with `make` alone**, in a bare container, with no environment setup at
 > all — every deck names its SKY130 model file by absolute path. If a setup command fails, try
@@ -104,7 +104,7 @@ Cheat sheets: [The SKY130 passive catalogue](reference/sky130-passive-catalogue.
 . /foss/designs/common/.designinit
 mod add ad102          # first time only
 mod ad102
-ngspice -v | head -2    # expect: ** ngspice-46 : Circuit level simulation program
+ngspice -v | head -2    # expect: ** ngspice-47 : Circuit level simulation program
 cd labs/lab-01-a-resistor-you-designed && make
 ```
 

@@ -6,7 +6,7 @@
 
 Every `print` in these decks is one imaginary die off one imaginary wafer.
 This script collects them, reports mean and standard deviation, and compares
-both against a run on hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+both against a run on hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 
 The decks call `setseed 1`, so Monte Carlo here is **reproducible**: your two
 hundred dies are the same two hundred dies, in the same order, as the ones in

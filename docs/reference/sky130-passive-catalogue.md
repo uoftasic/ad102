@@ -4,7 +4,7 @@
 what do they cost me in area, and where did those numbers come from?*
 
 This is the page you keep open while designing. Every resistance and capacitance below was
-**measured**, in `hpretl/iic-osic-tools:2026.04` with ngspice 46, by instantiating the device
+**measured**, in `hpretl/iic-osic-tools:2026.08` with ngspice 47, by instantiating the device
 at a stated geometry and dividing — not copied from a datasheet. Every parameter is quoted
 with the file it lives in, so you can check any line of this page yourself in one `grep`.
 

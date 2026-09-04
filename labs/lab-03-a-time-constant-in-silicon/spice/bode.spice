@@ -18,11 +18,11 @@
 *
 * W and L are PLAIN MICRON NUMBERS -- never W=1u.
 *
-* Fast: this deck uses the pre-flattened tt corner (sky130.lib.spice.tt.red),
+* Fast: this deck uses the pre-flattened tt corner (sky130.lib.spice),
 * which is the same models as sky130.lib.spice and about thirty times quicker
 * to read. It can, because it needs no other corner and no mismatch.
 
-.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice.tt.red tt
+.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 
 * ---- the real one: your Lab 01 resistor and your Lab 02 capacitor
 Vr in 0 dc 0 ac 1

@@ -5,7 +5,7 @@ Writeup: [`docs/labs/lab-03-a-time-constant-in-silicon-overview.md`](../../docs/
 Labs 01 and 02 designed a resistor and a capacitor. This one puts them in the
 same circuit and asks whether $\tau = RC$ survives contact with silicon.
 
-Runs inside the workbench `hpretl/iic-osic-tools:2026.04` — ngspice **46**,
+Runs inside the workbench `hpretl/iic-osic-tools:2026.08` — ngspice **46**,
 PDK **sky130A**. No environment setup.
 
 ```bash
@@ -63,7 +63,7 @@ circuit reads **466.6700 ps** — both exact.
 That is a measurement artefact, not a device effect, and telling the two apart
 is most of what analog verification is.
 
-## Reference numbers (ngspice 46, sky130A, tt corner)
+## Reference numbers (ngspice 47, sky130A, tt corner)
 
 **Golden** — a transient analysis of a linear circuit has no randomness in it.
 

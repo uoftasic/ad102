@@ -7,7 +7,7 @@
 * Nothing here is measured with an instrument -- the resistance IS the
 * answer to Ohm's law, one division.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/sheet.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.   ngspice -b spice/sheet.spice
 *
 * NOTE: W and L are PLAIN MICRON NUMBERS. W=1 means one micrometre.
 *       Write W=1, not W=1u. The suffix scales the number by 1e-6, and what

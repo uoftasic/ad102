@@ -2,7 +2,7 @@
 """AD102 passives-decks -- read the ngspice logs and render a verdict.
 
 Every reference number below came out of the pinned workbench
-(hpretl/iic-osic-tools:2026.04, ngspice 46, sky130A, tt corner, 27 C).
+(hpretl/iic-osic-tools:2026.08, ngspice 47, sky130A, tt corner, 27 C).
 A DC operating point and a linear AC analysis have no randomness in them,
 and mismatch.spice pins its seed, so your run matches to every digit.
 

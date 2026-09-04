@@ -5,7 +5,7 @@ Writeup: [`docs/labs/lab-04-two-resistors-that-disagree-overview.md`](../../docs
 Labs 01–03 assumed a resistor is worth what the geometry says. Two resistors
 drawn from the same mask, side by side on the same die, are not.
 
-Runs inside the workbench `hpretl/iic-osic-tools:2026.04` — ngspice **46**,
+Runs inside the workbench `hpretl/iic-osic-tools:2026.08` — ngspice **46**,
 PDK **sky130A**. No environment setup.
 
 ```bash
@@ -70,7 +70,7 @@ after which the loop quietly stops at **one** die and every standard deviation
 you compute is zero. `make` prints the operating-point count so you can see at
 a glance whether you got 201 or 2.
 
-## Reference numbers (ngspice 46, sky130A, tt corner, seed 1, 200 dies)
+## Reference numbers (ngspice 47, sky130A, tt corner, seed 1, 200 dies)
 
 **Golden**, because of `setseed`.
 

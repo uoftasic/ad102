@@ -11,7 +11,7 @@
 * five-digit values on the page are the ones you get.
 * Capacitors are measured with a 1 V AC source at 1 kHz, C = Im(I)/(2*pi*f).
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/catalogue.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/catalogue.spice
 * W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
 *
 * NOTE the two line types. res_high_po, res_xhigh_po, res_generic_pd,

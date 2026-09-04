@@ -5,7 +5,7 @@ Writeup: [`docs/labs/lab-01-a-resistor-you-designed-overview.md`](../../docs/lab
 You have written `R = 10k` on a schematic many times. This lab asks the next
 question: **10 kΩ of what, shaped how, and how much silicon does it cost?**
 
-Runs inside the workbench `hpretl/iic-osic-tools:2026.04` — ngspice **46**,
+Runs inside the workbench `hpretl/iic-osic-tools:2026.08` — ngspice **46**,
 PDK **sky130A** at `/foss/pdks/sky130A`. Check yours with `ngspice -v`.
 
 ```bash
@@ -78,7 +78,7 @@ same strip reads **3550.443 ohm** written `W=1 L=10` and **3193.812 ohm** writte
 There is no `u` anywhere in either deck in this package, and there should be none
 in yours.
 
-## Reference numbers (ngspice 46, sky130A, tt corner, 27 °C)
+## Reference numbers (ngspice 47, sky130A, tt corner, 27 °C)
 
 These are **golden** — a DC operating point has no randomness in it, so your
 run matches to every digit printed.

@@ -13,7 +13,7 @@
 * 10 um x 10 um -- one hundred times the area, same recipe.
 * Two hundred fabricated wafers each.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/mismatch.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/mismatch.spice
 * Roughly 90 s of model loading, then 200 fast operating points.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
