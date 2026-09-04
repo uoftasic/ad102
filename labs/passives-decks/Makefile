@@ -2,7 +2,7 @@
 # The ngspice decks behind the AD102 guide pages. Every number printed on
 # a guide page comes out of this directory.
 #
-# Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+# Runs inside hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 #
 #   make            run every deck, then check the numbers
 #   make check      re-render the verdict from logs already on disk

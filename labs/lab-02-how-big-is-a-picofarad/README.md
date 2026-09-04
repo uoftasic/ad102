@@ -5,7 +5,7 @@ Writeup: [`docs/labs/lab-02-how-big-is-a-picofarad-overview.md`](../../docs/labs
 Lab 01 priced a resistor. This one prices the other two passives, and the
 answers get much worse.
 
-Runs inside the workbench `hpretl/iic-osic-tools:2026.04` — ngspice **46**,
+Runs inside the workbench `hpretl/iic-osic-tools:2026.08` — ngspice **46**,
 PDK **sky130A**. No environment setup: every deck names the model library by
 absolute path.
 
@@ -50,7 +50,7 @@ expects you to use them.
 There is no `u` suffix anywhere in this package and there should be none in
 yours.
 
-## Reference numbers (ngspice 46, sky130A, tt corner, 27 °C)
+## Reference numbers (ngspice 47, sky130A, tt corner, 27 °C)
 
 **Golden** — AC operating points are deterministic; yours match to the digit.
 

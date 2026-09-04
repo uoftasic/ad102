@@ -14,8 +14,8 @@ inductors in the PDK.
 
 Exit status 0 = every check passed, 1 = something did not.
 
-All reference numbers were measured on hpretl/iic-osic-tools:2026.04
-(ngspice 46, sky130A, tt corner, 27 C). AC operating points are deterministic,
+All reference numbers were measured on hpretl/iic-osic-tools:2026.08
+(ngspice 47, sky130A, tt corner, 27 C). AC operating points are deterministic,
 so these are GOLDEN: yours match to every digit printed.
 """
 

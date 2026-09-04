@@ -1,5 +1,5 @@
 # AD102 Lab 02 -- How big is a picofarad?
-# Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+# Runs inside hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 #
 #   make          everything, then the verdict
 #   make pf       part 1: what a farad costs, in three technologies

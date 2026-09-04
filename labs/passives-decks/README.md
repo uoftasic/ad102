@@ -11,7 +11,7 @@ claims.
 
 ## Run it
 
-Inside the workbench `hpretl/iic-osic-tools:2026.04` — ngspice **46**, PDK
+Inside the workbench `hpretl/iic-osic-tools:2026.08` — ngspice **46**, PDK
 **sky130A** at `/foss/pdks/sky130A`:
 
 ```bash

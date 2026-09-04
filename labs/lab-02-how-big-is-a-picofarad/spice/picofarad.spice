@@ -10,7 +10,7 @@
 * 1 MHz and read the current. For an ideal capacitor I = 2*pi*f*C*V, so
 * C = |I| / (2*pi*f). One division, no curve fitting.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/picofarad.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.   ngspice -b spice/picofarad.spice
 * W and L are PLAIN MICRON NUMBERS -- never W=1u.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt

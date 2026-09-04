@@ -71,7 +71,7 @@ on 1 V AC sources at 1 MHz and reads the current each one draws. $C = |I| /
 - **Try this:** read the density off the model card before you run anything.
 
   ```bash
-  grep -hE "^\+ c[ap]mimc" /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice.tt.red | head -2
+  grep -hE "^\+ c[ap]mimc" /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice | head -2
   ```
 
   ```

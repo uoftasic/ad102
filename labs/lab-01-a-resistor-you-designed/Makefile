@@ -1,5 +1,5 @@
 # AD102 Lab 01 -- A resistor you designed
-# Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+# Runs inside hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 #
 #   make          measure the device, then check the resistors you sized
 #   make sheet    part 1: extract ohms-per-square and end resistance

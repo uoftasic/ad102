@@ -15,7 +15,7 @@
 * included by hand. If you forget, ngspice says
 *     Error: unknown subckt: x1 a 0 ct 0 sky130_fd_pr__ind_05_220
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/l_spiral.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/l_spiral.spice
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 .include /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__ind_03_90.model.spice

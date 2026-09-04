@@ -109,7 +109,7 @@ the first design decision, and it is the only one that does not cost area.
 
 ## Try this
 
-You need the workbench — `hpretl/iic-osic-tools:2026.04` — and nothing else.
+You need the workbench — `hpretl/iic-osic-tools:2026.08` — and nothing else.
 
 ```bash
 cd labs/passives-decks

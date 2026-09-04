@@ -23,7 +23,7 @@ git clone https://github.com/uoftasic/ad102.git
 cd ad102
 
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" -w /work \
-  hpretl/iic-osic-tools:2026.04 --skip \
+  hpretl/iic-osic-tools:2026.08 --skip \
   bash -c 'cd /work/labs/lab-01-a-resistor-you-designed && make'
 ```
 

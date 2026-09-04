@@ -64,7 +64,7 @@ ax1.set_ylabel("gain (dB)")
 ax1.set_title("The RC you fabricated, in the frequency domain",
               color=INK, fontsize=13, fontweight="bold", loc="left", pad=22)
 ax1.text(0, 1.02,
-         "SKY130 tt, ngspice 46 — real: 15.8580 MHz, ideal: 15.9155 MHz",
+         "SKY130 tt, ngspice 47 — real: 15.8580 MHz, ideal: 15.9155 MHz",
          transform=ax1.transAxes, color=INK2, fontsize=10)
 ax1.grid(True, which="both", alpha=0.7)
 ax1.set_axisbelow(True)

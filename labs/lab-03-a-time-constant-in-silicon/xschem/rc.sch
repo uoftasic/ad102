@@ -46,7 +46,7 @@ C {devices/gnd.sym} -60 60 0 0 {name=g2 lab=0}
 C {devices/gnd.sym} 0 220 0 0 {name=g3 lab=0}
 C {devices/lab_pin.sym} -110 -60 0 0 {name=l_in lab=in}
 C {devices/lab_pin.sym} 0 90 0 1 {name=l_out lab=out}
-C {devices/code_shown.sym} -300 300 0 0 {name=MODELS only_toplevel=true value=".lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice.tt.red tt"}
+C {devices/code_shown.sym} -300 300 0 0 {name=MODELS only_toplevel=true value=".lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt"}
 C {devices/code_shown.sym} -300 365 0 0 {name=CONTROL only_toplevel=true value="
 .control
 tran 2p 80n

@@ -15,7 +15,7 @@
 * one 'resistance too low' warning buried in the middle of the run, and
 * ngspice still exits 0.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.   ngspice -b spice/u_trap.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.   ngspice -b spice/u_trap.spice
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 

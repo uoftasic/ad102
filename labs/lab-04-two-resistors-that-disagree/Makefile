@@ -1,5 +1,5 @@
 # AD102 Lab 04 -- Two resistors that disagree
-# Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+# Runs inside hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 #
 #   make          both decks, then the verdict
 #   make mm       part 1: 200 dies, four sizes and four dividers

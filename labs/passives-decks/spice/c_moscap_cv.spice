@@ -10,7 +10,7 @@
 * voltage source on the gate, and a DC source setting the bias.
 * C = Im(I) / (2*pi*f) with a 1 V AC drive.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/c_moscap_cv.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/c_moscap_cv.spice
 * W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt

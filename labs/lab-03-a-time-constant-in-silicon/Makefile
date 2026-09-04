@@ -1,5 +1,5 @@
 # AD102 Lab 03 -- A time constant in silicon
-# Runs inside hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+# Runs inside hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 #
 #   make          both decks, then the verdict
 #   make rc       part 1: the same RC eight ways, plus temperature

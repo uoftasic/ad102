@@ -9,7 +9,7 @@
 * sitting between the head and the body. Probing it splits one measured
 * resistance into its two halves.
 *
-* Runs inside hpretl/iic-osic-tools:2026.04.  ngspice -b spice/r_head_and_body.spice
+* Runs inside hpretl/iic-osic-tools:2026.08.  ngspice -b spice/r_head_and_body.spice
 * W and L are PLAIN MICRON NUMBERS -- no `u` suffix anywhere.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt

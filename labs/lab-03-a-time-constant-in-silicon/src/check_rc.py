@@ -15,7 +15,7 @@ The 5 ps is half the edge, and it is worth understanding rather than
 tolerating -- see the writeup. This script subtracts it, so what it prints is
 tau.
 
-Reference numbers measured on hpretl/iic-osic-tools:2026.04 (ngspice 46,
+Reference numbers measured on hpretl/iic-osic-tools:2026.08 (ngspice 47,
 sky130A, tt corner). GOLDEN: transient analysis of a linear circuit has no
 randomness in it, so yours match to every digit.
 

@@ -8,7 +8,7 @@
 Nobody is grading this lab. This script is the grader. It pulls the printed
 resistances out of the log, fits the two numbers that actually define a
 fabricated resistor -- ohms per square, and the fixed end resistance -- and
-compares them to a run on hpretl/iic-osic-tools:2026.04 (ngspice 46, sky130A).
+compares them to a run on hpretl/iic-osic-tools:2026.08 (ngspice 47, sky130A).
 
 Exit status 0 = every check passed, 1 = something did not. Usable from a
 Makefile.

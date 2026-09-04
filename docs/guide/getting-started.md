@@ -144,7 +144,7 @@ xschem -v | head -1
 
 ```
 ******
-** ngspice-46 : Circuit level simulation program
+** ngspice-47 : Circuit level simulation program
 ** Compiled with KLU Direct Linear Solver
 ```
 
@@ -152,7 +152,7 @@ xschem -v | head -1
 XSCHEM V3.4.8RC
 ```
 
-**`ngspice-46` and `V3.4.8RC` are the numbers that matter.** If you see something else you are
+**`ngspice-47` and `V3.4.8RC` are the numbers that matter.** If you see something else you are
 on a different image, and commands on these pages may fail in ways this course does not
 describe.
 
@@ -161,11 +161,11 @@ they are the AD104 layout toolchain, and they are listed so you know the image i
 
 | Tool | Command | Expect |
 |---|---|---|
-| ngspice | `ngspice -v \| head -2` | `** ngspice-46 : Circuit level simulation program` |
+| ngspice | `ngspice -v \| head -2` | `** ngspice-47 : Circuit level simulation program` |
 | XSchem | `xschem -v \| head -1` | `XSCHEM V3.4.8RC` |
-| Magic | `magic -dnull -noconsole --version` | `8.3.636` |
-| KLayout | `klayout -v` | `KLayout 0.30.8` |
-| Netgen | `netgen -batch quit \| head -1` | `Netgen 1.5.318 compiled on …` |
+| Magic | `magic -dnull -noconsole --version` | `8.3.681` |
+| KLayout | `klayout -v` | `KLayout 0.30.11` |
+| Netgen | `netgen -batch quit \| head -1` | `Netgen 1.5.323 compiled on …` |
 
 > **Scary-but-normal:** `netgen -batch quit` also prints
 > `Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
@@ -341,7 +341,7 @@ terminal that does not exist — you get a program that silently does nothing.
 . /foss/designs/common/.designinit
 mod ad102
 echo $PDK                      # sky130A
-ngspice -v | head -2           # ** ngspice-46 : Circuit level simulation program
+ngspice -v | head -2           # ** ngspice-47 : Circuit level simulation program
 ls labs/                       # the four lab packages, plus passives-decks
 ```
 

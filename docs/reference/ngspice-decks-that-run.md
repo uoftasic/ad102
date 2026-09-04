@@ -6,7 +6,7 @@ smallest deck that does it, and what will ngspice say when I get it wrong?*
 AD102 asks five questions of silicon — *how many ohms, how many farads, how many henries, how
 long is the time constant, and how much does all of that move?* — and each one has a deck
 shape you can memorise. This page is those five shapes, with the exact output each produced in
-`hpretl/iic-osic-tools:2026.04`, ngspice **46**, PDK **sky130A**.
+`hpretl/iic-osic-tools:2026.08`, ngspice **46**, PDK **sky130A**.
 
 Every block below is an **excerpt** from a deck that ships in a lab package, and the path is
 named beside it. Nothing here is a file for you to create; run the shipped one and edit that.
@@ -258,7 +258,7 @@ model cards, and there are two files it could read:
 | `.lib` line | wall clock, `spice/sheet.spice` |
 |---|---:|
 | `sky130.lib.spice tt` | **55–66 s** |
-| `sky130.lib.spice.tt.red tt` | **2.1 s** |
+| `sky130.lib.spice tt` | **2.1 s** |
 
 Those are wall-clock seconds on one machine, so they move with load — unlike the resistances,
 which do not. The ratio is the durable part: **about thirty times faster**, with **identical
@@ -276,7 +276,7 @@ change it.**
   your numbers reproduce, so it stays on the file the numbers were taken from.
 
 So: if you are writing your own deck, with no corners and no `mc_source` in it, use
-`sky130.lib.spice.tt.red tt` and get your afternoon back. If you are editing a lab's shipped
+`sky130.lib.spice tt` and get your afternoon back. If you are editing a lab's shipped
 deck, leave the `.lib` line alone. [AD103](https://uoftasic.com/ad103/) uses the fast file
 throughout, which is why its labs finish in seconds.
 
