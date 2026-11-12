@@ -19,7 +19,7 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
 
 **Time:** about 2.5 hours. Each ngspice run is silent for anywhere from about 10 seconds to just
 over a minute before it prints anything, depending on your machine (see
-[Expected warnings and delays](#expected-warnings-and-delays)).
+[Warnings and delays](reference/ngspice-decks-that-run.md#lab-01)).
 
 ## Part 1: Load the course
 
@@ -357,7 +357,7 @@ splits into its two parts.
    its target.
 
 6. Count the model warnings in the log. They are the harmless ones described under
-   [Expected warnings and delays](#expected-warnings-and-delays); this deck has fewer resistors
+   [Warnings and delays](reference/ngspice-decks-that-run.md#lab-01); this deck has fewer resistors
    than `sheet.spice`, so it has fewer of them.
 
    ```bash
@@ -530,34 +530,3 @@ image is complete:
 `Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
 line like it. Those are Tcl namespace notices from the tool itself. They are not about your
 design, and there is nothing to fix.
-
-## Expected warnings and delays
-
-**Silence.** Every ngspice run in this lab loads
-`.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt`, which pulls in 12 MB of model
-cards for every device in SKY130, mostly MOSFETs you are not using. ngspice prints nothing while
-it loads, for anywhere from about 10 seconds to just over a minute per run depending on your
-machine (the comment at the top of the Makefile records 55–65 s). `make` runs the simulator twice, so allow up
-to about two minutes. It is not hung.
-
-**170 `unrecognized parameter` lines, in 34 blocks**, in `results/sheet.log`. A `rhead_model`
-block has four of these lines and a `rbody_model` block has six; here is a head block:
-
-```
-Warning: Model issue on line 4842 :
-  .model xl1:rhead_model r sw_et=0 isnoisy=0 rsh=    3.458312000000000e+02 ...
-unrecognized parameter (sw_et) - ignored
-unrecognized parameter (isnoisy) - ignored
-unrecognized parameter (p2) - ignored
-unrecognized parameter (q2) - ignored
-```
-
-SkyWater writes one set of model cards for several simulators. `sw_et`, `isnoisy` and
-`p2`/`q2`/`p3`/`q3` are Spectre-flavoured keywords for self-heating, noise and voltage
-coefficients, which ngspice does not implement. ngspice says so and carries on with the parameters it does understand, which
-are the ones this lab measures. There are thirty-four blocks for twenty-two resistors because
-most of these devices expand into more than one `.model` card.
-
-**A line that starts with `Error`** is different. That one stops the run, and your log will
-contain no `r_` lines at all; the checker, `src/check_res.py`, tells you to look for exactly
-that.

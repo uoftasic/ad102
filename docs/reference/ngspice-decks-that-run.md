@@ -1,7 +1,7 @@
 # ngspice deck recipes
 
-The smallest deck that measures a passive device, for each kind of measurement in AD102, and what
-ngspice says when you get it wrong.
+The smallest deck that measures a passive device, for each kind of measurement in AD102, what
+ngspice says when you get it wrong, and the warnings each lab prints that you can ignore.
 
 AD102 asks five questions of silicon: how many ohms, how many farads, how many henries, how long
 is the time constant, and how much does all of that move? Each has a deck shape you can reuse.
@@ -170,7 +170,8 @@ meas tran t_ideal  WHEN v(bo)=1.137816 RISE=1
 **The `.tran` is a card, not a control command, and `run` executes it.** That looks like extra
 work until you want the same analysis at another temperature: `set temp` only takes effect on the
 next `run`, so a `tran` typed inside `.control` runs immediately and ignores any temperature you
-set afterwards. `rc.spice` runs −40 °C and +125 °C from this one card.
+set afterwards. `rc.spice` runs −40 °C and +125 °C from this one card. If you restructure the
+deck and your cold and hot numbers come out identical to the 27 °C one, this is why.
 
 That `meas` line has two traps, which together cost 1.005 ns:
 
@@ -268,6 +269,96 @@ this course, including `spice/bode.spice` in Lab 03, now loads `sky130.lib.spice
 a tutorial you find elsewhere names a `.red` file, ngspice on this image stops with
 `Could not find library file`. If you are editing a lab's shipped deck, leave the `.lib` line
 alone: the reference numbers were taken with it.
+
+## Warnings and delays in each lab
+
+What each lab prints that is not an error, and how long it stays silent. A line that starts with
+`Error` is different: it stops the run, and [Error messages](#error-messages) says what it means.
+
+### Lab 01
+
+Every ngspice run loads `.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt`, 12 MB
+of model cards for every device in SKY130, mostly MOSFETs you are not using, and prints nothing
+while it loads. That takes anywhere from about 10 seconds to just over a minute per run,
+depending on your machine (the comment at the top of the Makefile records 55–65 s). `make` runs
+the simulator twice, so allow up to about two minutes. It is not hung.
+
+`results/sheet.log` holds 170 `unrecognized parameter` lines, in 34 blocks. A `rhead_model`
+block has four of these lines and a `rbody_model` block has six; here is a head block:
+
+```
+Warning: Model issue on line 4842 :
+  .model xl1:rhead_model r sw_et=0 isnoisy=0 rsh=    3.458312000000000e+02 ...
+unrecognized parameter (sw_et) - ignored
+unrecognized parameter (isnoisy) - ignored
+unrecognized parameter (p2) - ignored
+unrecognized parameter (q2) - ignored
+```
+
+SkyWater writes one set of model cards for several simulators. `sw_et`, `isnoisy` and
+`p2`/`q2`/`p3`/`q3` are Spectre-flavoured keywords for self-heating, noise and voltage
+coefficients, which ngspice does not implement. ngspice says so and carries on with the
+parameters it does understand, which are the ones the lab measures. There are thirty-four blocks
+for twenty-two resistors because most of these devices expand into more than one `.model` card.
+
+`make resistor` in `passives-decks` (Lab 01, Part 6) prints fewer of them, because its deck has
+fewer resistors: `grep -c 'unrecognized parameter' results/r_head_and_body.log` prints `100`.
+
+A line that starts with `Error` stops the run, and your log will contain no `r_` lines at all;
+the checker, `src/check_res.py`, tells you to look for exactly that.
+
+### Lab 02
+
+`pf`, `mine` and `tank` each load SKY130's model cards before printing anything. `henry` does
+not: the inductor models live in three small files outside the corner library, so it finishes
+almost immediately. The Makefile budgets about three and a half minutes for the whole `make` on
+the pinned image. It is not hung.
+
+### Lab 03
+
+Each of the two runs in `make` is silent while ngspice loads 12 MB of SKY130 model cards.
+
+`Doing analysis at TEMP = ... and TNOM = 27.000000` appears five times in `results/rc.log`, at
+27 °C, −40 °C and +125 °C. That is Part 4: the deck runs the same `.tran` card at three
+temperatures. `TNOM` staying at 27 is correct; it is the temperature the model parameters were
+extracted at, not the one you are simulating.
+
+`Warning: command 'plot' is not available during batch simulation, ignored!` comes from the
+XSchem part's schematic, which asks for a picture that batch mode cannot draw. The `meas` line
+under it is still the answer.
+
+### Lab 04
+
+Each of the two decks loads the SKY130 model cards (about 55 s on the pinned image) and then
+evaluates 200 operating points (about 23 s for the bigger of the two), printing nothing while it
+works. Most of the time is model loading, not Monte Carlo.
+
+`results/mismatch.log` holds 28,280 `unrecognized parameter (...) - ignored` lines, of which
+5,656 are `(sw_et)`. They are the same harmless lines as in Lab 01. Two hundred re-evaluations
+of the netlist repeat the whole block two hundred times, so the log is 1.8 MB. `make` sends it
+to the log rather than to your terminal.
+
+**The loop counter must exist before the first `mc_source`.** `mc_source` discards the previous
+analysis's vectors, and a counter created after an analysis has run goes with them. If you get
+this wrong, you see the following, buried in the usual model warnings:
+
+```
+Warning from checkvalid: vector run is not available or has zero length.
+Error: RHS "run + 1" invalid
+```
+
+After that the loop stops at one die and every σ you compute is zero, silently, with exit status
+0. That is why `make` prints the operating-point count first: you are looking for 201, and if you
+see 2, this is the cause. The shipped decks create the counter immediately after `setseed 1`,
+before anything has been simulated:
+
+```
+setseed 1
+let run = 0          <- here
+dowhile run < 200
+  mc_source
+  ...
+```
 
 ## `X` lines and `R` lines
 

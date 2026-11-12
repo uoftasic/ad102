@@ -24,7 +24,8 @@ Package: [`labs/lab-03-a-time-constant-in-silicon/`](https://github.com/uoftasic
   desktop and `$PDK` set to `sky130A` (Lab 01, Part 1).
 
 **Time:** about 2 hours. `make` runs two ngspice decks, each silent while the SKY130 model cards
-load (about a minute each on the pinned image).
+load (about a minute each on the pinned image; see
+[Warnings and delays](reference/ngspice-decks-that-run.md#lab-03)).
 
 A resistor charging a capacitor from a step follows
 
@@ -429,22 +430,3 @@ Next on the [Course path](README.md#course-path): read
 [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and
 [Matching and Pelgrom's law](guide/matching-beats-accuracy.md), then do
 [Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
-
-## Expected warnings and delays
-
-**Silence.** Each of the two runs in `make` is silent while ngspice loads 12 MB of SKY130 model
-cards.
-
-**`Doing analysis at TEMP = ... and TNOM = 27.000000` appears five times** in `results/rc.log`,
-at 27 °C, −40 °C and +125 °C. That is Part 4: the deck runs the same `.tran` card at three temperatures. `TNOM`
-staying at 27 is correct; it is the temperature the model parameters were extracted at, not the
-one you are simulating.
-
-**`Warning: command 'plot' is not available during batch simulation, ignored!`** comes from
-Part 8's schematic, which asks for a picture that batch mode cannot draw. The `meas` line under
-it is still the answer.
-
-**`set temp` only takes effect on the next `run`.** That is why the analysis in `rc.spice` is a
-`.tran` card rather than a `tran` command inside `.control`: a `tran` command in the control
-block runs immediately and ignores a temperature you set afterwards. If you restructure the deck
-and your cold and hot numbers come out identical to the 27 °C one, this is why.

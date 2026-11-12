@@ -31,8 +31,8 @@ No environment setup is needed.
 | `make clean` | delete the logs in `results/`, keep sources |
 
 Both runs print `operating points (200 dies + 1 nominal) : 201` first. If you see 2 instead of
-201, the Monte Carlo loop stopped after one die; the writeup's "Expected warnings and delays"
-section explains why.
+201, the Monte Carlo loop stopped after one die; [Warnings and delays](https://uoftasic.com/ad102/#/reference/ngspice-decks-that-run?id=lab-04)
+explains why.
 
 ## Files
 
