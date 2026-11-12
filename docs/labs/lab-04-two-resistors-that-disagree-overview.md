@@ -23,9 +23,9 @@ Package: [`labs/lab-04-two-resistors-that-disagree/`](https://github.com/uoftasi
 
   This lab needs no environment setup.
 
-**Time:** about 2 hours. The Monte Carlo runs are silent throughout. A full `make` takes between
-about 30 seconds and two minutes, depending on your machine (the Makefile records 106 s and
-128 s on the pinned image; see
+Time: about 2 hours, not counting the optional part at the end. The Monte Carlo runs are silent
+throughout. A full `make` takes between about 30 seconds and two minutes, depending on your
+machine (the Makefile records 106 s and 128 s on the pinned image; see
 [Warnings and delays](reference/ngspice-decks-that-run.md#lab-04)).
 
 Labs 01–03 assumed that a device is worth what its geometry says: you sized a resistor to 2200 Ω
@@ -38,6 +38,8 @@ building a million things at once. Much of analog design is arranging for the ra
 matter.
 
 ## Part 1: Process corners
+
+What moves between process corners, and what stays put?
 
 The corners deck in `labs/passives-decks` is the one quoted on the two guide pages. It builds one
 circuit three times, once per corner (`ll`, `tt`, `hh`), changing only one word on the `.lib`
@@ -75,10 +77,21 @@ divider = 3.845828e-01
 ```
 
 The absolute values moved by ±12.5 %, the RC corner frequency by a 1.67 : 1 range, and the ratio
-and divider did not move in any printed digit.
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md#why-the-ratio-holds) explains why.
+and divider did not move in any printed digit. Why not?
+
+<details>
+<summary>Answer</summary>
+
+A corner applies the same multiplier to every device made of that material, and in a ratio of two
+such devices the multiplier cancels. What is left is a ratio of lengths you drew.
+[Matching and Pelgrom's law](guide/matching-beats-accuracy.md#why-the-ratio-holds) works it
+through, including why the ratio is 3.680396 rather than 4.
+
+</details>
 
 ## Part 2: Run the Monte Carlo
+
+Can you run a Monte Carlo that someone else can reproduce exactly?
 
 Corners shift every device together. Mismatch moves devices apart, and needs a different switch.
 `spice/mismatch.spice` turns the SKY130 mismatch models on with one line:
@@ -89,9 +102,10 @@ Corners shift every device together. Mismatch moves devices apart, and needs a d
 
 With it on, every device instance draws its own `AGAUSS()` sample when the netlist is evaluated.
 The control block calls `mc_source`, which re-evaluates the netlist (in effect, fabricates a
-different die), then runs one `op`, two hundred times. Then `alterparam mc_mm_switch=0`
-followed by one more `mc_source` gives the nominal die, with no mismatch at all. `setseed 1` fixes the random sequence, so
-your two hundred dies are the same two hundred dies as on this page, in the same order.
+different die), then runs one `op`, two hundred times. Then `alterparam mc_mm_switch=0` followed
+by one more `mc_source` gives the nominal die, with no mismatch at all. `setseed 1` fixes the
+random sequence, so your two hundred dies are the same two hundred dies as on this page, in the
+same order.
 
 1. Run the lab:
 
@@ -101,18 +115,34 @@ your two hundred dies are the same two hundred dies as on this page, in the same
 
    It ends in `FAIL`; you fix that in Part 6. Leave the output in your terminal.
 
-2. Before you trust any statistic, check the count at the top of the output.
+2. Before you trust any statistic, check the count at the top of the output. If it says 2
+   instead of 201, the loop stopped after one die;
+   [Warnings and delays](reference/ngspice-decks-that-run.md#lab-04) explains why.
 
-**You should see:**
+**You should see:** the count, then the nominal die. Part A of the deck forces 1 µA through four
+single resistors, so dividing `v(s1)` to `v(s4)` by 1 µA gives their nominal resistances:
+695.4646, 1647.124, 1468.119 and 1370.854 Ω. `v(ta)` to `v(td)` are the divider taps you'll
+read in Parts 4 and 5.
 
 ```
 operating points (200 dies + 1 nominal) : 201
+--- NOMINAL (mismatch off) ---
+v(s1) = 6.954646e-04
+v(s2) = 1.647124e-03
+v(s3) = 1.468119e-03
+v(s4) = 1.370854e-03
+v(ta) = 9.000000e-01
+v(tb) = 9.000000e-01
+v(tc) = 1.309327e+00
+v(td) = 1.350000e+00
 ```
 
 A Monte Carlo result you cannot reproduce is an anecdote, not a measurement. Seeding it costs one
 word, and turns "about 5.6 mV" into a number you can put in a table and have someone else check.
 
 ## Part 3: Pelgrom's law
+
+Does σ halve when the area quadruples?
 
 Part A of the deck puts 1 µA through four single resistors with areas of 1, 4, 16 and 64 µm².
 
@@ -138,17 +168,6 @@ Part A of the deck puts 1 µA through four single resistors with areas of 1, 4, 
 
 3. Find table A in the checker's output.
 
-4. (Optional) The guide page's 1 × 1 µm against 10 × 10 µm comparison, with a different seed, is
-   in `labs/passives-decks`. To reproduce it:
-
-   ```bash
-   cd ../passives-decks
-   make mismatch
-   cd ../lab-04-two-resistors-that-disagree
-   ```
-
-   It ends with `100x the area bought 8.38x better matching`.
-
 **You should see:**
 
 ```
@@ -164,12 +183,16 @@ The last column tests the law, and for the three larger devices it holds: 1.912 
 against a predicted 2.000, from 200 samples that only pin σ down to ±5 % anyway.
 
 The 1 µm² device does not follow it. It should have scattered by 3.55 % and scattered by 2.59 %,
-27 % less than predicted, so it is *better* than the law allows.
+27 % less than predicted, so it is *better* than the law allows. Why? (Look back at Lab 01,
+Part 6.)
 
-To see why, go back to Lab 01, Part 6. At $W = 1$, $L = 1$ the resistor's total is 695.46 Ω,
-and 299.89 Ω of that, 43 %, is contact head, not body. `body_pelgrom` describes only the body.
-The head has its own coefficient (`head_pelgrom`, averaged over a different quantity), and on this
-device its contribution to σ is about as large as the body's
+<details>
+<summary>Answer</summary>
+
+At $W = 1$, $L = 1$ the resistor's total is 695.46 Ω, and 299.89 Ω of that, 43 %, is contact
+head, not body. `body_pelgrom` describes only the body. The head has its own coefficient
+(`head_pelgrom`, averaged over a different quantity), and on this device its contribution to σ is
+about as large as the body's
 ([the worked example](guide/matching-beats-accuracy.md#worked-example-predicting-the-monte-carlo)
 gets 13.067 Ω from the head and 14.051 Ω from the body).
 
@@ -178,12 +201,18 @@ stops looking like the geometry the coefficient was extracted on, the single-num
 the law stops applying. This is the same trap as Lab 01's naive $R = R_\square L/W$, with the
 same fix: measure the thing you are actually going to build.
 
+</details>
+
 ## Part 4: The same divider at 48 times the area
+
+What does 48 times the area buy you in precision?
 
 Part B builds a 1:1 divider twice: once from two 0.84 µm² devices and once from two 40 µm² ones.
 The schematic and ratio are the same; only the size changes.
 
-1. Find the two `1:1` lines in the checker's `B and C` table.
+1. From area alone, predict how much more precise the big pair should be: $\sqrt{40/0.84}$.
+
+2. Find the two `1:1` lines in the checker's `B and C` table.
 
 **You should see:**
 
@@ -193,19 +222,27 @@ The schematic and ratio are the same; only the size changes.
 ```
 
 Both nominals are exactly 0.900000 V, so both are perfectly accurate. One is eight times less
-precise than the other.
+precise than the other. 25 mV of scatter on a 900 mV node is 2.8 %, roughly five bits' worth of
+reference error in an ADC, from a circuit whose schematic is correct. The fix is the least clever
+thing in engineering: draw it bigger.
 
-25 mV of scatter on a 900 mV node is 2.8 %, roughly five bits' worth of reference error in an
-ADC, from a circuit whose schematic is correct. The fix is the least clever thing in engineering:
-draw it bigger. 47.6 times the area bought 7.76 times the precision. Area alone predicts
-$\sqrt{47.6} = 6.90$, so the small pair is about 12 % worse than area explains. It is 0.42 µm
-wide, below the 0.69 µm point where Lab 01, Part 4 found the sheet resistance starts to change,
-and it also pays head mismatch, which does not scale with $WL$ at all.
+47.6 times the area bought 7.76 times the precision, but area alone predicts
+$\sqrt{47.6} = 6.90$. Why is the small pair about 12 % worse than area explains?
+
+<details>
+<summary>Answer</summary>
+
+It is 0.42 µm wide, below the 0.69 µm point where Lab 01, Part 4 found the sheet resistance
+starts to change, and it also pays head mismatch, which does not scale with $WL$ at all.
+
+</details>
 
 This is the main reason analog blocks look enormous next to digital ones: precision is paid for
 in square micrometres.
 
 ## Part 5: One ratio drawn two ways
+
+Does building a ratio from identical units help its accuracy, its precision, or both?
 
 Part C builds a 3:1 divider from exactly 24 µm² of poly, twice:
 
@@ -231,9 +268,13 @@ They have the same ratio on paper, the same area and the same material.
     where 200 samples only pin sigma down to +/- 5.0 %. Those are the same number.
 ```
 
-**The nominals differ by 3.01 %.** The two-device version is wrong, and wrong the same way on
-every die. Lab 01 explains it: every resistor pays 378.2448 Ω of end resistance regardless of
-length, so
+The nominals differ by 3.01 %, and the two-device version is wrong the same way on every die.
+Why?
+
+<details>
+<summary>Answer</summary>
+
+Lab 01: every resistor pays 378.2448 Ω of end resistance regardless of length, so
 
 $$\frac{R_6}{R_6+R_{18}} = \frac{378.24 + 6(317.22)}{8369.76} = 0.27260$$
 
@@ -241,10 +282,19 @@ and not 0.25. Build both branches from the *same unit* and that overhead appears
 both. The ratio becomes a ratio of **counts**, one unit out of four, and the overhead divides out
 exactly. The measured nominal is `1.350000`.
 
-**The spreads do not differ.** 5.6433 against 5.7290 mV is 1.5 % apart, and 200 samples cannot
-resolve σ better than $1/\sqrt{2N} = 5$ %. Splitting the resistor into unit cells bought nothing
-in random mismatch, and the algebra says it never will: for independent per-device errors, the σ
-of a ratio depends on total area and nothing else about how you divided it up.
+</details>
+
+The spreads, 5.6433 against 5.7290 mV, are 1.5 % apart. Did the unit cells buy any precision?
+
+<details>
+<summary>Answer</summary>
+
+No. 200 samples cannot resolve σ better than $1/\sqrt{2N} = 5$ %, so the two spreads are the same
+number. Splitting the resistor into unit cells bought nothing in random mismatch, and the algebra
+says it never will: for independent per-device errors, the σ of a ratio depends on total area and
+nothing else about how you divided it up.
+
+</details>
 
 So "matching" usually means two different things, and you pay for them differently:
 
@@ -278,12 +328,14 @@ whole class of error, including ones nobody has told you about yet.
 
 ## Part 6: Design a 0.45 V divider
 
-`spice/my_divider.spice` has to put **0.4500 V** on `tap` from a 1.8 V supply, using
+Can you make one divider accurate, precise and small at the same time?
+
+`spice/my_divider.spice` has to put 0.4500 V on `tap` from a 1.8 V supply, using
 `sky130_fd_pr__res_high_po`, and meet all three of these:
 
-1. nominal within **0.2 %** of 0.4500 V,
-2. σ at most **3.0 mV** over 200 dies,
-3. total drawn area under **150 µm²**.
+1. nominal within 0.2 % of 0.4500 V,
+2. σ at most 3.0 mV over 200 dies,
+3. total drawn area under 150 µm².
 
 You can use as many devices as you like. Keep the node called `tap` and the supply called `vdd`;
 the checker reads your geometry back out of the file.
@@ -314,29 +366,46 @@ PASS -- every number matches the reference run.
 
 ## Finishing
 
-You are done when `make mine check` prints `PASS -- every number matches the reference run.`
+You're done when `make mine check`, run on the divider you designed in Part 6, prints
+`PASS -- every number matches the reference run.`
 
 `setseed 1` makes the Monte Carlo reproducible, so on the pinned image (ngspice-47, `sky130A`,
-`tt` corner, seed 1, 200 dies) your numbers match these:
+`tt` corner, seed 1, 200 dies) your numbers match the ones on this page.
 
-| | nominal | σ |
-|---|---|---|
-| 1 µm² resistor | 695.4646 Ω | 2.5852 % |
-| 4 µm² resistor | 1647.124 Ω | 1.6046 % |
-| 16 µm² resistor | 1468.119 Ω | 0.8391 % |
-| 64 µm² resistor | 1370.854 Ω | 0.4007 % |
-| 1:1 divider, 0.84 µm² devices | 0.900000 V | 25.0787 mV |
-| 1:1 divider, 40 µm² devices | 0.900000 V | 3.2321 mV |
-| 3:1, one L=6 + one L=18 | 1.309327 V | 5.6433 mV |
-| 3:1, four identical L=6 units | 1.350000 V | 5.7290 mV |
+Question:
+
+1. The shipped divider failed twice. Which failure did area fix, and which did identical units
+   fix?
+
+   <details>
+   <summary>Answer</summary>
+
+   Identical units fixed the nominal, a systematic error from the end resistance (Part 5). Area
+   fixed σ, at four times the area per factor of two (Parts 3 and 4). The lab's
+   `solutions/README.md` has one design that does both.
+
+   </details>
 
 After yours passes, read
 [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-04-two-resistors-that-disagree/solutions/README.md)
 for one good answer and why unit devices do nothing for σ in this simulator.
 
-Two results from this lab carry into everything after it: build every ratio you care about from
-identical unit cells, and expect to pay for precision in square micrometres, at four times the
-area per factor of two.
+Submit: nothing for this lab.
+
+## Going further (optional)
+
+### The guide page's mismatch run
+
+The guide page's 1 × 1 µm against 10 × 10 µm comparison, with a different seed, is in
+`labs/passives-decks`. To reproduce it:
+
+```bash
+cd ../passives-decks
+make mismatch
+cd ../lab-04-two-resistors-that-disagree
+```
+
+It ends with `100x the area bought 8.38x better matching`.
 
 Next on the [Course path](README.md#course-path): read
 [From schematic to cross-section](guide/from-schematic-to-cross-section.md), then do the
