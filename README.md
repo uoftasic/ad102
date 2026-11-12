@@ -2,7 +2,7 @@
 
 Linear analysis, folded together with how passives are actually built on a chip.
 
-The second course in the UofT ASIC Team **analog track**. Published docs live under `./docs` and are served by GitHub Pages; the runnable SPICE decks live in `labs/`.
+The second course in the UofT ASIC Team **analog track**. Published docs live under `./docs` and are served by GitHub Pages; the runnable SPICE decks live in `labs/`. Students should start at the Course path on the home page.
 
 Org: [github.com/uoftasic](https://github.com/uoftasic)
 
@@ -16,7 +16,9 @@ Org: [github.com/uoftasic](https://github.com/uoftasic)
 
 ## Quick start
 
-Every package under `labs/` runs with `make` alone, in a bare container, with no environment setup. On a fresh clone every lab's first `make` ends in `FAIL` — **that FAIL is the lab**, not a broken package.
+Every package under `labs/` runs with `make` alone, in a bare container, with no environment setup. On a fresh clone every lab's first `make` ends in `FAIL` on purpose: each package ships a naive design for the student to fix.
+
+Students set up through the `workspace` repo from [IC101](https://uoftasic.com/ic101/) instead; that is Part 1 of Lab 01. The command below is a quick check that a lab runs in the image:
 
 ```bash
 git clone https://github.com/uoftasic/ad102.git
@@ -40,7 +42,8 @@ Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should document the team wo
 | Path | On Pages? | Purpose |
 |------|-----------|---------|
 | `docs/` | **Yes** | Human-facing Docsify site |
-| `docs/labs/` | Yes | Lab *writeups* (procedure, theory) |
+| `docs/guide/` | Yes | Guide pages: reading only |
+| `docs/labs/` | Yes | Lab *writeups*: every command, as numbered parts and steps |
 | `labs/` | No | Runnable packages (HDL, Python, data, graders) |
 | `scripts/` | No | Team utilities / automation |
 | `notebooks/` | No | Exploratory / assignment notebooks |

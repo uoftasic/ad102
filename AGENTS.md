@@ -7,7 +7,9 @@ Optimize for **clear student learning paths**, not template maintenance. Prefer 
 ## Goals
 
 - Teach IC development skills: RTL (SystemVerilog/Verilog), simulation, synthesis, FPGA bring-up, and/or open ASIC flows (e.g. Yosys, LibreLane, SKY130) as the course requires.
-- Keep each lab **self-contained**: prerequisites → objectives → short theory → procedure → expected results → links to code.
+- Keep each lab **self-contained**: what you'll build or measure → before you start (guide pages to read, setup) → time → numbered parts with numbered steps, each part ending in a "you should see" check → finishing.
+- Keep guide pages (`docs/guide/`) **reading only**: concepts, figures, worked examples. Commands and activities belong in the lab writeups; a guide page points to the lab part where the student does it.
+- Keep the **Course path** table on `docs/README.md` (alternating Read and Do rows, with time estimates) and `docs/_sidebar.md` in the same order.
 - Separate **what students read** (`docs/`) from **what they run** (`labs/`, `scripts/`, `notebooks/`).
 - Never publish grades, solution keys, or PII under `docs/`. Put keys in `labs/**/solutions/` and gitignore them on student forks when policy requires.
 
@@ -35,16 +37,18 @@ Lab IDs: `lab-NN-short-name` (e.g. `lab-02-counter-sv`).
    - `src/` — HDL / Python / entrypoints
    - `data/` — small inputs (large binaries → Git LFS or external)
    - `requirements.txt` or tool notes when needed
-2. Add `docs/labs/<lab-id>-overview.md` with: Prerequisites, Objectives, Theory (short), Procedure, Expected results, Links.
-3. Link the writeup from `docs/_sidebar.md` (and `_navbar.md` only if it belongs in top nav).
+2. Add `docs/labs/<lab-id>-overview.md` in the lab shape above: what you'll build or measure, before you start, time, numbered parts each ending in a "you should see" check, and finishing.
+3. Add a row for it to the Course path table in `docs/README.md`, and link the writeup from `docs/_sidebar.md` in the same position (and from `_navbar.md` only if it belongs in top nav).
 4. Cross-link: writeup → GitHub `labs/<lab-id>/`; package README → `docs/labs/<lab-id>-overview.md`.
 
-**Writeups teach; packages execute.** Do not dump long HDL into Docsify pages — reference files under `labs/`.
+**Writeups teach; packages execute.** Do not paste long HDL or decks into Docsify pages; reference the files under `labs/`.
+
+A capstone with no package (like AD102's `docs/labs/capstone-floor-plan-overview.md`) still gets a writeup in `docs/labs/` and a Course path row.
 
 ## Adding a guide page
 
-1. Add kebab-case Markdown under `docs/guide/` (e.g. `yosys-synth.md`).
-2. Link from `docs/_sidebar.md`.
+1. Add kebab-case Markdown under `docs/guide/` (e.g. `yosys-synth.md`). Reading only: no required commands.
+2. Add it to the right Read row of the Course path in `docs/README.md`, and link it from `docs/_sidebar.md` in the same position.
 3. Images under `docs/assets/img/` with paths relative to `docs/`.
 4. Prefer relative Docsify links between pages; use GitHub URLs for `labs/` and `scripts/`.
 
@@ -76,4 +80,4 @@ Lab IDs: `lab-NN-short-name` (e.g. `lab-02-counter-sv`).
 
 - Repo conventions: `CONTRIBUTING.md`
 - Bootstrap tokens / Pages checklist: `TEMPLATE.md`
-- Sample lab shape: `labs/lab-01/` + `docs/labs/lab-01-overview.md`
+- Sample lab shape: `labs/lab-01-a-resistor-you-designed/` + `docs/labs/lab-01-a-resistor-you-designed-overview.md`
