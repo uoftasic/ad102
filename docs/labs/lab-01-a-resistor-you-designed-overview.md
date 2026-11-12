@@ -23,9 +23,9 @@ minute before it prints anything, depending on your machine (see
 
 ## Part 1: Set up the workbench
 
-You do this part once. You need the course files from step 5 to go on. If one of the PDK or
-version checks fails, ask for help, but you can still run the labs: the lab decks name their model
-files by absolute path, so `make` works even when the environment is not set up.
+You do this part once. You need the course files from step 5 to go on. If the PDK checks in
+steps 2 to 4 go wrong, ask for help, but you can still run the labs: the lab decks name their
+model files by absolute path, so `make` works even when the environment is not set up.
 
 1. On your own machine, in your `workspace` clone, start the desktop:
 
@@ -98,7 +98,7 @@ files by absolute path, so `make` works even when the environment is not set up.
 
    | What you see | What it means |
    |---|---|
-   | `bash: mod: command not found` | You did not run step 3 in this terminal. Every new tab starts clean. |
+   | `bash: mod: command not found` | This terminal has not loaded the course environment. Run step 3 in it. |
    | `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
    | `fatal: could not read Username for 'https://github.com'` | git is asking you to log in, which means it could not read the repo anonymously. Check the spelling first. If it is right, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
 
@@ -221,7 +221,7 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    $$
 
 6. Check those two numbers against measurements you did not use. At $L = 10$:
-   $378.2448 + 3172.198 = 3550.4424$, against a measured 3550.443. At $L = 20$: $6722.640$,
+   $378.2448 + 3172.198 = 3550.4428$, against a measured 3550.443. At $L = 20$: $6722.6408$,
    against 6722.641.
 
 **You should see:** your line matches every point to the last printed digit, across a 100-to-1
@@ -249,9 +249,9 @@ can ignore it. On a 500 Ω resistor it is most of the device.
 > $345.8312 / 1.1548 = 299.47\ \Omega$. Its temperature coefficients (`tc1 = -4.3e-4`,
 > `tc2 = 12e-6`, `tnom = 30`) scale that by
 > $1 + (-4.3{\times}10^{-4})(-3) + (12{\times}10^{-6})(9) = 1.001398$ at the 27 °C ngspice
-> simulated at ($27 - 30 = -3$, and $(-3)^2 = 9$), giving 299.89 Ω. And $299.89 + 78.35 = 378.24$, against the 378.2448 you
-> measured. The arithmetic closes to five figures using only constants in a text file you can
-> `cat`.
+> simulated at ($27 - 30 = -3$, and $(-3)^2 = 9$), giving 299.89 Ω. And
+> $299.89 + 78.35 = 378.24$, against the 378.2448 you measured. The arithmetic closes to five
+> figures using only constants in a text file you can `cat`.
 
 ## Part 3: Size a 10 kΩ resistor
 
@@ -306,13 +306,14 @@ $L = 10$ µm and $L = 5$ µm.
 | 2 | 158.530 | 199.875 | 317.061 | 12.6159 |
 | 5 | 63.393 | 82.841 | 316.966 | 78.8728 |
 
-Read the Ω-per-square column downward: 317.362, 317.220, 317.061, 316.966. Sheet resistance is a
-property of the material, constant to a tenth of a percent, until 0.35 µm, where it jumps 7 % to
-340.074. Below 0.69 µm the model applies `weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip
-drawn 0.35 µm wide conducts as though it were 0.326 µm wide. Lithography and etch do not give
-you the width you drew. The end resistance changes with width as well, from 82.841 Ω at 5 µm to
-958.562 Ω at 0.35 µm, because the contact head is as wide as the strip (the note in Part 2 shows
-its resistance is `rsh` divided by a width).
+Read the Ω-per-square column from the bottom up: 316.966, 317.061, 317.220, 317.362. Sheet
+resistance is a property of the material, constant to a tenth of a percent, until the top row,
+0.35 µm, where it jumps 7 % to 340.074. Below 0.69 µm the model applies
+`weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip drawn 0.35 µm wide conducts as though it
+were 0.326 µm wide. Lithography and etch do not give you the width you drew. The end resistance
+changes with width as well, from 82.841 Ω at 5 µm to 958.562 Ω at 0.35 µm, because the contact
+head is as wide as the strip (the note in Part 2 shows its resistance is `rsh` divided by a
+width).
 
 Now read the last column: 0.36 µm² per kΩ at the narrowest width against 78.9 at the widest.
 Same material, same sheet resistance, a factor of 219 in area. You win twice by going narrow,
@@ -471,6 +472,15 @@ numbers.
        got       53001.1 ohm   (+6.00 %)   FAIL
    ```
 
+   Below that, the checker explains each failure, and it ends with:
+
+   ```
+     ^ On a fresh clone this FAIL is the lab, not a broken
+       package. spice/my_resistor.spice ships with the naive
+       sizing on purpose. Edit the two L= numbers and run
+       `make mine check` again.
+   ```
+
    On a 2.2 kΩ resistor, the 378 Ω of ends is no longer a rounding error; it is a sixth of the
    device.
 
@@ -548,6 +558,9 @@ There is a guided version of this exercise at <https://tinytapeout.com/siliwiz/r
 ## Finishing
 
 You are done when `make mine check` prints `PASS -- every number matches the reference run.`
+Your two resistors pass if each is within 1 % of its target. The checker also compares every
+simulated resistance with the reference run (within 0.5 %) and the two extracted constants
+(within 1 %), which is what "matches the reference run" means.
 
 A DC operating point has no randomness in it, so on the pinned image (ngspice-47, `sky130A`, `tt`
 corner, 27 °C) your numbers match these to every digit shown:
@@ -564,7 +577,7 @@ After your own numbers pass, read
 [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-01-a-resistor-you-designed/solutions/README.md)
 for the reference sizing and some questions worth arguing about.
 
-Next on the [Course path](README.md#course-path): read
+Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
 [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
 [Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
 
@@ -573,8 +586,9 @@ Next on the [Course path](README.md#course-path): read
 **Silence.** Every ngspice run in this lab loads
 `.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt`, which pulls in 12 MB of model
 cards for every device in SKY130, mostly MOSFETs you are not using. ngspice prints nothing while
-it loads: 55–65 s per run on the pinned image when the Makefile's timings were taken, and about
-10 s on a faster machine. `make` runs the simulator twice. It is not hung.
+it loads, for anywhere from about 10 seconds to a minute per run depending on your machine (the
+comment at the top of the Makefile records 55–65 s). `make` runs the simulator twice, so allow up
+to about two minutes. It is not hung.
 
 **170 `unrecognized parameter` lines, in 34 blocks**, in `results/sheet.log`. A `rhead_model`
 block has four of these lines and a `rbody_model` block has six; here is a head block:
