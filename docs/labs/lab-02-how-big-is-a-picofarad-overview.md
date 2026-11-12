@@ -28,7 +28,7 @@ Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad1
 of the decks are silent while the SKY130 model cards load, anywhere from about 10 seconds to a
 minute each depending on your machine. `henry` loads three small inductor files instead and
 finishes almost immediately. The Makefile budgets about three and a half minutes for the whole
-`make` on the pinned image.
+`make` on the pinned image ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-02)).
 
 The only theory you need beyond the guide pages: two plates of area $A$ separated by a dielectric
 of thickness $t$ give $C = \varepsilon A / t$. On a chip $\varepsilon$ and $t$ are both fixed, so
@@ -496,11 +496,3 @@ Next on the [Course path](README.md#course-path): read
 [What to build instead of an inductor](guide/what-analog-builds-instead.md), then do
 [Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md), which
 puts your resistor and capacitor into the same circuit.
-
-## Expected warnings and delays
-
-**Silence.** `pf`, `mine` and `tank` each load SKY130's model cards before printing anything.
-`henry` does not. It is not hung.
-
-**`W=1`, never `W=1u`.** SKY130 geometry parameters are plain micron numbers. There is no `u`
-suffix anywhere in this package, and there should be none in yours.

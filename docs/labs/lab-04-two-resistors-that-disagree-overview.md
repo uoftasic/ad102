@@ -25,7 +25,8 @@ Package: [`labs/lab-04-two-resistors-that-disagree/`](https://github.com/uoftasi
 
 **Time:** about 2 hours. The Monte Carlo runs are silent throughout. A full `make` takes between
 about 30 seconds and two minutes, depending on your machine (the Makefile records 106 s and
-128 s on the pinned image).
+128 s on the pinned image; see
+[Warnings and delays](reference/ngspice-decks-that-run.md#lab-04)).
 
 Labs 01–03 assumed that a device is worth what its geometry says: you sized a resistor to 2200 Ω
 and the simulator returned 2200.006 Ω. That is the end of the design story, but not of the
@@ -340,36 +341,3 @@ area per factor of two.
 Next on the [Course path](README.md#course-path): read
 [From schematic to cross-section](guide/from-schematic-to-cross-section.md), then do the
 [Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md).
-
-## Expected warnings and delays
-
-**Silence.** Each of the two decks loads the SKY130 model cards (about 55 s on the pinned image)
-and then evaluates 200 operating points (about 23 s for the bigger of the two), printing nothing
-while it works. Most of the time is model loading, not Monte Carlo.
-
-**The loop counter must exist before the first `mc_source`.** `mc_source` discards the previous
-analysis's vectors, and a counter created after an analysis has run goes with them. If you get
-this wrong, you see the following, buried in the usual model warnings:
-
-```
-Warning from checkvalid: vector run is not available or has zero length.
-Error: RHS "run + 1" invalid
-```
-
-After that the loop stops at one die and every σ you compute is zero, silently, with exit status
-0. That is why `make` prints the operating-point count first: you are looking for 201, and if you
-see 2, this is the cause. The shipped decks create the counter immediately after `setseed 1`,
-before anything has been simulated:
-
-```
-setseed 1
-let run = 0          <- here
-dowhile run < 200
-  mc_source
-  ...
-```
-
-**28,280 `unrecognized parameter (...) - ignored` lines**, of which 5,656 are `(sw_et)`. Lab 01
-explains these: one set of model cards, written for several simulators. Two hundred
-re-evaluations of the netlist repeat the whole block two hundred times, so `results/mismatch.log`
-is 1.8 MB. `make` sends it to the log rather than to your terminal.
