@@ -10,7 +10,7 @@ checks every one of those numbers on your machine. The labs run its targets in s
 | `make capacitor` | [Lab 02, Part 5](https://uoftasic.com/ad102/#/labs/lab-02-how-big-is-a-picofarad-overview) |
 | `make inductor` | [Lab 02, Part 7](https://uoftasic.com/ad102/#/labs/lab-02-how-big-is-a-picofarad-overview) |
 | `make corners` | [Lab 04, Part 1](https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview) |
-| `make mismatch` | [Lab 04, Part 3](https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview) (optional) |
+| `make mismatch` | [Lab 04, Going further](https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview) (optional) |
 
 ## Run it
 
