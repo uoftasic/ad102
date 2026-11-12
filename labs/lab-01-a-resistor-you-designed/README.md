@@ -44,5 +44,6 @@ the model library by absolute path, so a bare container works.
 | `solutions/` | Reference sizing. Open it after your own numbers pass. |
 | `results/` | Everything ngspice writes. Gitignored except `.gitkeep`. |
 
-`W` and `L` on a SKY130 device are plain micron numbers: `W=1`, never `W=1u`. There is no `u`
-suffix anywhere in this package.
+`W` and `L` on a SKY130 device are plain micron numbers: `W=1`, never `W=1u`. Apart from
+`spice/u_trap.spice`, which exists to show the mistake, there is no `u` suffix anywhere in this
+package.

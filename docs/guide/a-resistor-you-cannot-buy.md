@@ -122,7 +122,8 @@ puts the device outside every bin its model was fitted over. On a MOSFET that st
 `could not find a valid modelname`. On a resistor the run does not stop: the strip that reads
 3550.443 Ω written `W=1 L=10` reads 3193.812 Ω written `W=1u L=10u`, an ordinary-looking
 resistance 10 % off, and ngspice still exits with status 0.
-[Getting started](guide/getting-started.md#the-u-suffix-trap) goes through it in detail. There
-is no `u` anywhere in any deck in this course, and there should be none in yours.
+[Getting started](guide/getting-started.md#the-u-suffix-trap) goes through it in detail. Apart
+from Lab 01's `u_trap.spice`, which exists to show the mistake, there is no `u` in any deck in
+this course, and there should be none in yours.
 
 Next: [Ohms per square](guide/ohms-per-square.md), the unit that turns a rectangle into ohms.
