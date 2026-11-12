@@ -7,9 +7,14 @@ Optimize for **clear student learning paths**, not template maintenance. Prefer 
 ## Goals
 
 - Teach IC development skills: RTL (SystemVerilog/Verilog), simulation, synthesis, FPGA bring-up, and/or open ASIC flows (e.g. Yosys, LibreLane, SKY130) as the course requires.
-- Keep each lab **self-contained**: what you'll build or measure → before you start (guide pages to read, setup) → time → numbered parts with numbered steps, each part ending in a "you should see" check → finishing.
+- Keep each lab **self-contained**: what you'll build or measure → before you start (guide pages to read, setup) → time (leave optional parts out, or give their time separately) → numbered parts with numbered steps → Finishing → Going further (optional) → a "Next on the Course path" line. Each part opens with the one question it answers and ends in a "you should see" check.
+- Every lab has at least one required part where the student produces something: edits a deck or file, writes a test, draws a cell, or computes a number and writes it down before checking it. Ask for a prediction before a run wherever the student can reasonably make one.
+- Keep observed numbers and outputs in "you should see". When a check would also explain *why*, ask it as a question at that step and put the answer directly under it in a collapsed `<details><summary>Answer</summary> … </details>` block (blank lines inside, so Markdown and math render).
+- Finishing has three things, in this order: **You're done when** (one checkable line tied to the student's own work, not the shipped `PASS`), **Questions** (each with a collapsed answer or a pointer to the step that answers it) and **Submit** (what to hand in, or "nothing"). Optional parts go after it, under Going further, marked "(optional)" in their headers; no required part may depend on one.
 - Keep guide pages (`docs/guide/`) **reading only**: concepts, figures, worked examples. Commands and activities belong in the lab writeups; a guide page points to the lab part where the student does it.
-- Keep the **Course path** table on `docs/README.md` (alternating Read and Do rows, with time estimates) and `docs/_sidebar.md` in the same order.
+- Keep the **Course path** table on `docs/README.md` (alternating Read and Do rows, with time estimates) and `docs/_sidebar.md` in the same order. The table header is `| # | | What | Time |`; Read and Do are plain text; a Do row is `[Lab 01: Title](labs/…-overview.md).` followed by one sentence on what you'll do; the row times add up to the total on the home page. Lab page titles and sidebar entries use the same "Lab 01: Title" form.
+- Lab 01, Part 1 is "Load the course": a link to IC101 Lab 03 for anyone who hasn't set up the workbench, then the desktop, `.designinit`, `mod add <course>`, the tool versions the printed outputs depend on, and only the troubleshooting rows specific to this course, with a link to IC101's Troubleshooting page for the rest.
+- Put lookup material (warning catalogues, troubleshooting tables, long tool output) on reference pages and link it from the step where it comes up. Aim for at most about 2,500 words per lab writeup, without cutting teaching content.
 - Separate **what students read** (`docs/`) from **what they run** (`labs/`, `scripts/`, `notebooks/`).
 - Never publish grades, solution keys, or PII under `docs/`. Put keys in `labs/**/solutions/` and gitignore them on student forks when policy requires.
 
@@ -37,7 +42,7 @@ Lab IDs: `lab-NN-short-name` (e.g. `lab-02-counter-sv`).
    - `src/` — HDL / Python / entrypoints
    - `data/` — small inputs (large binaries → Git LFS or external)
    - `requirements.txt` or tool notes when needed
-2. Add `docs/labs/<lab-id>-overview.md` in the lab shape above: what you'll build or measure, before you start, time, numbered parts each ending in a "you should see" check, and finishing.
+2. Add `docs/labs/<lab-id>-overview.md` in the lab shape above: what you'll build or measure, before you start, time, numbered parts each opening with a question and ending in a "you should see" check, Finishing (You're done when, Questions, Submit), Going further, and the Next line.
 3. Add a row for it to the Course path table in `docs/README.md`, and link the writeup from `docs/_sidebar.md` in the same position (and from `_navbar.md` only if it belongs in top nav).
 4. Cross-link: writeup → GitHub `labs/<lab-id>/`; package README → `docs/labs/<lab-id>-overview.md`.
 
@@ -56,7 +61,7 @@ A capstone with no package (like AD102's `docs/labs/capstone-floor-plan-overview
 
 - State **learning objectives** in student language (“You will synthesize a counter and inspect the netlist”).
 - Assume a clone of this repo and the course’s documented workbench; do not bundle Docker in every lab unless the course already does.
-- For EDA-heavy work (LibreLane / SKY130 / IIC-OSIC-TOOLS), document the **team workbench** steps in-course rather than inventing a one-off container story.
+- For EDA-heavy work (LibreLane / SKY130 / IIC-OSIC-TOOLS), use the **team workbench** that IC101 Lab 03 sets up rather than inventing a one-off container story; the course itself only loads into it (Lab 01, Part 1).
 - Keep procedures copy-pasteable (`cd`, install, simulate/synth, check artifact).
 - Define **expected results** (printout, waveform check, area/timing ballpark, golden hash) so students know they succeeded.
 - Progress difficulty across labs; reuse naming and directory conventions so later labs feel familiar.
@@ -72,7 +77,7 @@ A capstone with no package (like AD102's `docs/labs/capstone-floor-plan-overview
 ## What not to do
 
 - Do not add maintainer-only pages to the published site (contributing guides, template notes, notation stubs “for debugging”).
-- Do not put solution keys or rubrics in `docs/`.
+- Do not put solution keys or rubrics in `docs/`. A collapsed answer to a question in a writeup is fine; the reference answer to the part the student designs (a deck, a test) stays in `labs/**/solutions/`.
 - Do not replace student-facing content with template/bootstrap instructions; point humans at `CONTRIBUTING.md` / `TEMPLATE.md` only when they are bootstrapping or changing repo conventions.
 - Do not change org assumptions: GitHub org is `uoftasic`; course id matches the repo name.
 
