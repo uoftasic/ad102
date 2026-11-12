@@ -1,26 +1,28 @@
 # The SKY130 passive catalogue
 
-**Question this page answers:** *I need a resistor. I need a capacitor. Which ones exist,
-what do they cost me in area, and where did those numbers come from?*
+Which resistors and capacitors SKY130 has, what each costs in area, and where the numbers come
+from. Keep this page open while designing.
 
-This is the page you keep open while designing. Every resistance and capacitance below was
-**measured**, in `hpretl/iic-osic-tools:2026.08` with ngspice 47, by instantiating the device
-at a stated geometry and dividing — not copied from a datasheet. Every parameter is quoted
-with the file it lives in, so you can check any line of this page yourself in one `grep`.
+Every resistance and capacitance below was measured in `hpretl/iic-osic-tools:2026.08` with
+ngspice 47, by instantiating the device at a stated geometry and dividing, not copied from a
+datasheet. Every parameter is quoted with the file it lives in, so you can check any line here
+with one `grep`.
 
-## First, the rule that breaks everyone once
+## Units of W and L
 
 `W` and `L` on a SKY130 device are **plain micron numbers with no unit suffix**. `W=1` is one
-micrometre. `W=1u` is not, and it fails. Same for a capacitor's `W`/`L` and a diode's
-`area`/`perim`. The full explanation, and the exact error text, is in AD103's
-[Reading a SKY130 device model](https://uoftasic.com/ad103/#/reference/sky130-device-guide).
+micrometre. `W=1u` is not, and it fails. The same goes for a capacitor's `W`/`L` and a diode's
+`area`/`perim`. [Getting started](guide/getting-started.md#the-u-suffix-trap) shows what happens
+on a resistor, and AD103's
+[Reading a SKY130 device model](https://uoftasic.com/ad103/#/reference/sky130-device-guide) has
+the exact error text for transistors.
 
 ## Resistors
 
-### The catalogue
+### Resistor table
 
-Thirteen devices in nine rows, spanning **five orders of magnitude** of sheet resistance.
-`R measured` is one square — a strip drawn W = 1 µm, L = 1 µm — at 0.1 V:
+Thirteen devices in nine rows, spanning five orders of magnitude of sheet resistance.
+`R measured` is one square (a strip drawn W = 1 µm, L = 1 µm) at 0.1 V:
 
 | Device | What it is physically | $R_\square$ from the PDK | `R` measured, W=1 L=1 |
 |---|---|---:|---:|
@@ -59,35 +61,37 @@ Get that backwards and ngspice says `Error: unknown subckt:` or
 
 Magic's extraction technology file
 `/foss/pdks/sky130A/libs.tech/magic/sky130A.tech` carries its own copy in milliohms per
-square — `xhrpoly 319800`, `uhrpoly 2000000`, `mrp1 48200` — and it does not agree with the
+square (`xhrpoly 319800`, `uhrpoly 2000000`, `mrp1 48200`), and it does not agree with the
 ngspice file everywhere. [Ohms per square](guide/ohms-per-square.md) explains which one to
-believe when.
+use when.
 
-### Why one square of `res_high_po` is 695 Ω and not 317 Ω
+### End resistance of `res_high_po`
 
-Because a real resistor has to be contacted. The device is a strip of resistive poly with a
-**fat head** at each end holding a row of contacts, and the head is not free. Increase the
-length by 10 µm and watch what the *body* costs:
+A real resistor has to be contacted. The device is a strip of resistive poly with a wide head at
+each end holding a row of contacts, and the heads are not free. Increase the length by 10 µm and
+see what the *body* costs:
 
 | Device | R at L = 1 | R at L = 11 | slope (Ω per µm of L) |
 |---|---:|---:|---:|
 | `res_high_po`, W=1 | 695.4646 Ω | 3867.662 Ω | **317.2198** |
 | `res_xhigh_po`, W=1 | 2152.022 Ω | — | — |
 
-317.2198 Ω per micron of length, at W = 1 µm, against `rsheet = 317.3885` on the model card —
-**0.05 % apart**. The body is exactly the sheet resistance you were promised. The other
-$695.4646 - 317.2198 = 378.24\ \Omega$ is the two contact heads, and it does not shrink when
-you shorten the resistor. A one-square `res_high_po` is more head than resistor.
+That is 317.2198 Ω per micron of length at W = 1 µm, against `rsheet = 317.3885` on the model
+card: 0.05 % apart. The body is the sheet resistance the card promises. The other
+$695.4646 - 317.2198 = 378.24\ \Omega$ is end resistance: the contact head (299.8915 Ω, see
+[Ohms per square](guide/ohms-per-square.md#head-and-body-of-one-resistor)) plus a short body
+extension the model adds. It does not shrink when you shorten the resistor, so a one-square
+`res_high_po` is more ends than resistor.
 
-Design consequence: **never draw a short precision resistor.** The head is 378 Ω whatever you
-do, so at one square it is 54 % of the value, at five squares 19 %, at ten squares 11 %. Below
-about five squares a serious fraction of your resistor is contact resistance, which matches
-far worse than sheet resistance does.
+Design consequence: **never draw a short precision resistor.** The ends are 378 Ω whatever you
+do, so at one square they are 54 % of the value, at five squares 19 %, at ten squares 11 %. Below
+about five squares a large fraction of your resistor is contact resistance, which matches far
+worse than sheet resistance does.
 
 ### The fixed-width precision family
 
 `res_high_po` and `res_xhigh_po` also ship as five pre-characterised widths each. These are
-the ones a layout tool will actually give you, because the contact head geometry is fixed:
+the ones a layout tool will give you, because the contact head geometry is fixed:
 
 | Width (µm) | `res_high_po_*` Ω/µm of length | `res_xhigh_po_*` Ω/µm of length |
 |---:|---:|---:|
@@ -100,16 +104,16 @@ the ones a layout tool will actually give you, because the contact head geometry
 Each figure is `(R at L=11 − R at L=1) / 10` from a measured pair, so the contact heads are
 already subtracted out.
 
-**Multiply the `xhigh` column by its width and you get 1999.80 Ω/□ at every one of the five**
-— $0.35 \times 5713.715 = 1999.80$, $5.73 \times 349.005 = 1999.80$ — against `rsheet = 2000.0`
-in the model file. One material, one number, five widths.
+Multiply the `xhigh` column by its width and you get 1999.80 Ω/□ for all five
+($0.35 \times 5713.715 = 1999.80$, $5.73 \times 349.005 = 1999.80$), against `rsheet = 2000.0`
+in the model file: one material, one number, five widths.
 
-Do the same on the `high` column and you get 379.9, 325.8, 309.7, 300.8, 323.5 Ω/□. **These
-are not one number.** The narrow-width flavours are separately fitted devices, and a 0.35 µm
-strip behaves like a 380 Ω/□ material, not a 317 Ω/□ one. If you scale a design from one
-width to another, re-simulate; do not scale by hand.
+Do the same with the `high` column and you get 379.9, 325.8, 309.7, 300.8 and 323.5 Ω/□, which
+are not one number. The narrow-width flavours are separately fitted devices, and a 0.35 µm strip
+behaves like a 380 Ω/□ material, not a 317 Ω/□ one. If you move a design from one width to
+another, re-simulate rather than scaling by hand.
 
-### What 10 kΩ costs, measured four ways
+### 10 kΩ four ways
 
 Same target, four flavours, each length tuned until the simulator agrees:
 
@@ -120,7 +124,7 @@ Same target, four flavours, each length tuned until the simulator agrees:
 | `res_generic_nd` | 1 | 85.1 | 9998.521 Ω | **85.1 µm²** |
 | `res_generic_po` | 1 | 196.4 | 10001.30 Ω | **196.4 µm²** |
 
-**A factor of 341 in area for the same 10 kΩ.** This is the whole argument for having a
+That is a factor of 341 in area for the same 10 kΩ, and it is the argument for having a
 high-resistance implant in the process: without it, a modest bias resistor is bigger than a
 logic gate.
 
@@ -131,15 +135,14 @@ MACRO sky130_fd_sc_hd__inv_1
   SIZE 1.380 BY 2.720 ;
 ```
 
-3.7536 µm² for the smallest inverter in the standard-cell library. So the 10 kΩ
-`res_xhigh_po_0p35` is **smaller than one inverter**, and the `res_generic_po` version is
-**fifty-two of them**. Scale that to 100 kΩ in poly — 1964 µm², about 520 inverters — and the
-resistor is bigger than the circuit it biases. Picking the flavour is a design decision, not
-a detail.
+That is 3.7536 µm² for the smallest inverter in the standard-cell library. So the 10 kΩ
+`res_xhigh_po_0p35` is smaller than one inverter, and the `res_generic_po` version is fifty-two
+of them. Scale that to 100 kΩ in ordinary poly (1964 µm², about 520 inverters) and the resistor
+is bigger than the circuit it biases. Picking the flavour is a design decision, not a detail.
 
 ## Capacitors
 
-### The catalogue
+### Capacitor table
 
 All measured with a 1 V AC source at 1 kHz, $C = |I| / (2\pi f V)$ with $V = 1$ V:
 
@@ -155,24 +158,21 @@ All measured with a 1 V AC source at 1 kHz, $C = |I| / (2\pi f V)$ with $V = 1$ 
 | `cap_var_lvt` at 1.8 V | 10 × 10 µm | 817.8665 fF | 8.179 fF/µm² |
 | the **same** varactor at 0 V | 10 × 10 µm | 99.51349 fF | 0.995 fF/µm² |
 
-Four things to take from that table.
+Notes on the table:
 
-**1. `m3_1` and `m3_2` are the same capacitor on different metals.** `cap_mim_m3_1` sits
-between met3 and the `capm` plate; `cap_mim_m3_2` between met4 and `cap2m`. Identical
-capacitance to seven digits — the choice is about what you need to route underneath.
+1. `m3_1` and `m3_2` are the same capacitor on different metals. `cap_mim_m3_1` sits between
+   met3 and the `capm` plate; `cap_mim_m3_2` between met4 and `cap2m`. The capacitance is
+   identical to seven digits, so the choice is about what you need to route underneath.
+2. MIM density rises as the plate shrinks, because the perimeter term is fixed per micron of edge
+   and edge/area grows: 2.326 fF/µm² at 2 × 2, 2.030 at 22.2 × 22.2.
+3. A MOS capacitor is 3.8× denser than a MIM, but its value is not fixed: 787.6883 fF at 1.8 V
+   and 220.7182 fF at 0 V, **the same physical device, a factor of 3.57 apart.** Use it for
+   supply decoupling, where one plate is always at the rail, and never in a filter whose corner
+   frequency you care about.
+4. The varactor uses that nonlinearity on purpose: 99.5 fF to 817.9 fF, a factor of 8.22 over the
+   supply range. It is the tuning element in an oscillator.
 
-**2. MIM density rises as the plate shrinks**, because the perimeter term is fixed per micron
-of edge and edge/area grows. 2.326 fF/µm² at 2 × 2, 2.030 at 22.2 × 22.2.
-
-**3. A MOS capacitor is 3.8× denser than a MIM, and it is not a capacitor.** 787.6883 fF at
-1.8 V and 220.7182 fF at 0 V — **the same physical device, a factor of 3.57 apart.** Use it
-for supply decoupling, where one plate is always at the rail; never in a filter whose corner
-frequency you care about.
-
-**4. The varactor is that nonlinearity on purpose.** 99.5 fF to 817.9 fF, a **factor of 8.22**
-over the supply range. That is the tuning element in an oscillator.
-
-### The arithmetic behind the MIM, closing exactly
+### MIM capacitance from the model parameters
 
 The model is three lines of file, at
 `/foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__cap_mim_m3_1.model.spice`:
@@ -200,23 +200,23 @@ So for a plate you drew 10 µm square, the metal etches back 0.025 µm and the r
 
 $$2.00 \times 9.975^2 \;+\; 0.19 \times 2 \times (9.975 + 9.975) = 199.00125 + 7.581 = \boxed{206.582\ \text{fF}}$$
 
-ngspice measured `2.065822e-13`. **Six significant figures, from three constants and a
-subtraction.** When a PDK number and your arithmetic agree like that, you have understood
-the device.
+ngspice measured `2.065822e-13`: six significant figures from three constants and a
+subtraction. When a PDK number and your arithmetic agree like that, you have understood the
+device.
 
 ### What 1 pF costs
 
 | Device | Area for 1 pF | Caveat |
 |---|---:|---|
 | MOS cap at 1.8 V | 127 µm² | only if one plate stays at a rail |
-| MIM | **493 µm²** — 22.2 × 22.2 µm, measured at 1000.314 fF | the honest answer |
+| MIM | **493 µm²**: 22.2 × 22.2 µm, measured at 1000.314 fF | linear; the usual choice for a signal path |
 | VPP fringe | 913 µm² | but it lives *under* your MIM, so it can be free |
 
-493 µm² is about 130 inverters. This is the number that ends every "just put a 1 nF cap on
-it" conversation: a nanofarad is half a square millimetre, which is most of a small chip.
+493 µm² is about 130 inverters. This is the number to bring to any "just put a 1 nF cap on it"
+conversation: a nanofarad is half a square millimetre, which is most of a small chip.
 [What a picofarad costs](guide/what-a-picofarad-costs.md) is the long version.
 
-### The capacitors you did not draw
+### Parasitic capacitance to substrate
 
 Every layer has capacitance to the substrate whether you asked for one or not. From Magic's
 `defaultareacap` lines in `/foss/pdks/sky130A/libs.tech/magic/sky130A.tech`, in aF/µm²:
@@ -232,19 +232,19 @@ Every layer has capacitance to the substrate whether you asked for one or not. F
 | met5 | 6.32 | 0.006 |
 | n-well / deep n-well | 120 | 0.120 |
 
-A 100 µm × 1 µm met1 wire carries 2.6 fF to ground for free. That is more than a quarter of
-the 10 fF you may have deliberately drawn elsewhere.
-[The capacitor you did not draw](guide/the-capacitor-you-did-not-draw.md) is the page for
-this.
+A 100 µm × 1 µm met1 wire carries 2.6 fF to ground whether you want it or not, more than a
+quarter of a 10 fF capacitor you might deliberately draw elsewhere.
+[Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) covers this, including the
+sidewall terms.
 
-## The one you cannot have
+## Inductors
 
 There is no good inductor. SKY130 ships three spiral models
 (`sky130_fd_pr__ind_03_90`, `ind_05_125`, `ind_05_220`). `ind_05_220` is 9.92 nH, occupies
 tens of thousands of µm², and has **Q = 0.0000150516 at 1 kHz**; the best Q any of the three
 ever reaches is **21.1, at 6.38 GHz**, and above 3.52777 GHz `ind_05_220`'s reactance changes
-sign entirely. [The inductor problem](guide/the-inductor-problem.md) and
-[What analog builds instead](guide/what-analog-builds-instead.md) cover why, and what
+sign. [Inductors on a chip](guide/the-inductor-problem.md) and
+[What to build instead of an inductor](guide/what-analog-builds-instead.md) cover why, and what
 replaces it.
 
 ## Corners
@@ -252,8 +252,8 @@ replaces it.
 `tt` is the transistor corner. Passives have their own, selected by the second word on the
 `.lib` line: `ll` (low resistance, low capacitance) and `hh` (high, high), plus `hl` and `lh`.
 
-Measured, not read off a parameter file — the same four devices simulated three times with
-only the corner name changed:
+Measured, not read off a parameter file: the same four devices simulated three times with only
+the corner name changed.
 
 | Device | `ll` | `tt` | `hh` | spread about `tt` |
 |---|---:|---:|---:|---:|
@@ -262,7 +262,7 @@ only the corner name changed:
 | `res_generic_po` W=1 L=10 | 451.1426 Ω | 509.2314 Ω | 583.1667 Ω | −11.4 % / +14.5 % |
 | `cap_mim_m3_1` 10 × 10 | 179.7322 fF | 206.5822 fF | 233.8667 fF | −13.0 % / +13.2 % |
 
-The parameters behind those runs, if you want to see where the numbers come from —
+The parameters behind those runs are in
 `/foss/pdks/sky130A/libs.tech/ngspice/r+c/res_low__cap_low.spice`,
 `res_typical__cap_typical.spice`, `res_high__cap_high.spice` and their `__lin` siblings:
 
@@ -282,13 +282,13 @@ Note that the device does not always move by exactly the parameter's percentage:
 changes the etch bias that sets the strip's effective width. **Simulate the corner; do not
 scale the typical answer by hand.**
 
-**Every absolute value on this page moves by roughly ±10 % between corners.** A *ratio* of
-two of the same device does not, and that is the entire reason analog design is built on
-ratios — [Matching beats accuracy](guide/matching-beats-accuracy.md).
+**Every absolute value on this page moves by roughly ±10 % between corners.** A *ratio* of two
+of the same device does not, which is why analog design is built on ratios; see
+[Matching and Pelgrom's law](guide/matching-beats-accuracy.md).
 
-## Re-run everything on this page
+## Re-running these numbers
 
-Two commands, because the numbers come from two decks:
+The numbers come from two sets of decks in `labs/passives-decks`:
 
 ```bash
 cd labs/passives-decks

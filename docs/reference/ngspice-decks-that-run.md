@@ -1,19 +1,19 @@
-# ngspice decks that actually run
+# ngspice deck recipes
 
-**Question this page answers:** *I want to measure a passive device myself. What is the
-smallest deck that does it, and what will ngspice say when I get it wrong?*
+The smallest deck that measures a passive device, for each kind of measurement in AD102, and what
+ngspice says when you get it wrong.
 
-AD102 asks five questions of silicon — *how many ohms, how many farads, how many henries, how
-long is the time constant, and how much does all of that move?* — and each one has a deck
-shape you can memorise. This page is those five shapes, with the exact output each produced in
-`hpretl/iic-osic-tools:2026.08`, ngspice **46**, PDK **sky130A**.
+AD102 asks five questions of silicon: how many ohms, how many farads, how many henries, how long
+is the time constant, and how much does all of that move? Each has a deck shape you can reuse.
+This page shows those five shapes, with the exact output each produced in
+`hpretl/iic-osic-tools:2026.08`, ngspice 47, PDK `sky130A`.
 
 Every block below is an **excerpt** from a deck that ships in a lab package, and the path is
-named beside it. Nothing here is a file for you to create; run the shipped one and edit that.
+named beside it. Nothing here is a file for you to create; run the shipped deck and edit that.
 
-## Every deck has the same five parts
+## The five parts of a deck
 
-In this order, and ngspice does not care about the order except that `.end` is last:
+Write them in this order. ngspice only cares that `.end` is last:
 
 | Part | Looks like | Notes |
 |---|---|---|
@@ -23,19 +23,19 @@ In this order, and ngspice does not care about the order except that `.end` is l
 | 4. what to do | `.control` … `.endc`, or `.op` / `.ac` / `.tran` cards | |
 | 5. `.end` | `.end` | |
 
-Run it in batch — run, print, exit:
+Run it in batch mode (run, print, exit):
 
 ```bash
 ngspice -b spice/sheet.spice
 ```
 
-Without `-b` you land in an interactive prompt, the terminal looks hung, and you are one
-`quit` away from your results.
+Without `-b` you land in an interactive prompt and the terminal looks hung; type `quit` to get
+your results.
 
-## 1. How many ohms? — `.op` and Ohm's law
+## 1. Resistance: `.op` and Ohm's law
 
-There is no `measure the resistance` command. You push a current you chose through the device
-and divide the voltage you got by it.
+There is no "measure the resistance" command. You push a current you chose through the device
+and divide the resulting voltage by it.
 
 From `labs/lab-01-a-resistor-you-designed/spice/sheet.spice`:
 
@@ -56,28 +56,28 @@ print r_L1
 r_l1 = 6.954646e+02
 ```
 
-**695.4646 Ω** for one drawn square of a device whose model card says 317.3885 Ω/□ — the whole
-subject of [Ohms per square](guide/ohms-per-square.md).
+That is 695.4646 Ω for one drawn square of a device whose model card says 317.3885 Ω/□, which
+is the subject of [Ohms per square](guide/ohms-per-square.md).
 
-Three things about that idiom:
+Three things about that pattern:
 
-- **1 µA is a deliberate choice.** Small enough that the resistor's own self-heating and
-  voltage coefficient do not move the answer, large enough to be far from numerical noise.
-  Push 1 mA through a 100 kΩ and you are asking a different question.
-- **`let` before `print`.** `v(l1)/1u` is an *expression*; `r_L1` is a vector. `print` will
-  take either, but `meas` will not, and the habit costs nothing.
-- **Vector names come back lower-case.** You wrote `r_L1`, ngspice prints `r_l1`. That is not
-  a typo in your deck and it matters when you `grep` the log.
+- **1 µA is deliberate.** It is small enough that the resistor's own self-heating and voltage
+  coefficient do not move the answer, and large enough to be far from numerical noise. Push
+  1 mA through 100 kΩ and you are asking a different question.
+- **`let` before `print`.** `v(l1)/1u` is an *expression*; `r_L1` is a vector. `print` takes
+  either, but `meas` does not, and the habit costs nothing.
+- **Vector names come back lower-case.** You wrote `r_L1`, and ngspice prints `r_l1`. That
+  matters when you `grep` the log.
 
-If you drive with a voltage source instead, the current comes out of the source and it is
-negative, so it is `1m/(-i(va))` — as in
+If you drive with a voltage source instead, the current comes out of the source and is
+negative, so the resistance is `1m/(-i(va))`, as in
 `labs/passives-decks/spice/corners.spice.in`:
 
 ```spice
 let R_A = 1m/(-i(va))
 ```
 
-## 2. How many farads? — one `.ac` point
+## 2. Capacitance: one `.ac` point
 
 A capacitor has no DC behaviour to measure, so ask it at one frequency and undo $Z = 1/(j\omega
 C)$.
@@ -102,20 +102,19 @@ print c_s10
 c_s10 = 2.065822e-13
 ```
 
-**206.5822 fF** for a 10 × 10 µm MIM plate.
+That is 206.5822 fF for a 10 × 10 µm MIM plate.
 
-- **`ac lin 1 1e6 1e6`** is "one point, at 1 MHz". You do not need a sweep to read one value.
-- **`ac 1` on the source is not optional.** `dc 0` alone gives you a silent zero everywhere and
-  a capacitance of exactly nothing.
-- **1 MHz is arbitrary and it cancels.** Any frequency works, as long as the same number
-  appears in `k`. Use a decade either side as a sanity check: if the answer moves, your device
-  is not a pure capacitor, which is the entire point of
-  [The capacitor you did not draw](guide/the-capacitor-you-did-not-draw.md).
+- **`ac lin 1 1e6 1e6`** means one point, at 1 MHz. You don't need a sweep to read one value.
+- **`ac 1` on the source is required.** With `dc 0` alone you get zero everywhere, with no
+  warning.
+- **1 MHz is arbitrary and cancels out.** Any frequency works, as long as the same number
+  appears in `k`. Try a decade either side as a sanity check: if the answer moves, your device
+  is not a pure capacitor (see [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md)).
 
-## 3. How many henries? — `.ac`, and complex arithmetic
+## 3. Inductance: `.ac` and complex arithmetic
 
 An on-chip inductor is a resistor with some inductance attached, so you cannot use the trick
-above unmodified — you have to separate the imaginary part from the real one.
+above unchanged; you have to separate the imaginary part from the real one.
 
 From `labs/lab-02-how-big-is-a-picofarad/spice/henry.spice`:
 
@@ -143,13 +142,13 @@ q_090_2g4 = 1.086413e+01
 r_090_2g4 = 2.157013e+00
 ```
 
-**1.5208 nH, $Q$ = 10.86, and 2.157 Ω of series resistance you did not ask for.**
+That is 1.5208 nH, $Q$ = 10.86, and 2.157 Ω of series resistance you did not ask for.
 
-The outer `real(...)` is not redundant. `imag(v(c))` is still a complex vector as far as
-ngspice's type system is concerned, with a zero imaginary part; wrap it in `real()` and you get
-a number you can print without a warning.
+The outer `real(...)` is needed. `imag(v(c))` is still a complex vector as far as ngspice's type
+system is concerned, with a zero imaginary part; wrap it in `real()` and you get a number you can
+print without a warning.
 
-## 4. How long is the time constant? — `.tran` and `meas`
+## 4. Time constant: `.tran` and `meas`
 
 From `labs/lab-03-a-time-constant-in-silicon/spice/rc.spice`:
 
@@ -166,32 +165,31 @@ meas tran t_ideal  WHEN v(bo)=1.137816 RISE=1
 .endc
 ```
 
-1.137816 V is $0.632120 \times 1.8$, so the crossing time *is* $\tau$ — by definition, not by
-approximation.
+1.137816 V is $0.632120 \times 1.8$, so the crossing time is $\tau$ by definition.
 
 **The `.tran` is a card, not a control command, and `run` executes it.** That looks like extra
-ceremony until you want the same analysis at another temperature: `set temp` only takes effect
-on the next `run`, so a `tran` typed inside `.control` runs immediately and ignores any
-temperature you set afterwards. `rc.spice` sweeps −40 °C and +125 °C off this one card.
+work until you want the same analysis at another temperature: `set temp` only takes effect on the
+next `run`, so a `tran` typed inside `.control` runs immediately and ignores any temperature you
+set afterwards. `rc.spice` runs −40 °C and +125 °C from this one card.
 
-**Two traps live in that one line, and both cost the same 1.005 ns.**
+That `meas` line has two traps, which together cost 1.005 ns:
 
 - `meas ... when` returns an **absolute time**, not an interval. The pulse starts at
   $t = 1$ ns, so subtract 1 ns.
 - The pulse has a **10 ps rise time**, and a first-order system behaves as though the step
   arrived at the ramp's midpoint. Subtract another 5 ps.
 
-Total offset **1.005 ns**, and `src/check_rc.py` subtracts exactly that. Forget it and a 10 ns
-time constant reads 11.005 ns — 10 % high, and *constant*, which is the clue: an error that
-does not scale with the thing you are measuring is an artefact of the measurement, not a
-property of the device.
+The total offset is 1.005 ns, and `src/check_rc.py` subtracts exactly that. Forget it and a
+10 ns time constant reads 11.005 ns: 10 % high, and *constant*. That is the clue: an error that
+does not scale with the thing you are measuring is an artefact of the measurement, not a property
+of the device.
 
-## 5. How much does it move? — corners and Monte Carlo
+## 5. Variation: corners and Monte Carlo
 
-These are two different questions and they take two different mechanisms. Confusing them is the
-most common thing to get wrong in this half of the course.
+These are two different questions, with two different mechanisms. Confusing them is the most
+common mistake in this half of the course.
 
-### Corners — the whole wafer lot is high or low
+### Corners: the whole wafer lot is high or low
 
 One extra word on the `.lib` line picks a section of the model file:
 
@@ -216,14 +214,14 @@ One extra word on the `.lib` line picks a section of the model file:
 | **$R_B/R_A$** | **3.680396** | **3.680396** | **3.680396** |
 | **divider tap** | **0.3845828 V** | **0.3845828 V** | **0.3845828 V** |
 
-Read the last two rows against the first four. Absolute values move by ±12.5 %, the corner
-frequency by ±31 %, and **the ratio does not move in the seventh decimal place.** That is
-[Matching beats accuracy](guide/matching-beats-accuracy.md) in one table, and it is why analog
+Compare the last two rows with the first four. Absolute values move by ±12.5 % and the corner
+frequency by ±31 %, while **the ratio does not move in the seventh decimal place.** That is
+[Matching and Pelgrom's law](guide/matching-beats-accuracy.md) in one table, and it is why analog
 designers build ratios.
 
-### Mismatch — two devices on *the same* die differ
+### Mismatch: two devices on the same die differ
 
-Corners move every device together. Mismatch moves them apart, and it takes a different switch.
+Corners move every device together. Mismatch moves them apart, and needs a different switch.
 
 From `labs/lab-04-two-resistors-that-disagree/spice/mismatch.spice`:
 
@@ -244,77 +242,65 @@ op
 ```
 
 - **`mc_mm_switch=1`** turns on the per-instance `AGAUSS` term in SkyWater's model cards.
-  Without it every instance of the same device is byte-identical and mismatch is invisible.
+  Without it, every instance of the same device is identical and mismatch is invisible.
 - **`mc_source` re-evaluates the netlist**, drawing a fresh sample for every instance. Loop it
   200 times and you have 200 imaginary dies.
 - **`setseed 1`** makes the sequence reproducible, which is why your Lab 04 numbers match the
-  writeup to the digit rather than being "about right".
+  writeup to the digit.
 
-## Why your labs are slow, and when you are allowed to fix it
+## Why the decks are slow
 
-Every AD102 deck spends about a minute doing nothing visible before it prints. It is reading
-model cards, and there are two files it could read:
+Every AD102 deck spends a while doing nothing visible before it prints. It is reading model
+cards: `.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt` walks a tree of
+`.include`s covering every device in SKY130, about 12 MB, nearly all of it MOSFET models a
+passive deck never uses.
 
 | `.lib` line | wall clock, `spice/sheet.spice` |
 |---|---:|
-| `sky130.lib.spice tt` | **55–66 s** |
-| `sky130.lib.spice tt` | **2.1 s** |
+| `sky130.lib.spice tt` | 55–66 s on the pinned image; about 10 s on the machine this page was last checked on |
 
-Those are wall-clock seconds on one machine, so they move with load — unlike the resistances,
-which do not. The ratio is the durable part: **about thirty times faster**, with **identical
-output to the last digit**. The `.red` file is the same tree of `.include`s already flattened
-into one file, so ngspice opens one 12 MB file instead of walking hundreds.
+Those are wall-clock seconds, so they move with machine load, unlike the resistances, which do
+not.
 
-**AD102's decks deliberately use the slow one anyway, and you should understand why before you
-change it.**
+Earlier workbench images also shipped pre-flattened files such as `sky130.lib.spice.tt.red`,
+which loaded about thirty times faster. The 2026.08 image does not ship them, so every deck in
+this course, including `spice/bode.spice` in Lab 03, now loads `sky130.lib.spice`. If a deck or
+a tutorial you find elsewhere names a `.red` file, ngspice on this image stops with
+`Could not find library file`. If you are editing a lab's shipped deck, leave the `.lib` line
+alone: the reference numbers were taken with it.
 
-- **The `.red` files only exist for the transistor corners** — `tt`, `ff`, `ss`, `fs`, `sf`.
-  There is no `sky130.lib.spice.ll.red`, so the corner decks in `labs/passives-decks/` cannot
-  use them at all.
-- **The Monte Carlo numbers come out different.** Run `mismatch.spice`'s statistics against
-  `.tt.red` and the samples do not match the ones in the writeup. Lab 04's whole point is that
-  your numbers reproduce, so it stays on the file the numbers were taken from.
+## `X` lines and `R` lines
 
-So: if you are writing your own deck, with no corners and no `mc_source` in it, use
-`sky130.lib.spice tt` and get your afternoon back. If you are editing a lab's shipped
-deck, leave the `.lib` line alone. [AD103](https://uoftasic.com/ad103/) uses the fast file
-throughout, which is why its labs finish in seconds.
-
-## `X` lines and `R` lines are not interchangeable
-
-Most SKY130 passives are **subcircuits**, so they start with `X` and take capital `W=` / `L=`:
+Most SKY130 passives are **subcircuits**, so their lines start with `X` and take capital
+`W=` / `L=`:
 
 ```spice
 XR1 a 0 0 sky130_fd_pr__res_high_po W=1 L=10 mult=1
 ```
 
-A few — `res_generic_nw`, `res_generic_l1`, and all the metal resistors — are bare `.model`
-cards, so they start with `R` and take lower-case `w=` / `l=`:
+A few (`res_generic_nw`, `res_generic_l1`, and all the metal resistors) are bare `.model`
+cards, so their lines start with `R` and take lower-case `w=` / `l=`:
 
 ```spice
 r1 b 0 sky130_fd_pr__res_generic_m1 w=1 l=1
 ```
 
-Get it backwards and ngspice tells you, in two different ways depending on which way you got it
-backwards. Both are in the table below. The full list of which is which is in
-[the catalogue](reference/sky130-passive-catalogue.md).
+Get it backwards and ngspice tells you, with a different message for each direction; both are
+in the table below. The catalogue lists [which device takes which](reference/sky130-passive-catalogue.md).
 
-## The one that costs an afternoon: `W=1`, never `W=1u`
+## Units of W and L
 
-In a SKY130 deck, `W`, `L`, `w` and `l` carry **no unit suffix**. `W=1` *means* one micron.
-Every other number on the line takes SI suffixes as usual — `1k`, `0.7p`, `3n` — which is
-exactly why this trap works.
+In a SKY130 deck, `W`, `L`, `w` and `l` carry **no unit suffix**. `W=1` means one micron. Every
+other number on the line takes SI suffixes as usual (`1k`, `0.7p`, `3n`), which is why this
+mistake is so easy to make.
 
-**On a resistor it does not announce itself.** [Getting
-started](guide/getting-started.md#5-the-trap-that-will-cost-you-an-afternoon-u) has the full
-autopsy: the same device gives **3550.443 Ω** written `W=1 L=10` and **3193.812 Ω** written
-`W=1u L=10u` — a perfectly ordinary-looking answer 10 % away from the right one, with
-`ngspice` exiting `0`.
+On a resistor it gives no error. [Getting started](guide/getting-started.md#the-u-suffix-trap)
+goes through it: the same device gives 3550.443 Ω written `W=1 L=10` and 3193.812 Ω written
+`W=1u L=10u`, an ordinary-looking answer 10 % away from the right one, with ngspice exiting `0`.
 
-**Reflex check:** if a resistance is close-but-not-right, look for a stray `u` before you look
-anywhere else.
+If a resistance is close but not right, look for a stray `u` before you look anywhere else.
 
-## Error messages, with the exact text
+## Error messages
 
 | ngspice says | You did |
 |---|---|
@@ -325,10 +311,10 @@ anywhere else.
 | `Too few parameters for subcircuit type "sky130_fd_pr__cap_var_lvt" (instance: xxcv)` | gave the wrong number of *nodes*. The varactor has three terminals, not two. |
 | `Error: no such vector as -i(vds).` | put an expression where `meas` wanted a vector. `let id = -i(Vds)` first. |
 | `Error: incomplete or empty netlist` / `no simulations run!` | nothing on its own. It is the second message; the real error is a few lines above it. |
-| `Warning: command 'plot' is not available during batch simulation, ignored!` | asked a batch run for a picture. Harmless — the `meas` lines still ran. Comes up when you netlist a schematic that has `plot` in its control block. |
-| ten × `unrecognized parameter (sw_et) - ignored` | nothing. Every deck with a poly resistor in it prints this. See [Getting started](guide/getting-started.md). |
+| `Warning: command 'plot' is not available during batch simulation, ignored!` | asked a batch run for a picture. Harmless: the `meas` lines still ran. Comes up when you netlist a schematic that has `plot` in its control block. |
+| ten × `unrecognized parameter (sw_et) - ignored` | nothing. Every deck with a poly resistor in it prints this. See [Getting started](guide/getting-started.md#expected-warnings). |
 
-## Exit codes lie, so read the log
+## Exit codes
 
 | Deck | exit |
 |---|---:|
@@ -337,12 +323,12 @@ anywhere else.
 | `W=1u` on a **resistor** — silently 10 % wrong | `0` |
 | a deck whose `meas` failed | `0` |
 
-`$?` catches a deck that would not build, and catches nothing else. Every AD102 `Makefile`
-therefore reads the log and prints its own `PASS` or `FAIL`, and so should any script of yours.
+`$?` catches a deck that would not build, and nothing else. So every AD102 `Makefile` reads the
+log and prints its own `PASS` or `FAIL`, and any script of yours should too.
 
 ---
 
-Related: [The SKY130 passive catalogue](reference/sky130-passive-catalogue.md) — which device
-exists, which line type it takes, and what it measures at.
+Related: [The SKY130 passive catalogue](reference/sky130-passive-catalogue.md): which devices
+exist, which line type each takes, and what each measures.
 [AD103's ngspice survival card](https://uoftasic.com/ad103/#/reference/ngspice-errors) covers
 the same tool from the transistor side.
