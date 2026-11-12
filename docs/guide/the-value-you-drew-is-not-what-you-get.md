@@ -148,7 +148,7 @@ and even two resistors on the same die disagree. `labs/passives-decks/spice/mism
 
 A and B are drawn identically, 1 µm × 1 µm, in the same simulation on the same wafer, and each
 carries 2.8 % of its own random variation on top of whatever the corner did.
-[Lab 04 — Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md)
+[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md)
 is about that number.
 
 ## A rule for specifications

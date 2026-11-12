@@ -1,4 +1,4 @@
-# Lab 02 — How big is a picofarad?
+# Lab 02: How big is a picofarad?
 
 You'll measure capacitance from an AC current, separate a plate capacitor's area term from its
 edge term, and price one picofarad in each of the capacitor types SKY130 offers. Then you'll
@@ -494,7 +494,7 @@ actually contains.
 
 Next on the [Course path](README.md#course-path): read
 [What to build instead of an inductor](guide/what-analog-builds-instead.md), then do
-[Lab 03 — A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md), which
+[Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md), which
 puts your resistor and capacitor into the same circuit.
 
 ## Expected warnings and delays

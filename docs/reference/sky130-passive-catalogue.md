@@ -303,6 +303,6 @@ minute.
 
 No environment setup: every deck names the model library by absolute path, so a bare
 container works. Related labs:
-[Lab 01 — A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md),
-[Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md),
-[Lab 04 — Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
+[Lab 01: A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md),
+[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md),
+[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).

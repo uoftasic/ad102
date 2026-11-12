@@ -1,4 +1,4 @@
-# Lab 04 — Two resistors that disagree
+# Lab 04: Two resistors that disagree
 
 You'll see the same resistor move at every process corner while a ratio of two resistors stays
 fixed. Then you'll run a reproducible Monte Carlo mismatch simulation, check Pelgrom's law on
@@ -339,7 +339,7 @@ area per factor of two.
 
 Next on the [Course path](README.md#course-path): read
 [From schematic to cross-section](guide/from-schematic-to-cross-section.md), then do the
-[Capstone — Defend a floor plan](labs/capstone-floor-plan-overview.md).
+[Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md).
 
 ## Expected warnings and delays
 

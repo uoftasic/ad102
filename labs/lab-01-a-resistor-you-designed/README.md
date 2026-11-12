@@ -1,4 +1,4 @@
-# Lab 01 — A resistor you designed
+# Lab 01: A resistor you designed
 
 Writeup: [`docs/labs/lab-01-a-resistor-you-designed-overview.md`](../../docs/labs/lab-01-a-resistor-you-designed-overview.md),
 published at <https://uoftasic.com/ad102/#/labs/lab-01-a-resistor-you-designed-overview>. The

@@ -1,4 +1,4 @@
-# Capstone — Defend a floor plan
+# Capstone: Defend a floor plan
 
 You'll read the SKY130 layer stack out of the PDK, look at a resistor, a capacitor and a wire in
 cross-section, and then size a 1 MHz on-chip low-pass filter and defend its area. There is no lab

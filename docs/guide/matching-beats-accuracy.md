@@ -211,7 +211,7 @@ These all use the same idea. Silicon is very good at making two things the same 
 making one thing a particular value, so analog circuits ask it for copies rather than numbers.
 
 Next on the [Course path](README.md#course-path):
-[Lab 04 — Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md). It
+[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md). It
 runs its own Monte Carlo, checks Pelgrom's law across four device sizes, and ends with a divider
 specification that a naive two-resistor layout cannot meet. After that comes
 [From schematic to cross-section](guide/from-schematic-to-cross-section.md), which turns the chip

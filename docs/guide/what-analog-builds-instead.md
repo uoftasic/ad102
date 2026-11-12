@@ -120,5 +120,5 @@ This principle follows directly from a measurement you'll see on the next two pa
 absolute values are poor, and on-chip ratios are essentially exact.
 
 Next on the [Course path](README.md#course-path):
-[Lab 03 — A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md).
+[Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md).
 After that, read [Process corners](guide/the-value-you-drew-is-not-what-you-get.md).
