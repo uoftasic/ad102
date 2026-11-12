@@ -20,11 +20,11 @@ Package: [`labs/lab-03-a-time-constant-in-silicon/`](https://github.com/uoftasic
   cd /foss/designs/modules/ad102/labs/lab-03-a-time-constant-in-silicon
   ```
 
-  The decks need no environment setup. Only the optional XSchem window in Part 8 needs the noVNC
-  desktop and `$PDK` set to `sky130A` (Lab 01, Part 1).
+  The decks need no environment setup. Only the XSchem window in the optional Part 8 needs the
+  noVNC desktop and `$PDK` set to `sky130A` (Lab 01, Part 1).
 
-**Time:** about 2 hours. `make` runs two ngspice decks, each silent while the SKY130 model cards
-load (about a minute each on the pinned image; see
+Time: about 2 hours, not counting the optional part at the end. `make` runs two ngspice decks,
+each silent while the SKY130 model cards load (about a minute each on the pinned image; see
 [Warnings and delays](reference/ngspice-decks-that-run.md#lab-03)).
 
 A resistor charging a capacitor from a step follows
@@ -36,6 +36,8 @@ is: step the input, find the moment the output crosses 63.2 % of its final value
 is $\tau$ by definition. Every `meas` in this lab is one line doing exactly that.
 
 ## Part 1: Measure two time constants you can predict
+
+Does a `meas` on a simple RC return the $\tau$ you predict?
 
 Part A of `spice/rc.spice` is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck,
 unchanged: a 1 kΩ/2 kΩ divider with 0.7 pF on the tap, driven by a 1.8 V pulse. It is the version
@@ -73,16 +75,21 @@ of this circuit a UofT student has most likely already run. Part B is an ideal 1
 10.0000. Both are five picoseconds late: the same 5 ps on two circuits whose time constants
 differ by a factor of twenty-one.
 
-An error that does not scale with the thing being measured is not a property of that thing. Look
-at the source:
+An error that does not scale with the thing being measured is not a property of that thing. The
+pulse source in the deck is
 
 ```
 Va ai 0 PULSE(0 1.8 1n 10p 10p 200n 400n)
 ```
 
-The rise time is 10 ps, so the step is really a ramp, and a first-order system responds as
-though the step arrived at the ramp's midpoint. Half of 10 ps is 5 ps. `check_rc.py` subtracts
-1.005 ns, and then both circuits read exactly right:
+Where do the 5 ps come from?
+
+<details>
+<summary>Answer</summary>
+
+The rise time is 10 ps, so the step is really a ramp, and a first-order system responds as though
+the step arrived at the ramp's midpoint. Half of 10 ps is 5 ps. `check_rc.py` subtracts 1.005 ns,
+and then both circuits read exactly right:
 
 ```
   A  ECE334 deck: 1k/2k divider + 0.7 pF, ideal         466.6700 ps    466.6700 ps
@@ -92,7 +99,11 @@ though the step arrived at the ramp's midpoint. Half of 10 ps is 5 ps. `check_rc
 Telling a **measurement artefact** from a **device effect** is most of what analog verification
 is. The clue here was that the error did not scale.
 
+</details>
+
 ## Part 2: Swap in your own resistor and capacitor
+
+Does the RC still give 10 ns when the parts are the ones you designed?
 
 Parts C, D and E replace the ideal 10 kΩ with your Lab 01 resistor ($L = 30.3315$ µm), then the
 ideal 1 pF with your Lab 02 capacitor ($s = 22.1965$ µm), then both.
@@ -122,23 +133,33 @@ cpar_1m = 9.527787e-14
 
 The capacitor makes no difference: swapping a real MIM plate for an ideal 1 pF changes nothing to
 five figures. The resistor adds 36.1 ps, and it adds the same 36.1 ps whether the capacitor next
-to it is real or ideal.
+to it is real or ideal. The checker fits both strips in block H and gets 0.1994 fF per
+micrometre of 1 µm-wide poly, plus 1.187 fF of ends; you'll use that number in Part 5.
 
-Block H says where the 36 ps comes from: a 30 µm strip of poly is a 7.2 fF capacitor, whether you
-wanted one or not. For a distributed RC line, half of that adds to the time constant:
-$10\,\text{k}\Omega \times 7.234\,\text{fF}/2 = 36.2$ ps, against the 36.1 ps you measured. The
-checker fits both strips and gets 0.1994 fF per micrometre of 1 µm-wide poly, plus 1.187 fF of
-ends. You'll use that number in Part 5.
+How does block H account for the 36 ps?
 
-So your resistor is also a capacitor. At 10 kΩ it costs you 0.36 %; Part 5 finds the size where
-you can no longer ignore it.
+<details>
+<summary>Answer</summary>
+
+A 30 µm strip of poly is a 7.2 fF capacitor, whether you wanted one or not. For a distributed RC
+line, half of that adds to the time constant:
+$10\,\text{k}\Omega \times 7.234\,\text{fF}/2 = 36.2$ ps, against the 36.1 ps you measured. So
+your resistor is also a capacitor. At 10 kΩ it costs you 0.36 %; Part 5 finds the size where you
+can no longer ignore it.
+
+</details>
 
 ## Part 3: Sizing without Labs 01 and 02
+
+What would this circuit have done if you had sized it from the model cards alone?
 
 Part F sizes the identical circuit with the two naive rules: length straight from the sheet
 resistance, and area straight from the capacitance density.
 
-1. Find line F and the two summary lines below the table.
+1. Lab 01's end resistance was worth 3.7 % on a 10 kΩ resistor, and Lab 02's fringe was worth
+   1.5 % on a picofarad. Predict the timing error of the naive circuit.
+
+2. Find line F and the two summary lines below the table.
 
 **You should see:**
 
@@ -149,12 +170,14 @@ resistance, and area straight from the capacitance density.
   designing without them        : +5.65 %
 ```
 
-Lab 01's end resistance was worth 3.7 % and Lab 02's fringe was worth 1.5 %, and in one circuit
-they add up to 5.65 % of timing error. Neither shows up as a warning or in DRC, and neither
-averages out across a wafer: every chip gets the same 5.65 %. That is the difference between a
-**tolerance**, which you budget for, and a **mistake**, which you don't know about.
+The two errors add up to 5.65 % of timing error in one circuit. Neither shows up as a warning or
+in DRC, and neither averages out across a wafer: every chip gets the same 5.65 %. That is the
+difference between a **tolerance**, which you budget for, and a **mistake**, which you don't know
+about.
 
 ## Part 4: Temperature
+
+How much does the same silicon drift between −40 °C and +125 °C?
 
 The deck runs part E again at −40 °C and +125 °C. Nothing about the layout changes.
 
@@ -173,11 +196,21 @@ The deck runs part E again at −40 °C and +125 °C. Nothing about the layout c
 ```
 
 You spent this lab chasing a 5.65 % sizing error, and temperature alone is worth 8.66 % over an
-industrial range. The MIM capacitor contributes almost none of it (its model card has
-`tc1 = 0`), so nearly all of the drift comes from the resistor. An on-chip RC is a fine way to
-make a filter corner that is allowed to wander, and a bad way to make a clock.
+industrial range. The MIM capacitor's model card has `tc1 = 0`. What does that tell you about
+where the drift comes from, and about using an on-chip RC as a clock?
+
+<details>
+<summary>Answer</summary>
+
+The MIM capacitor contributes almost none of the drift, so nearly all of it comes from the
+resistor. An on-chip RC is a fine way to make a filter corner that is allowed to wander, and a bad
+way to make a clock.
+
+</details>
 
 ## Part 5: One microsecond
+
+What happens to a real RC when the resistor gets big?
 
 Parts G and H build 1 µs twice: once with an ideal 1 MΩ, and once with a real one, 471.98 µm of
 `res_xhigh_po` sized with your Lab 01 numbers.
@@ -200,8 +233,12 @@ Parts G and H build 1 µs twice: once with an ideal 1 MΩ, and once with a real 
 The microsecond is 5 % long, and no capacitor was mis-sized. The strip that makes the megohm
 carries 95 fF of its own, a tenth of the capacitor it is charging.
 
-Scale it once more. A millisecond needs a thousand times this $RC$, say 100 MΩ and 10 pF. At
-1 µm wide, 100 MΩ of `res_xhigh_po` is 47,197 µm of poly: 4.7 centimetres, folded into a
+A millisecond needs a thousand times this $RC$, say 100 MΩ and 10 pF. Could you build it?
+
+<details>
+<summary>Answer</summary>
+
+No. At 1 µm wide, 100 MΩ of `res_xhigh_po` is 47,197 µm of poly: 4.7 centimetres, folded into a
 serpentine, carrying about 9.4 pF to the substrate by itself. The resistor's parasitic is now the
 same size as the capacitor it was supposed to charge, and no value of either fixes that.
 
@@ -211,10 +248,14 @@ oscillator makes a short, repeatable interval, and a digital counter multiplies 
 ticks. It is one of the cleanest examples anywhere of a digital answer to an analog question,
 and this measurement explains why the question comes up.
 
+</details>
+
 ## Part 6: Your own 20 ns time constant
 
-`spice/my_rc.spice` has one resistor length and one capacitor side. Build a **20.0 ns** time
-constant, within 1 %, in **under 400 µm²** of drawn area.
+How small can you make a 20 ns RC?
+
+`spice/my_rc.spice` has one resistor length and one capacitor side. Build a 20.0 ns time
+constant, within 1 %, in under 400 µm² of drawn area.
 
 The file ships with 2 kΩ and 10 pF. That is a fine 20 ns, but it costs 4981.84 µm², twelve times
 the budget, so the check in Part 1 failed on area, not on timing:
@@ -253,6 +294,8 @@ PASS -- every number matches the reference run.
 ```
 
 ## Part 7: The same RC in the frequency domain
+
+Does the corner frequency from an `.ac` analysis agree with the $\tau$ you measured?
 
 So far you have measured the RC with a stopwatch: step the input and time the output. AD101
 taught the other way: drive the input at every frequency and find where the output stops keeping
@@ -293,9 +336,10 @@ Your prediction:
 $$\frac{1}{2\pi \times 10.0362\ \text{ns}} = 15.858088\ \text{MHz}$$
 
 and `.ac` measured 15.8580 MHz: six significant figures, from two analyses that share nothing but
-the two device lines. Make this a habit. With any RC you have three numbers, $R$, $C$ and $\tau$,
-and any two give you the third. If they disagree, one of your decks is wrong and you have found
-out cheaply.
+the two device lines. Two independent measurements agreeing is the only evidence you get that a
+deck is right, and checking one against the other costs nothing. Make it a habit: with any RC you
+have three numbers, $R$, $C$ and $\tau$, and any two give you the third. If they disagree, one of
+your decks is wrong and you have found out cheaply.
 
 The other two lines confirm the shape of a first-order filter:
 
@@ -305,16 +349,54 @@ The other two lines confirm the shape of a first-order filter:
 
 ![Bode plot: gain and phase of the fabricated RC overlaid on the ideal 10 kΩ × 1 pF, corner at 15.8580 MHz vs 15.9155 MHz](../assets/img/ad102-rc-bode.png)
 
-Notice how little the real filter differs from the ideal one. Labs 01 and 02 (the end
-resistance, the perimeter capacitance, the sizing you got wrong on the first try) bought you a
-filter whose corner is 0.36 % from the ideal one you drew on paper. The same filter designed
-without those two labs, in Part 3, lands 5.65 % out, sixteen times worse.
+How far is your fabricated corner from the ideal one, and how far would the Part 3 design have
+been?
 
-An `.ac` and a `.tran` of the same RC must satisfy $f_{-3\text{dB}} = 1/(2\pi\tau)$. Checking
-one against the other costs nothing. The two analyses share nothing but the device lines, and two
-independent measurements agreeing is the only evidence you get that a deck is right.
+<details>
+<summary>Answer</summary>
 
-## Part 8 (optional): The same circuit in XSchem
+0.36 %. Labs 01 and 02 (the end resistance, the perimeter capacitance, the sizing you got wrong on
+the first try) bought you a filter whose corner is that close to the ideal one you drew on paper.
+The same filter designed without those two labs, in Part 3, lands 5.65 % out, sixteen times
+worse.
+
+</details>
+
+## Finishing
+
+You're done when `make mine check`, run on the resistor length and capacitor side you chose in
+Part 6, prints `PASS -- every number matches the reference run.`
+
+A transient analysis of a linear circuit has no randomness in it, so on the pinned image
+(ngspice-47, `sky130A`, `tt` corner) your numbers match the ones on this page.
+
+Question:
+
+1. In your Part 6 design, compare the resistor's area with the capacitor's. Why should they come
+   out roughly equal?
+
+   <details>
+   <summary>Answer</summary>
+
+   Resistor area is roughly $R/317.22$ µm² and capacitor area roughly $C[\text{fF}]/2$ µm², and
+   $C = \tau/R$, so the total has the form $aR + b/R$. Whenever cost has that form, the minimum is
+   where the two halves of the bill are the same size. The reference answer in
+   [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-03-a-time-constant-in-silicon/solutions/README.md)
+   has 176.36 µm² of resistor and 164.43 µm² of capacitor, and works through why it isn't exactly
+   50/50.
+
+   </details>
+
+After yours passes, read the same `solutions/README.md` for one good answer, why the two halves
+of the area bill come out equal, and the millisecond that cannot be built.
+
+Submit: nothing for this lab.
+
+## Going further (optional)
+
+Part 8 is not in the time estimate, and no later part of AD102 needs it.
+
+### Part 8 (optional): The same circuit in XSchem
 
 So far you have typed device lines and ngspice has believed you. The rest of the analog track
 describes circuits the other way: you **draw** them, and the tool writes the device lines for you.
@@ -327,8 +409,8 @@ poly), the same capacitor (a 22.1965 µm square of MIM), and the same pulse.
 The **SKY130** badge in the top right shows which parts catalogue XSchem loaded. If yours says
 **IHP**, stop and redo the PDK steps in
 [Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
-The resistor symbol prints **`R=9.999k`** beside itself, because the SKY130 symbols compute the
-resistance live from the `W` and `L` you give them. The capacitor shows **`C=1.002p`**.
+The resistor symbol prints `R=9.999k` beside itself, because the SKY130 symbols compute the
+resistance live from the `W` and `L` you give them. The capacitor shows `C=1.002p`.
 
 1. Turn the drawing into a netlist. This works without the desktop:
 
@@ -392,39 +474,8 @@ t_real              =  1.10412e-08
 Subtract the same 1.005 ns offset from Part 1 and that is $\tau = 10.0362$ ns, the same five
 figures as part E. The picture and the deck agree, because they are the same circuit.
 
-This is the last time in AD102 you type a device line. [AD103](https://uoftasic.com/ad103/) is
-entirely XSchem (you'll draw a diode, then a transistor, then a CMOS inverter), and it assumes you
+[AD103](https://uoftasic.com/ad103/) is entirely XSchem (you'll draw a diode, then a transistor, then a CMOS inverter), and it assumes you
 have already seen a schematic turn into a netlist, as you just did here.
-
-## Finishing
-
-You are done when `make mine check` prints `PASS -- every number matches the reference run.`
-
-A transient analysis of a linear circuit has no randomness in it, so on the pinned image
-(ngspice-47, `sky130A`, `tt` corner) your numbers match these:
-
-| circuit | $\tau$ |
-|---|---|
-| ECE334 1k/2k + 0.7 pF | 466.6700 ps |
-| ideal 10 kΩ × 1 pF | 10.0000 ns |
-| Lab 01 resistor + ideal C | 10.0361 ns |
-| ideal R + Lab 02 capacitor | 10.0000 ns |
-| both real | 10.0362 ns (+0.36 %) |
-| sized without Labs 01–02 | 10.5647 ns (+5.65 %) |
-| both real, −40 °C / +125 °C | 9.7849 / 10.6544 ns (8.66 % span) |
-| ideal 1 MΩ × 1 pF | 999.9950 ns |
-| real 1 MΩ + real 1 pF | 1049.9550 ns (+5.00 %) |
-| poly to substrate, W = 1 µm | 0.1994 fF/µm + 1.187 fF of ends |
-| `.ac` corner, fabricated RC | 15.8580 MHz (= $1/2\pi\tau$ to six figures) |
-| `.ac` corner, ideal 10 kΩ × 1 pF | 15.9155 MHz |
-| phase at the corner | −44.998° |
-| gain a decade past the corner | −20.0426 dB |
-| `xschem/rc.sch`, netlisted and run | `t_real = 1.10412e-08` → 10.0362 ns |
-
-After yours passes, read
-[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-03-a-time-constant-in-silicon/solutions/README.md)
-for one good answer, why the two halves of the area bill come out equal, and the millisecond that
-cannot be built.
 
 Next on the [Course path](README.md#course-path): read
 [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and
