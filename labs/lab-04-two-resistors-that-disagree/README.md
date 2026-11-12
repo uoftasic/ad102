@@ -15,8 +15,8 @@ make
 
 `make` runs two Monte Carlo decks (200 dies plus one nominal die each) and then the checker, and
 ends in `PASS` or `FAIL`. On a fresh clone it ends in `FAIL`, because `spice/my_divider.spice`
-ships with the divider everybody draws first. It prints nothing while it works: a full `make`
-took 106 s and 128 s on the pinned image, most of it loading the SKY130 model cards.
+ships with the divider everybody draws first. It prints nothing while it works. Two full runs of
+`make` on the pinned image took 106 s and 128 s, most of it loading the SKY130 model cards.
 
 No environment setup is needed.
 

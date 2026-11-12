@@ -101,7 +101,7 @@ That is still big, 472 µm² of poly at 1 µm wide, or 126 inverters, but it fit
 > wide, and the resistance per micron of length is $2000 / 0.944 = 2118.6441\ \Omega$.
 > [Lab 01](labs/lab-01-a-resistor-you-designed-overview.md) measures 2118.7619. That agrees to
 > five digits, and the small remainder is the model's nonlinear body term. This is the first
-> place in the course where what you drew and what you got are provably different numbers, and
+> place in the course where what you drew and what you got differ by an amount you can calculate, and
 > [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) is about that gap.
 
 ## Folding a long resistor

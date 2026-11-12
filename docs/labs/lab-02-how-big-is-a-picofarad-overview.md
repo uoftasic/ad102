@@ -27,13 +27,17 @@ Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad1
 `tank`) and then a checker script, `src/check_cap.py`, which fits and prints the results. Three
 of the decks are silent while the SKY130 model cards load, anywhere from about 10 seconds to a
 minute each depending on your machine. `henry` loads three small inductor files instead and
-finishes almost immediately.
+finishes almost immediately. The Makefile budgets about three and a half minutes for the whole
+`make` on the pinned image.
 
 The only theory you need beyond the guide pages: two plates of area $A$ separated by a dielectric
 of thickness $t$ give $C = \varepsilon A / t$. On a chip $\varepsilon$ and $t$ are both fixed, so
 capacitor design comes down to one constant, farads per square micrometre, and one decision, how
-much area to spend. Real plates also have edges, where the field bulges out and adds capacitance
-that scales with perimeter. For a square plate of side $s$:
+much area to spend. You cannot make the oxide thinner; you can only make the plate bigger. The
+process engineers could raise the density only by making $t$ smaller, which means a lower
+breakdown voltage and more leakage, so density is not free for them either. Real plates also have
+edges, where the field bulges out and adds capacitance that scales with perimeter. For a square
+plate of side $s$:
 
 $$C = \alpha s^2 + \beta s$$
 
