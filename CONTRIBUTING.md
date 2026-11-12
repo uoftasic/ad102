@@ -28,15 +28,15 @@ Only these three are fillable:
 | Default branch | `main` |
 | Docs pages | kebab-case `.md` under `docs/` |
 | Lab IDs | `lab-NN-short-name` |
-| Adding a doc page | add `.md` under `docs/`, link in `docs/_sidebar.md` |
-| Adding a lab | `labs/<id>/` + `docs/labs/<id>-overview.md` + sidebar entry |
+| Adding a guide page | add `.md` under `docs/guide/` (reading only; activities go in a lab), add it to the Course path, link it in `docs/_sidebar.md` |
+| Adding a lab | `labs/<id>/` + `docs/labs/<id>-overview.md` + a Course path row in `docs/README.md` + sidebar entry in the same order |
 | Binaries | small images in `docs/assets/`; large data → Git LFS or external |
 
 ## Docs vs labs
 
-- **`docs/`** — published site. Lab *writeups* in `docs/labs/`.
-- **`labs/`** — runnable HDL / Python / data. Each `labs/<id>/README.md` links to its Docsify writeup.
-- **`scripts/`** — utilities; list entry points in `scripts/README.md`.
+- **`docs/`**: the published site. Guide pages in `docs/guide/` are for reading; lab *writeups* in `docs/labs/` hold every command, as numbered parts.
+- **`labs/`**: runnable decks, Python and data. Each `labs/<id>/README.md` links to its Docsify writeup and lists its make targets and files.
+- **`scripts/`**: utilities; list entry points in `scripts/README.md`.
 
 Do not put grades, solution keys, or PII under `docs/`. Prefer `labs/**/solutions/` and gitignore them on student forks when needed.
 
