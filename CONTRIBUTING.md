@@ -29,12 +29,12 @@ Only these three are fillable:
 | Docs pages | kebab-case `.md` under `docs/` |
 | Lab IDs | `lab-NN-short-name` |
 | Adding a guide page | add `.md` under `docs/guide/` (reading only; activities go in a lab), add it to the Course path, link it in `docs/_sidebar.md` |
-| Adding a lab | `labs/<id>/` + `docs/labs/<id>-overview.md` + a Course path row in `docs/README.md` + sidebar entry in the same order |
+| Adding a lab | `labs/<id>/` + `docs/labs/<id>-overview.md` + a Course path row in `docs/README.md` (`[Lab NN: Title](…).` and one sentence on what you'll do) + sidebar entry in the same order |
 | Binaries | small images in `docs/assets/`; large data → Git LFS or external |
 
 ## Docs vs labs
 
-- **`docs/`**: the published site. Guide pages in `docs/guide/` are for reading; lab *writeups* in `docs/labs/` hold every command, as numbered parts.
+- **`docs/`**: the published site. Guide pages in `docs/guide/` are for reading; lab *writeups* in `docs/labs/` hold every command, as numbered parts. Each part opens with the question it answers and ends in a "you should see" check, and at least one part has the student produce something. A writeup ends with Finishing (You're done when, Questions with collapsed answers, Submit), then Going further for optional parts, then a "Next on the Course path" line. [AGENTS.md](AGENTS.md) has the details.
 - **`labs/`**: runnable decks, Python and data. Each `labs/<id>/README.md` links to its Docsify writeup and lists its make targets and files.
 - **`scripts/`**: utilities; list entry points in `scripts/README.md`.
 
