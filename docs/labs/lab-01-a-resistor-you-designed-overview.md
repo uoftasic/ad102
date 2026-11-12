@@ -17,15 +17,17 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
   passes. Part 1 sets up the rest.
 - The circuit theory is Ohm's law and a voltage divider. Nothing else.
 
-**Time:** about 2.5 hours. Each ngspice run is silent for anywhere from about 10 seconds to a
-minute before it prints anything, depending on your machine (see
+**Time:** about 2.5 hours. Each ngspice run is silent for anywhere from about 10 seconds to just
+over a minute before it prints anything, depending on your machine (see
 [Expected warnings and delays](#expected-warnings-and-delays)).
 
 ## Part 1: Set up the workbench
 
-You do this part once. You need the course files from step 5 to go on. If the PDK checks in
-steps 2 to 4 go wrong, ask for help, but you can still run the labs: the lab decks name their
-model files by absolute path, so `make` works even when the environment is not set up.
+You do this part once. Steps 3 and 5 have to work, because they give you the `mod` command and
+the course files; if either fails, ask for help before going on. The other checks are for your
+information. If `$PDK` is not `sky130A` in step 4, still ask, but you can run the labs in the
+meantime: the lab decks name their model files by absolute path, so `make` does not depend on
+`$PDK`.
 
 1. On your own machine, in your `workspace` clone, start the desktop:
 
@@ -207,8 +209,10 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    A model that is right at one end of your design range and wrong at the other is worse than
    one that is wrong everywhere, because it passes every check you run on the big case.
 
-5. The steps between consecutive lengths are steady, so $R$ is a straight line in $L$, but the
-   line does not go through the origin. Write it with an intercept:
+5. Each extra micrometre of length adds the same resistance (for example,
+   $(1012.684 - 695.4646)/1$ and $(1964.344 - 1012.684)/3$ both come to 317.22 Ω), so $R$ is a
+   straight line in $L$. But the line does not go through the origin. Write it with an
+   intercept:
 
    $$R = R_{\text{end}} + R_\square \, \frac{L}{W}$$
 
@@ -255,7 +259,7 @@ can ignore it. On a 500 Ω resistor it is most of the device.
 
 ## Part 3: Size a 10 kΩ resistor
 
-The deck already contains two 10 kΩ designs at $W = 1$ µm.
+`spice/sheet.spice` already contains two 10 kΩ designs at $W = 1$ µm (block B).
 
 1. Work out the naive length, using only the sheet resistance on the card:
    $L = 10000 / 317.3885 = 31.5074$ µm. This is `r_naive` in the deck.
@@ -323,8 +327,8 @@ matching.
 
 ## Part 5: Change the recipe
 
-Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`: the same layer and drawing
-rules, with a different implant dose.
+Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`, at five of the lengths (1, 2,
+10, 50 and 100 µm): the same layer and drawing rules, with a different implant dose.
 
 1. Extract $R_\square$ and $R_{\text{end}}$ from block D, using the two extremes as in Part 2.
 
@@ -528,7 +532,8 @@ Warning: r.xb.rbody: resistance too low or not given, set to 1 mOhm
 ```
 
 The wrong spelling gives 3193.812 Ω instead of 3550.443 Ω, 10 % off, with no error and exit
-status 0. There is no `u` suffix anywhere in this package, and there should be none in yours.
+status 0. Apart from `u_trap.spice`, which exists to show the mistake, there is no `u` suffix
+anywhere in this package, and there should be none in yours.
 
 ## Part 9 (optional): Draw a resistor in SiliWiz
 
@@ -558,9 +563,9 @@ There is a guided version of this exercise at <https://tinytapeout.com/siliwiz/r
 ## Finishing
 
 You are done when `make mine check` prints `PASS -- every number matches the reference run.`
-Your two resistors pass if each is within 1 % of its target. The checker also compares every
-simulated resistance with the reference run (within 0.5 %) and the two extracted constants
-(within 1 %), which is what "matches the reference run" means.
+Your two resistors pass if each is within 1 % of its target. The checker also compares the
+resistances from `sheet.spice` with the reference run (within 0.5 %), and the two constants
+extracted from them (within 1 %); that is what "matches the reference run" means.
 
 A DC operating point has no randomness in it, so on the pinned image (ngspice-47, `sky130A`, `tt`
 corner, 27 °C) your numbers match these to every digit shown:
@@ -586,8 +591,8 @@ Next on the [Course path](README.md#course-path): read the four pages in row 3, 
 **Silence.** Every ngspice run in this lab loads
 `.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt`, which pulls in 12 MB of model
 cards for every device in SKY130, mostly MOSFETs you are not using. ngspice prints nothing while
-it loads, for anywhere from about 10 seconds to a minute per run depending on your machine (the
-comment at the top of the Makefile records 55–65 s). `make` runs the simulator twice, so allow up
+it loads, for anywhere from about 10 seconds to just over a minute per run depending on your
+machine (the comment at the top of the Makefile records 55–65 s). `make` runs the simulator twice, so allow up
 to about two minutes. It is not hung.
 
 **170 `unrecognized parameter` lines, in 34 blocks**, in `results/sheet.log`. A `rhead_model`

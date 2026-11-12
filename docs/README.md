@@ -105,7 +105,8 @@ your machine. Lab 01, Part 1 has you check your versions.
 Each of Labs 01–04 has a **package**: a folder under `labs/` with its SPICE decks, a `Makefile`
 and a checker script. The packages run with `make` alone, with no environment setup, because
 every deck names its SKY130 model file by absolute path. You still do Lab 01, Part 1 once, to get
-the course files and check your tools; if its PDK checks go wrong, try `make` anyway. Apart from
+the course files and check your tools. The lab decks do not depend on the `PDK` setting it
+checks, so if that check goes wrong, `make` still works. Apart from
 the optional SiliWiz parts, which run in a browser tab, every lab step runs in a terminal, and
 only the optional XSchem part of Lab 03 opens a window on the desktop. A fifth
 package, `passives-decks`, holds the decks whose output the guide pages quote, and some lab parts
