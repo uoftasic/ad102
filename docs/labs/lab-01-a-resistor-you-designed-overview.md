@@ -1,8 +1,9 @@
 # Lab 01: A resistor you designed
 
 You'll measure the sheet resistance and end resistance of a SKY130 poly resistor from your own
-simulation, use those two numbers to size resistors that land within 1 % of their targets, and
-work out what a resistance costs in silicon compared with a piece of digital logic.
+simulation, then use those two numbers to size two resistors that land within 1 % of their
+targets. Along the way you'll work out what a resistance costs in silicon compared with a piece
+of digital logic.
 
 Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad102/tree/main/labs/lab-01-a-resistor-you-designed)
 
@@ -14,12 +15,12 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
   [What a resistor costs in area](guide/what-a-value-costs-in-area.md).
 - You need the workbench from [IC101](https://uoftasic.com/ic101/): the noVNC desktop comes up
   in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/#/guide/smoke-test)
-  passes. Part 1 sets up the rest.
+  passes. Part 1 loads this course into it.
 - The circuit theory is Ohm's law and a voltage divider. Nothing else.
 
-**Time:** about 2.5 hours. Each ngspice run is silent for anywhere from about 10 seconds to just
-over a minute before it prints anything, depending on your machine (see
-[Warnings and delays](reference/ngspice-decks-that-run.md#lab-01)).
+Time: about 2.5 hours, not counting the optional parts at the end. Each ngspice run is silent for
+anywhere from about 10 seconds to just over a minute before it prints anything, depending on your
+machine ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-01)).
 
 ## Part 1: Load the course
 
@@ -70,7 +71,7 @@ you haven't set up the workbench yet, do
 | `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
 | `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check the spelling first. If it is right, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
 
-For anything else, such as a blank desktop page or `mod: command not found`, see IC101's
+For anything else, such as a blank desktop page or `bash: mod: command not found`, see IC101's
 [Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
 
 **You should see:** `ls ..` lists the four lab packages plus `passives-decks`:
@@ -82,10 +83,12 @@ lab-02-how-big-is-a-picofarad      lab-04-two-resistors-that-disagree
 
 ## Part 2: Measure the material
 
-`spice/sheet.spice` builds twenty-two strips of `sky130_fd_pr__res_high_po`, forces exactly
-1 µA through each, and prints the voltage across it. Dividing by 1 µA gives the resistance:
-one application of Ohm's law per device, with no curve fitting. The first block is a **length
-ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
+Does the one number on the model card predict what a strip of `res_high_po` measures?
+
+`spice/sheet.spice` builds twenty-two strips of poly, forces exactly 1 µA through each, and
+prints the voltage across it. Dividing by 1 µA gives the resistance: one application of Ohm's law
+per device, with no curve fitting. The first block is a **length ladder** of
+`sky130_fd_pr__res_high_po`, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
 
 1. Read the one number the foundry advertises on the model card:
 
@@ -111,9 +114,8 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    ```
 
    This runs two ngspice decks, `spice/sheet.spice` and `spice/my_resistor.spice`, and then the
-   checker script, `src/check_res.py`. It ends in
-   `FAIL`, which you fix in Part 7. Leave the output in your terminal, because Parts 2 to 5 read
-   from it.
+   checker script, `src/check_res.py`. It ends in `FAIL`, which you fix in Part 7. Leave the
+   output in your terminal, because Parts 2 to 5 read from it.
 
 4. Find block A in the output and compare it with your predictions:
 
@@ -128,13 +130,20 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    r_l100 = 3.210022e+04
    ```
 
-   Your prediction for the longest strip was 31,739 Ω, and it measured 32,100 Ω: 1 % high.
-   Your prediction for the shortest was 317 Ω, and it measured 695 Ω: off by a factor of 2.2,
-   from the same formula. Something is being added that does not depend on how long you drew the
-   strip.
+   How far off are your predictions for the longest and the shortest strip, and what does the
+   difference tell you?
 
-   A model that is right at one end of your design range and wrong at the other is worse than
-   one that is wrong everywhere, because it passes every check you run on the big case.
+   <details>
+   <summary>Answer</summary>
+
+   You predicted 31,739 Ω for the longest strip, and it measured 32,100 Ω: 1 % high. You
+   predicted 317 Ω for the shortest, and it measured 695 Ω: off by a factor of 2.2, from the same
+   formula. Something is being added that does not depend on how long you drew the strip.
+
+   A model that is right at one end of your design range and wrong at the other is worse than one
+   that is wrong everywhere, because it passes every check you run on the big case.
+
+   </details>
 
 5. Each extra micrometre of length adds the same resistance (for example,
    $(1012.684 - 695.4646)/1$ and $(1964.344 - 1012.684)/3$ both come to 317.22 Ω), so $R$ is a
@@ -143,21 +152,22 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
 
    $$R = R_{\text{end}} + R_\square \, \frac{L}{W}$$
 
-   Use the two extremes to solve for both unknowns:
+   Use the two extremes, $L = 1$ and $L = 100$, to solve for both unknowns. Write them down.
 
-   $$
-   R_\square = \frac{32100.22 - 695.4646}{100 - 1} = 317.2198 \;\Omega/\square
-   \qquad
-   R_{\text{end}} = 695.4646 - 317.2198 = 378.2448 \;\Omega
-   $$
+6. Check your line against two measurements you did not use, at $L = 10$ and $L = 20$.
 
-6. Check those two numbers against measurements you did not use. At $L = 10$:
-   $378.2448 + 3172.198 = 3550.4428$, against a measured 3550.443. At $L = 20$: $6722.6408$,
-   against 6722.641.
+**You should see:**
 
-**You should see:** your line matches every point to the last printed digit, across a 100-to-1
-range of lengths. The checker prints the same extraction, with the course's own reference run
-in the last column for comparison (the `xhigh_po` row is the other material, which you extract
+$$
+R_\square = \frac{32100.22 - 695.4646}{100 - 1} = 317.2198 \;\Omega/\square
+\qquad
+R_{\text{end}} = 695.4646 - 317.2198 = 378.2448 \;\Omega
+$$
+
+At $L = 10$ the line gives $378.2448 + 3172.198 = 3550.4428$, against a measured 3550.443; at
+$L = 20$ it gives 6722.6408, against 6722.641. It matches every point to the last printed digit,
+across a 100-to-1 range of lengths. The checker prints the same extraction, with the course's own
+reference run in the last column (the `xhigh_po` row is the other material, which you extract
 yourself in Part 5):
 
 ```
@@ -167,37 +177,30 @@ yourself in Part 5):
     xhigh_po         2118.7619     34.2111      2118.7619 / 34.2111
 ```
 
-The 378 Ω is a fixed overhead on every resistor: the contact heads where metal meets poly, plus
-a little length the strip has that you did not draw. On a 100 kΩ resistor it is 0.4 % and you
-can ignore it. On a 500 Ω resistor it is most of the device.
+The 378 Ω is a fixed overhead on every resistor: the contact heads where metal meets poly, plus a
+little length the strip has that you did not draw. What fraction of a 100 kΩ resistor is it, and
+of a 500 Ω one?
 
-> **Where the 378 Ω comes from, if you want it.** Open the model card from step 1,
-> `sky130_fd_pr__res_high_po.model.spice`. The body is declared
-> `l = {leff}` with `leff = {l + 0.247}`, so the strip is electrically 0.247 µm longer than you
-> drew it, worth $317.2198 \times 0.247 = 78.35\ \Omega$. The head is a second resistor,
-> `rsh = 345.8312` over a width of `weff + 0.1558 = 1.1548` (`weff` is the effective width,
-> 0.999 µm for a strip drawn 1 µm wide; Part 4 has more on it), giving
-> $345.8312 / 1.1548 = 299.47\ \Omega$. Its temperature coefficients (`tc1 = -4.3e-4`,
-> `tc2 = 12e-6`, `tnom = 30`) scale that by
-> $1 + (-4.3{\times}10^{-4})(-3) + (12{\times}10^{-6})(9) = 1.001398$ at the 27 °C ngspice
-> simulated at ($27 - 30 = -3$, and $(-3)^2 = 9$), giving 299.89 Ω. And
-> $299.89 + 78.35 = 378.24$, against the 378.2448 you measured. The arithmetic closes to five
-> figures using only constants in a text file you can `cat`.
+<details>
+<summary>Answer</summary>
+
+0.4 % of a 100 kΩ resistor, which you can ignore. Most of a 500 Ω one.
+
+</details>
 
 ## Part 3: Size a 10 kΩ resistor
+
+How much does leaving out the end resistance cost on a real design?
 
 `spice/sheet.spice` already contains two 10 kΩ designs at $W = 1$ µm (block B).
 
 1. Work out the naive length, using only the sheet resistance on the card:
    $L = 10000 / 317.3885 = 31.5074$ µm. This is `r_naive` in the deck.
 
-2. Work out the corrected length, using both numbers you extracted:
+2. Work out the corrected length, $L = (10000 - R_{\text{end}})/R_\square$, from the two numbers
+   you extracted. This is `r_fixed`, which the deck draws at 30.3315 µm; check yours against it.
 
-   $$L = \frac{10000 - 378.2448}{317.2198} = 30.3315 \;\mu\mathrm{m}$$
-
-   This is `r_fixed`.
-
-3. Find block B in the output.
+3. Predict how far from 10 kΩ the naive design lands. Then find block B in the output.
 
 **You should see:**
 
@@ -210,14 +213,22 @@ r_fixed = 9.999997e+03
 The naive design is 10,373 Ω, 3.7 % too big. The corrected one is 9999.997 Ω, three parts in ten
 million.
 
-3.7 % sounds small until you remember what resistors are for. A resistor that sets a bias
-current sets it 3.7 % wrong. A pair of them setting a gain of 10 gets the gain wrong too, because
-the fixed 378 Ω is a different fraction of a long resistor and a short one. And the
-error is systematic: every chip on every wafer gets the same 3.7 %, so no amount of averaging
-finds it. A random spread is a tolerance, which you budget for; an error that is the same on every
-chip is a mistake, which you fix.
+3.7 % sounds small. Why is it worth fixing?
+
+<details>
+<summary>Answer</summary>
+
+Think about what resistors are for. A resistor that sets a bias current sets it 3.7 % wrong. A
+pair of them setting a gain of 10 gets the gain wrong too, because the fixed 378 Ω is a different
+fraction of a long resistor and a short one. And the error is systematic: every chip on every
+wafer gets the same 3.7 %, so no amount of averaging finds it. A random spread is a tolerance,
+which you budget for; an error that is the same on every chip is a mistake, which you fix.
+
+</details>
 
 ## Part 4: Change the width
+
+Is ohms per square a property of the material alone, and what does a narrow strip buy you?
 
 The length ladder was all at $W = 1$ µm. Blocks C and C2 sweep four other widths at two lengths,
 $L = 10$ µm and $L = 5$ µm.
@@ -231,28 +242,46 @@ $L = 10$ µm and $L = 5$ µm.
 
 | W (µm) | Ω per µm of length | end Ω | Ω per square | µm² of body per kΩ |
 |---|---|---|---|---|
-| 0.35 | 971.641 | 958.562 | **340.074** | **0.3602** |
+| 0.35 | 971.641 | 958.562 | 340.074 | 0.3602 |
 | 0.69 | 459.946 | 523.544 | 317.362 | 1.5002 |
 | 1 | 317.220 | 378.245 | 317.220 | 3.1524 |
 | 2 | 158.530 | 199.875 | 317.061 | 12.6159 |
 | 5 | 63.393 | 82.841 | 316.966 | 78.8728 |
 
-Read the Ω-per-square column from the bottom up: 316.966, 317.061, 317.220, 317.362. Sheet
-resistance is a property of the material, constant to a tenth of a percent, until the top row,
-0.35 µm, where it jumps 7 % to 340.074. Below 0.69 µm the model applies
-`weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip drawn 0.35 µm wide conducts as though it
-were 0.326 µm wide. Lithography and etch do not give you the width you drew. The end resistance
-changes with width as well, from 82.841 Ω at 5 µm to 958.562 Ω at 0.35 µm, because the contact
-head is as wide as the strip (the note in Part 2 shows its resistance is `rsh` divided by a
-width).
+Read the Ω-per-square column from the bottom up. Where does it stop being constant, and why?
 
-Now read the last column: 0.36 µm² per kΩ at the narrowest width against 78.9 at the widest.
-Same material, same sheet resistance, a factor of 219 in area. You win twice by going narrow,
-once on width and again on the length you no longer need, so area per ohm goes as $W^2$. That
-makes "just draw it narrow" look free. It isn't: Lab 04 measures what narrow costs you in
-matching.
+<details>
+<summary>Answer</summary>
+
+316.966, 317.061, 317.220, 317.362: sheet resistance is a property of the material, constant to
+a tenth of a percent, until the top row, 0.35 µm, where it jumps 7 % to 340.074. Below 0.69 µm
+the model applies `weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip drawn 0.35 µm wide
+conducts as though it were 0.326 µm wide. Lithography and etch do not give you the width you
+drew.
+
+The end resistance changes with width as well, from 82.841 Ω at 5 µm to 958.562 Ω at 0.35 µm,
+because the contact head is as wide as the strip. Its resistance is `rsh` divided by a width;
+see [Where the end resistance comes from](#where-the-end-resistance-comes-from) under Going
+further.
+
+</details>
+
+Now read the last column: 0.36 µm² per kΩ at the narrowest width against 78.9 at the widest,
+a factor of 219 for the same material. Why is that so much more than the ratio of the widths?
+
+<details>
+<summary>Answer</summary>
+
+You win twice by going narrow, once on width and again on the length you no longer need, so area
+per ohm goes as $W^2$. That makes "just draw it narrow" look free. It isn't: Lab 04 measures what
+narrow costs you in matching.
+
+</details>
 
 ## Part 5: Change the recipe
+
+What does the other poly implant change, and what does a resistor cost next to a piece of
+digital logic?
 
 Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`, at five of the lengths (1, 2,
 10, 50 and 100 µm): the same layer and drawing rules, with a different implant dose.
@@ -272,9 +301,9 @@ Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`, at five of th
 
 3. Price your resistors in digital logic. In [DD103](https://uoftasic.com/dd103/), a 4-bit
    ripple-carry adder (twelve SKY130 standard cells that add two nibbles) synthesises to
-   110.11 µm². At $W = 1$ µm a strip's area is its length in µm². Work out the length for each
-   row of the table below from your design equation (the checker prints the 10 kΩ and 100 kΩ
-   lengths in its `the design that follows from them` block), then divide each area by 110.11.
+   110.11 µm². At $W = 1$ µm a strip's area is its length in µm². From your design equation, work
+   out the length of a 1 kΩ, 10 kΩ and 100 kΩ `res_high_po` and a 100 kΩ `res_xhigh_po`, all at
+   $W = 1$ µm, then divide each area by 110.11.
 
 **You should see:** the card says `rsheet = 2000.0`. Your extraction says 2118.7619 Ω/□, 5.9 %
 higher, with only 34.21 Ω of ends. Compared with `res_high_po`, that is 6.7 times the ohms per
@@ -284,22 +313,34 @@ square and a tenth of the fixed overhead. Your price list should match this one:
 |---|---|---|
 | 1 kΩ, `res_high_po`, W = 1 µm | 1.96 µm² | 0.018 |
 | 10 kΩ, `res_high_po`, W = 1 µm | 30.33 µm² | 0.28 |
-| 100 kΩ, `res_high_po`, W = 1 µm | 314.05 µm² | **2.85** |
+| 100 kΩ, `res_high_po`, W = 1 µm | 314.05 µm² | 2.85 |
 | 100 kΩ, `res_xhigh_po`, W = 1 µm | 47.18 µm² | 0.43 |
 
-The headline number on a model card is a nominal; the device that gets fabricated is what the
-model computes, so design against the simulation. And the implant is the only knob in this lab
-that is not geometry. The foundry gives you a short menu of implant doses, and choosing from it
-is the one way to change ohms per square instead of buying more area.
+The checker's `and the design that follows from them` block prints the same lengths to four
+decimals (314.0465 µm and 47.1812 µm for the two 100 kΩ rows), and the 10 kΩ `res_xhigh_po` one
+too: 4.7036 µm.
 
-The areas above are the strip only. A drawn resistor also needs its two contact heads, spacing
-to whatever is beside it, and usually a guard ring (call it half as much area again), so treat them as a
-floor, not a quote. Even so, at 100 kΩ one of the cheapest things in the analog toolbox
-outweighs a working arithmetic unit. That is why analog blocks look enormous next to digital
-ones in a die photograph, and why a chip designer never answers "just add a resistor" straight
-away.
+The card says 2000.0 and your simulation says 2118.7619. Which one do you design with, and why?
+
+<details>
+<summary>Answer</summary>
+
+The simulation. The headline number on a model card is a nominal; the device that gets fabricated
+is what the model computes. The implant is also the only knob in this lab that is not geometry.
+The foundry gives you a short menu of implant doses, and choosing from it is the one way to
+change ohms per square instead of buying more area.
+
+</details>
+
+The areas above are the strip only. A drawn resistor also needs its two contact heads, spacing to
+whatever is beside it, and usually a guard ring (call it half as much area again), so treat them
+as a floor, not a quote. Even so, at 100 kΩ one of the cheapest things in the analog toolbox
+outweighs a working arithmetic unit. That is why analog blocks look enormous next to digital ones
+in a die photograph, and why a chip designer never answers "just add a resistor" straight away.
 
 ## Part 6: Split a resistor into head and body
+
+Which part of the resistor is the 378 Ω you extracted: the contact head, or the body?
 
 [Resistors on a chip](guide/a-resistor-you-cannot-buy.md) and
 [Ohms per square](guide/ohms-per-square.md) quote a different deck from the one you ran in
@@ -330,61 +371,46 @@ splits into its two parts.
    body_l10 = 3.250551e+03
    ```
 
-   The head is 299.8915 Ω at both lengths, the same to seven digits, because you did not change
-   the contacts. Take the bodies, which do scale:
+4. Work out the slope of the body from `body_l1` and `body_l10`.
 
-   $$\frac{3250.551 - 395.5731}{10 - 1} = \frac{2854.978}{9} = 317.2198\ \Omega/\square$$
-
-   That is the sheet resistance you extracted in Part 2, from a different deck.
-
-4. Read block C. It is one 314.046454 µm × 1 µm strip (the length that gives 100 kΩ of
-   `res_high_po`) simulated as four different resistor models: the two poly implants, and the
-   p+ and n+ diffusion resistors:
-
-   ```
-   --- C. one 314 um x 1 um strip, four implants (ohms) ---
-   r_high = 1.000000e+05
-   r_xhigh = 6.653872e+05
-   r_pdiff = 6.138915e+04
-   r_ndiff = 3.689775e+04
-   ```
-
-   The drawing and the silicon area are the same, and the values spread over 18:1.
-
-5. Blocks B and D are the worked examples on
-   [What a resistor costs in area](guide/what-a-value-costs-in-area.md): 1 k, 10 k and 100 k
-   sized with the design equation, and the same 100 kΩ at four widths. Check that each lands on
-   its target.
-
-6. Count the model warnings in the log. They are the harmless ones described under
-   [Warnings and delays](reference/ngspice-decks-that-run.md#lab-01); this deck has fewer resistors
-   than `sheet.spice`, so it has fewer of them.
-
-   ```bash
-   grep -c 'unrecognized parameter' results/r_head_and_body.log
-   ```
-
-7. Go back to the lab folder:
+5. Go back to the lab folder:
 
    ```bash
    cd ../lab-01-a-resistor-you-designed
    ```
 
-**You should see:** `head_l1` and `head_l10` both `2.998915e+02`, a body slope of
-317.2198 Ω/□, and `100` from the `grep`.
+**You should see:** the head is 299.8915 Ω at both lengths, the same to seven digits, because you
+did not change the contacts. The bodies scale:
 
-The 378.2448 Ω end resistance you extracted in Part 2 is this 299.89 Ω head plus the
-78.35 Ω body extension from the model's `leff`.
+$$\frac{3250.551 - 395.5731}{10 - 1} = \frac{2854.978}{9} = 317.2198\ \Omega/\square$$
+
+That is the sheet resistance you extracted in Part 2, from a different deck.
+
+The head is 299.89 Ω, but the end resistance you extracted in Part 2 is 378.2448 Ω. Where are the
+other 78 Ω?
+
+<details>
+<summary>Answer</summary>
+
+In the body. The model's `leff` makes the strip 0.247 µm longer than you drew it, and that extra
+length is worth 78.35 Ω. The 378.2448 Ω is the 299.89 Ω head plus that 78.35 Ω body extension.
+[Where the end resistance comes from](#where-the-end-resistance-comes-from), under Going
+further, has the arithmetic.
+
+</details>
 
 ## Part 7: Size your own resistors
+
+Can you size two resistors from your own two numbers so that each lands within 1 % of its
+target?
 
 `spice/my_resistor.spice` contains two devices and two `L=` numbers. You edit only those two
 numbers.
 
 | | device | W | target |
 |---|---|---|---|
-| R1 | `sky130_fd_pr__res_high_po` | 1 µm | **2.2 kΩ** |
-| R2 | `sky130_fd_pr__res_xhigh_po` | 1 µm | **50 kΩ** |
+| R1 | `sky130_fd_pr__res_high_po` | 1 µm | 2.2 kΩ |
+| R2 | `sky130_fd_pr__res_xhigh_po` | 1 µm | 50 kΩ |
 
 1. Print the verdict from Part 2 again (it has probably scrolled away):
 
@@ -403,25 +429,26 @@ numbers.
        got       53001.1 ohm   (+6.00 %)   FAIL
    ```
 
-   Below that, the checker explains each failure, and it ends with:
+   Below that, the checker explains each failure, and it ends with a note that on a fresh clone
+   this `FAIL` is the lab, not a broken package.
 
-   ```
-     ^ On a fresh clone this FAIL is the lab, not a broken
-       package. spice/my_resistor.spice ships with the naive
-       sizing on purpose. Edit the two L= numbers and run
-       `make mine check` again.
-   ```
+2. What fraction of a 2.2 kΩ resistor is the 378 Ω of ends?
 
-   On a 2.2 kΩ resistor, the 378 Ω of ends is no longer a rounding error; it is a sixth of the
-   device.
+   <details>
+   <summary>Answer</summary>
 
-2. Work out both lengths from the $R_\square$ and $R_{\text{end}}$ you extracted for each device
-   in Parts 2 and 5.
+   About a sixth. On a 2.2 kΩ resistor the ends are no longer a rounding error.
 
-3. Edit the two `L=` numbers in `spice/my_resistor.spice`. Write them as plain microns, with no
+   </details>
+
+3. Work out both lengths from the $R_\square$ and $R_{\text{end}}$ you extracted for each device
+   in Parts 2 and 5, and write them down. The checker's explanation of each failure ends with
+   the length it would use; compare yours with it only after you have your own.
+
+4. Edit the two `L=` numbers in `spice/my_resistor.spice`. Write them as plain microns, with no
    `u` suffix.
 
-4. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
+5. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
    `make check` prints the verdict again:
 
    ```bash
@@ -434,7 +461,78 @@ numbers.
 PASS -- every number matches the reference run.
 ```
 
-## Part 8 (optional): The `u` suffix trap
+## Finishing
+
+You're done when `make mine check`, run on the two lengths you worked out in Part 7, prints
+`PASS -- every number matches the reference run.`
+
+That line needs each of your resistors within 1 % of its target. The checker also compares the
+resistances from `sheet.spice` with the reference run (within 0.5 %), and the two constants
+extracted from them (within 1 %). A DC operating point has no randomness in it, so on the pinned
+image (ngspice-47, `sky130A`, `tt` corner, 27 °C) your numbers match the ones on this page to
+every digit shown.
+
+Question:
+
+1. On area alone, which material would you use for a 100 kΩ resistor, and what does it cost in
+   adders?
+
+   <details>
+   <summary>Answer</summary>
+
+   `res_xhigh_po`: 47.18 µm², 0.43 adders, against 314.05 µm² and 2.85 adders for `res_high_po`
+   (Part 5). Area doesn't settle it, though: the lab's `solutions/README.md` explains why you
+   wouldn't use `res_xhigh_po` for everything.
+
+   </details>
+
+After your own numbers pass, read
+[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-01-a-resistor-you-designed/solutions/README.md)
+for the reference sizing and some questions worth arguing about.
+
+Submit: nothing for this lab.
+
+## Going further (optional)
+
+None of these is in the time estimate, and no later part needs them.
+
+### Where the end resistance comes from
+
+Open the model card from Part 2, step 1, `sky130_fd_pr__res_high_po.model.spice`. The body is declared
+`l = {leff}` with `leff = {l + 0.247}`, so the strip is electrically 0.247 µm longer than you drew
+it, worth $317.2198 \times 0.247 = 78.35\ \Omega$. The head is a second resistor,
+`rsh = 345.8312` over a width of `weff + 0.1558 = 1.1548` (`weff` is the effective width,
+0.999 µm for a strip drawn 1 µm wide; Part 4 has more on it), giving
+$345.8312 / 1.1548 = 299.47\ \Omega$. Its temperature coefficients (`tc1 = -4.3e-4`,
+`tc2 = 12e-6`, `tnom = 30`) scale that by
+$1 + (-4.3{\times}10^{-4})(-3) + (12{\times}10^{-6})(9) = 1.001398$ at the 27 °C ngspice
+simulated at ($27 - 30 = -3$, and $(-3)^2 = 9$), giving 299.89 Ω. And
+$299.89 + 78.35 = 378.24$, against the 378.2448 you measured. The arithmetic closes to five
+figures using only constants in a text file you can `cat`.
+
+### More of the `make resistor` output
+
+Part 6's `make resistor` printed three more blocks.
+
+- Block C is one 314.046454 µm × 1 µm strip (the length that gives 100 kΩ of `res_high_po`)
+  simulated as four different resistor models: the two poly implants, and the p+ and n+
+  diffusion resistors. The drawing and the silicon area are the same, and the values spread over
+  18:1:
+
+  ```
+  --- C. one 314 um x 1 um strip, four implants (ohms) ---
+  r_high = 1.000000e+05
+  r_xhigh = 6.653872e+05
+  r_pdiff = 6.138915e+04
+  r_ndiff = 3.689775e+04
+  ```
+
+- Blocks B and D are the worked examples on
+  [What a resistor costs in area](guide/what-a-value-costs-in-area.md): 1 k, 10 k and 100 k sized
+  with the design equation, and the same 100 kΩ at four widths. Check that each lands on its
+  target.
+
+### Part 8 (optional): The `u` suffix trap
 
 `spice/u_trap.spice` holds the same resistor written twice, once as `W=1 L=10` and once as
 `W=1u L=10u`. [Getting started](guide/getting-started.md#the-u-suffix-trap) explains what goes
@@ -462,7 +560,7 @@ The wrong spelling gives 3193.812 Ω instead of 3550.443 Ω, 10 % off, with no e
 status 0. Apart from `u_trap.spice`, which exists to show the mistake, there is no `u` suffix
 anywhere in this package, and there should be none in yours.
 
-## Part 9 (optional): Draw a resistor in SiliWiz
+### Part 9 (optional): Draw a resistor in SiliWiz
 
 SiliWiz is a browser layout tool from the Tiny Tapeout project. It shows a cross-section of your
 drawing while you draw it, which makes "a strip of poly with two contacts" concrete.
@@ -487,34 +585,6 @@ There is a guided version of this exercise at <https://tinytapeout.com/siliwiz/r
 > [Ohms per square](guide/ohms-per-square.md)). SiliWiz uses round numbers chosen
 > for teaching. Use it for the cross-section and ngspice for the value.
 
-## Finishing
-
-You are done when `make mine check` prints `PASS -- every number matches the reference run.`
-Your two resistors pass if each is within 1 % of its target. The checker also compares the
-resistances from `sheet.spice` with the reference run (within 0.5 %), and the two constants
-extracted from them (within 1 %); that is what "matches the reference run" means.
-
-A DC operating point has no randomness in it, so on the pinned image (ngspice-47, `sky130A`, `tt`
-corner, 27 °C) your numbers match these to every digit shown:
-
-| | `res_high_po` | `res_xhigh_po` |
-|---|---|---|
-| Ω per square | 317.2198 | 2118.7619 |
-| end resistance | 378.2448 Ω | 34.2111 Ω |
-| card advertises | 317.3885 | 2000.0 |
-| L for 10 kΩ at W = 1 µm | 30.3315 µm | 4.7036 µm |
-| L for 100 kΩ at W = 1 µm | 314.0465 µm | 47.1812 µm |
-
-After your own numbers pass, read
-[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-01-a-resistor-you-designed/solutions/README.md)
-for the reference sizing and some questions worth arguing about.
-
-Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
-[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
-
-## Going further (optional)
-
 ### Check the rest of the image
 
 AD102 doesn't use these tools. They are the AD104 layout tools, listed so you can confirm the
@@ -530,3 +600,7 @@ image is complete:
 `Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
 line like it. Those are Tcl namespace notices from the tool itself. They are not about your
 design, and there is nothing to fix.
+
+Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
+[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
+[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
