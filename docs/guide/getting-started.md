@@ -40,7 +40,9 @@ switches you to SKY130. You load it with a leading `.`:
 The `.` is the shell's `source` command. It runs the file in your current shell rather than in
 a child process, which is the only way a script can change your environment. Typing the path
 without the dot and the space does nothing useful. Because it only changes the current shell,
-you have to load it again in every new terminal.
+every new terminal needs it. On the IC101 workbench the image does this for you when a terminal
+opens (the `workspace` repo's own `.designinit` chains to this file), so you will usually find
+`PDK` already set to `sky130A`. Loading it again does no harm.
 
 XSchem reads `$PDK` when it starts to decide which symbol library to load. Before
 `.designinit`, its settings come from `~/.xschem/xschemrc`, which does this:
