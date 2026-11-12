@@ -1,9 +1,9 @@
 # Lab 02: How big is a picofarad?
 
 You'll measure capacitance from an AC current, separate a plate capacitor's area term from its
-edge term, and price one picofarad in each of the capacitor types SKY130 offers. Then you'll
-measure the inductance, Q and self-resonance of the PDK's on-chip spirals, and build a 2.4 GHz
-resonator from one.
+edge term, and price one picofarad in each of the capacitor types SKY130 offers. Then you'll size
+three capacitors of your own, measure the inductance, Q and self-resonance of the PDK's on-chip
+spirals, and build a 2.4 GHz resonator from one.
 
 Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad102/tree/main/labs/lab-02-how-big-is-a-picofarad)
 
@@ -23,12 +23,13 @@ Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad1
 
   This lab needs no environment setup; every deck names its model files by absolute path.
 
-**Time:** about 2.5 hours. A full `make` runs four ngspice decks (`pf`, `mine`, `henry` and
-`tank`) and then a checker script, `src/check_cap.py`, which fits and prints the results. Three
-of the decks are silent while the SKY130 model cards load, anywhere from about 10 seconds to a
-minute each depending on your machine. `henry` loads three small inductor files instead and
-finishes almost immediately. The Makefile budgets about three and a half minutes for the whole
-`make` on the pinned image ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-02)).
+Time: about 2.5 hours, not counting the optional parts at the end. A full `make` runs four
+ngspice decks (`pf`, `mine`, `henry` and `tank`) and then a checker script, `src/check_cap.py`,
+which fits and prints the results. Three of the decks are silent while the SKY130 model cards
+load, anywhere from about 10 seconds to a minute each depending on your machine. `henry` loads
+three small inductor files instead and finishes almost immediately. The Makefile budgets about
+three and a half minutes for the whole `make` on the pinned image
+([Warnings and delays](reference/ngspice-decks-that-run.md#lab-02)).
 
 The only theory you need beyond the guide pages: two plates of area $A$ separated by a dielectric
 of thickness $t$ give $C = \varepsilon A / t$. On a chip $\varepsilon$ and $t$ are both fixed, so
@@ -41,14 +42,15 @@ plate of side $s$:
 
 $$C = \alpha s^2 + \beta s$$
 
-The edge term matters less the bigger the plate. That is the same pattern as Lab 01's end
-resistance: a fixed overhead that matters less as the device grows.
+The edge term matters less the bigger the plate, the same pattern as Lab 01's end resistance.
 
 Every capacitance in this lab is read the same way: the deck hangs the device on a 1 V AC source
 at 1 MHz and reads the current the source supplies. For a capacitor $I = 2\pi f C V$, so
 $C = |I| / (2\pi f)$, one division with no fitting.
 
 ## Part 1: The area ladder
+
+Does the density on the model card predict what a square MIM plate measures?
 
 `spice/picofarad.spice` builds five square MIM capacitors with sides from 1 µm to 20 µm.
 
@@ -91,13 +93,21 @@ The 20 µm plate: predicted 800.0 fF, measured 813.18 fF, 1.6 % high. The 1 µm 
 2.00 fF, measured 2.64 fF, 32 % high. Both are high, but the relative error on the small plate is
 twenty times larger.
 
-This matters because the two capacitors an analog designer most wants to match are usually a big
-one and a small one, such as a sampling capacitor and a reference, or the two arms of a divider.
-If you size both from the area term alone, the small one comes out proportionally bigger, the
-ratio you built is not the ratio you designed, and no measurement of either capacitor on its own
-will show it.
+The two capacitors an analog designer most wants to match are usually a big one and a small one,
+such as a sampling capacitor and a reference, or the two arms of a divider. What happens to their
+ratio if you size both from the area term alone?
+
+<details>
+<summary>Answer</summary>
+
+The small one comes out proportionally bigger, so the ratio you built is not the ratio you
+designed, and no measurement of either capacitor on its own will show it.
+
+</details>
 
 ## Part 2: Fit the area and edge terms
+
+How many terms does it take to describe a MIM plate exactly?
 
 $C = \alpha s^2 + \beta s$ has two unknowns, and you have five measurements.
 
@@ -117,11 +127,17 @@ $C = \alpha s^2 + \beta s$ has two unknowns, and you have five measurements.
          side  10.0 um   fit   206.5024 fF   measured   206.5822 fF   (-0.0386 %)
    ```
 
-3. Look at the signs of those three residuals and decide what they tell you before you go on.
+3. Look at the signs of those three residuals. Before you read the checker's one-line comment
+   under them, decide what they tell you.
 
-   (All three are negative, and they shrink as the plate grows. A fit that was only noisy would
+   <details>
+   <summary>Answer</summary>
+
+   All three are negative, and they shrink as the plate grows. A fit that was only noisy would
    miss in both directions. A systematic miss that fades with size means something small and
-   constant is missing: a term that does not scale with the plate at all.)
+   constant is missing: a term that does not scale with the plate at all.
+
+   </details>
 
 4. Find the checker's three-term fit:
 
@@ -144,26 +160,34 @@ You now have a model of the device that is better than the headline number, that
 yourself, and that you can invert to answer "what side length gives me 250 fF?", which is the
 question you will actually ask it.
 
-> **Where the edge term comes from.** The card says the perimeter term is `cpmimc = 0.19e-15`
-> farads per micrometre of edge, and a square of side $s$ has $4s$ of edge, so you would expect
-> $\beta = 0.76$. You measured 0.659991. The difference is that the plate is not the size you
-> drew: the model computes with `wc = w + m3_dw`, where `m3_dw` is the **metal-3 width bias**,
-> how much narrower the etched metal comes out than the mask. Substituting $s \to s - d$ into
-> $2s^2 + 0.76s$ gives $2s^2 + (0.76 - 4d)s + (2d^2 - 0.76d)$. Setting $0.76 - 4d = 0.659991$
-> gives $d = 0.025002$ µm, and that same $d$ predicts the constant term as −0.017751 fF, against
-> the −0.017742 you measured. The checker prints both:
->
-> ```
->     the edge term implies a metal etch bias of 25.00 nm per side,
->     which predicts a constant term of -0.017751 fF against the -0.017742 you measured.
-> ```
->
-> You measured a 25 nm etch bias with a capacitance measurement, from five numbers, without
-> being told it existed. It is the same story as `weff`, the effective width, in Lab 01, Part 4:
-> the mask is not the silicon, and the model knows the difference even when the datasheet
-> headline doesn't mention it.
+The card says the perimeter term is `cpmimc = 0.19e-15` farads per micrometre of edge, and a
+square of side $s$ has $4s$ of edge, so you would expect $\beta = 0.76$. You measured 0.659991.
+Where did the difference go?
+
+<details>
+<summary>Answer</summary>
+
+The plate is not the size you drew. The model computes with `wc = w + m3_dw`, where `m3_dw` is
+the **metal-3 width bias**, how much narrower the etched metal comes out than the mask.
+Substituting $s \to s - d$ into $2s^2 + 0.76s$ gives $2s^2 + (0.76 - 4d)s + (2d^2 - 0.76d)$.
+Setting $0.76 - 4d = 0.659991$ gives $d = 0.025002$ µm, and that same $d$ predicts the constant
+term as −0.017751 fF, against the −0.017742 you measured. The checker prints both:
+
+```
+    the edge term implies a metal etch bias of 25.00 nm per side,
+    which predicts a constant term of -0.017751 fF against the -0.017742 you measured.
+```
+
+You measured a 25 nm etch bias with a capacitance measurement, from five numbers, without being
+told it existed. It is the same story as `weff`, the effective width, in Lab 01, Part 4: the mask
+is not the silicon, and the model knows the difference even when the datasheet headline doesn't
+mention it.
+
+</details>
 
 ## Part 3: Size one picofarad
+
+How far off is a picofarad sized from the area term alone?
 
 1. Work out the naive size: $A = 1000\,\text{fF} / 2.00 = 500\ \mu\mathrm{m}^2$, a square of side
    $\sqrt{500} = 22.3607$ µm. The deck contains it as `c_naive`.
@@ -171,7 +195,7 @@ question you will actually ask it.
 2. Solve $2.000000\,s^2 + 0.659991\,s - 0.017742 = 1000$ for the corrected side. The deck contains
    it as `c_fixed`.
 
-3. Find block B.
+3. Predict how far from 1 pF the naive plate lands. Then find block B.
 
 **You should see:**
 
@@ -184,12 +208,21 @@ c_fixed = 1.000001e-12
 The naive plate gives 1.0147 pF, 1.47 % high. The corrected side, $s = 22.1965$ µm, measures
 1.000001 pF, one part in a million.
 
-1.47 % on a single capacitor is usually survivable. 1.47 % on the *ratio* of two capacitors is a
-switched-capacitor filter with the wrong corner frequency, or an ADC that is a quarter of a bit
-non-linear. Capacitor ratios are the most precise thing available on a chip (better than 0.1 %
-is routine), and ignoring the fringe term throws that precision away.
+1.47 % on a single capacitor is usually survivable. When isn't it?
+
+<details>
+<summary>Answer</summary>
+
+When it lands on a ratio of two capacitors. 1.47 % on the ratio is a switched-capacitor filter
+with the wrong corner frequency, or an ADC that is a quarter of a bit non-linear. Capacitor ratios
+are the most precise thing available on a chip (better than 0.1 % is routine), and ignoring the
+fringe term throws that precision away.
+
+</details>
 
 ## Part 4: Three ways to build a capacitor
+
+Which construction gives the most capacitance per square micrometre, and what does it cost you?
 
 Block C measures the other two kinds of capacitor from
 [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md): MOS (an nFET gate and a pFET gate,
@@ -236,19 +269,28 @@ four and a half ripple-carry adders. And block D:
 c_nmos_off = 2.207181e-13
 ```
 
-220.72 fF instead of the 787.69 fF of `c_nmos10`, with no change to a single shape in the
-layout.
+220.72 fF instead of the 787.69 fF of `c_nmos10`, a factor of 3.57 (the checker prints it too),
+with no change to a single shape in the layout.
 
-The densest capacitor uses the gate oxide, because it is the thinnest insulator in the process.
-But it is a transistor, so it is only a capacitor while there is a channel under the gate to act
-as the other plate. Remove the bias and 72 % of the capacitance goes with it. A capacitance that
-depends on the voltage across it causes distortion, so MOS capacitors go on the supply rails by
-the million, where the voltage never moves, and stay out of signal paths. Density, linearity and
-mask cost (MIM needs extra masks; see the table on
+The MOS capacitor is the densest by far. Why doesn't it go in a filter?
+
+<details>
+<summary>Answer</summary>
+
+It uses the gate oxide, the thinnest insulator in the process, which is why it is densest. But it
+is a transistor, so it is only a capacitor while there is a channel under the gate to act as the
+other plate. Remove the bias and 72 % of the capacitance goes with it. A capacitance that depends
+on the voltage across it causes distortion, so MOS capacitors go on the supply rails by the
+million, where the voltage never moves, and stay out of signal paths. Density, linearity and mask
+cost (MIM needs extra masks; see the table on
 [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md#choosing-between-them)) are separate
 properties, and no device wins on all three.
 
+</details>
+
 ## Part 5: The MOS capacitor's C–V curve
+
+How does a MOS capacitor's value move with its gate voltage?
 
 The guide pages quote a second set of decks in `labs/passives-decks`. `spice/c_area.spice`
 measures one MIM, VPP and MOS capacitor each at 1 kHz, and `spice/c_moscap_cv.spice` sweeps one
@@ -275,18 +317,30 @@ MOS capacitor's gate from 0 V to 1.8 V in 100 mV steps.
 **You should see:** MIM densities of 2.64, 2.07 and 2.02 fF/µm², falling as the plate grows. In
 the sweep, 220.7182 fF at 0 V (`c_000mv = 2.207182e-13`), a steep climb between 0.3 V and
 0.7 V, and a flattening toward 787.6883 fF at 1.8 V (`c_180mv = 7.876883e-13`). That is the
-curve plotted on [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md#mos-capacitance-and-gate-voltage):
-the steep part is the transistor's threshold.
+curve plotted on [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md#mos-capacitance-and-gate-voltage).
+
+What sets the voltage where the curve is steepest?
+
+<details>
+<summary>Answer</summary>
+
+The transistor's threshold. As Part 4 found, a MOS capacitor only has its full value while there
+is a channel under the gate to act as the other plate.
+
+</details>
 
 ## Part 6: Size your own capacitors
+
+Can you size two MIM plates from your own three-term fit so that each lands within 1 % of its
+target?
 
 `spice/my_cap.spice` has three plates to size:
 
 | | device | target |
 |---|---|---|
-| C1 | `cap_mim_m3_1`, square | **250 fF** |
-| C2 | `cap_mim_m3_1`, square | **20 fF** |
-| C3 | `nfet_01v8` gate at 1.8 V, square | **250 fF** |
+| C1 | `cap_mim_m3_1`, square | 250 fF |
+| C2 | `cap_mim_m3_1`, square | 20 fF |
+| C3 | `nfet_01v8` gate at 1.8 V, square | 250 fF |
 
 The file ships with all three sized from the area term alone, so the check in Part 1 failed on
 two of them:
@@ -305,8 +359,22 @@ two of them:
 
 1. Before you change anything, work out why C3 passed with the naive sizing and the other two
    did not. That is the point of the third row.
-2. Solve for the side lengths of C1 and C2 using your three-term fit from Part 2. Leave C3 as
-   it is.
+
+   <details>
+   <summary>Answer</summary>
+
+   All three naive sizings dropped the edge term. The edge term is a perimeter effect, so what
+   matters is perimeter over area, which for a square of side $s$ is $4/s$ and grows as the plate
+   shrinks. C3's dielectric is gate oxide, so its area term is about four times the MIM's, while
+   its edge term comes mostly from the small gate-to-source and gate-to-drain overlaps. When the
+   area term is that large, the edges have little left to contribute. The lab's
+   `solutions/README.md` has the longer version.
+
+   </details>
+
+2. Solve for the side lengths of C1 and C2 using your three-term fit from Part 2, and write them
+   down. Leave C3 as it is. The checker's explanation of each failure gives the side it would
+   use; compare yours with it only after you have your own.
 3. Edit the sizes in `spice/my_cap.spice`. Write them as plain microns, with no `u` suffix.
 4. Re-run your file and the checker:
 
@@ -321,6 +389,8 @@ PASS -- every number matches the reference run.
 ```
 
 ## Part 7: The three inductors
+
+What inductors does SKY130 give you, and what do they cost in area?
 
 `make` already ran `make henry`, which sweeps the three SKY130 inductor models from 100 MHz to
 100 GHz. It is the fast run, because the inductor models live in three small files outside the
@@ -366,17 +436,7 @@ corner library.
    220 µm across the hole in the middle is 48,400 µm², and the five turns of metal go outside
    that. So 48,400 µm² is a lower bound on the footprint, not the footprint.
 
-4. (Optional) `make henry` also leaves `results/ind_sweep.txt`, the whole 100 MHz to 100 GHz
-   sweep. To see it as a plot (nothing to install):
-
-   ```bash
-   python3 src/plot_inductors.py      # -> results/inductors.svg
-   ```
-
-   It marks each self-resonance, where the apparent inductance crosses zero. Above that line the
-   device behaves as a capacitor, even though it is still called an inductor.
-
-5. Now look at the low-frequency end, which the guide page quotes. Run the `passives-decks`
+4. Now look at the low-frequency end, which the guide page quotes. Run the `passives-decks`
    inductor deck:
 
    ```bash
@@ -396,19 +456,28 @@ Put the three passives side by side, all from your own runs in the same process:
 |---|---|---|
 | 1 kΩ resistor (Lab 01, strip only) | 1.96 µm² | 0.018 |
 | 1 pF MIM capacitor | 492.68 µm² | 4.5 |
-| 9.92 nH inductor | ≥ 48,400 µm² | **≥ 440** |
+| 9.92 nH inductor | ≥ 48,400 µm² | ≥ 440 |
 
 On a schematic the three symbols are the same size. In silicon they span a factor of
 twenty-five thousand.
 
-And 9.92 nH is not a useful inductance for anything but radio. A switching regulator wants
-microhenries. Even if inductance scaled linearly with area (it doesn't; a spiral does
-considerably worse), 10 µH would need 4.9 × 10⁷ µm², which is 49 mm², larger than most entire
-chips. That is why every switching regulator you have seen has an inductor soldered next to the
-chip rather than inside it. It also answers one of the three questions this course set out to
-answer, how you fabricate an inductor at the micro scale: mostly, you don't.
+A switching regulator wants microhenries. Could you put 10 µH on the chip?
+
+<details>
+<summary>Answer</summary>
+
+No. 9.92 nH is not a useful inductance for anything but radio. Even if inductance scaled linearly
+with area (it doesn't; a spiral does considerably worse), 10 µH would need 4.9 × 10⁷ µm², which
+is 49 mm², larger than most entire chips. That is why every switching regulator you have seen has
+an inductor soldered next to the chip rather than inside it. It also answers one of the three
+questions this course set out to answer, how you fabricate an inductor at the micro scale:
+mostly, you don't.
+
+</details>
 
 ## Part 8: A 2.4 GHz resonator
+
+Can you land a resonator on 2.4 GHz using only numbers you measured?
 
 `spice/tank.spice` puts `ind_03_90` in parallel with a MIM capacitor and looks for the impedance
 peak. The sizing uses numbers you already have:
@@ -429,20 +498,81 @@ using the three-term fit from Part 2.
    fpeak               =  2.40000e+09 with=  2.50130e+02
    ```
 
-**You should see:** resonance at 2.4000 GHz, exactly where you aimed, with a peak impedance of
-250.13 Ω.
+3. Find the `ind_03_90` lines in the `henry` output from Part 1:
 
-Two things check out at once. The resonance landing on the digit says your capacitor model, your
-inductor reading and your arithmetic all agree. And
+   ```
+   --- B. ind_03_90 at 2.4 GHz ---
+   l_090_2g4 = 1.554019e-09
+   q_090_2g4 = 1.086413e+01
+   r_090_2g4 = 2.157013e+00
+   ```
+
+**You should see:** resonance at 2.4000 GHz, exactly where you aimed, with a peak impedance of
+250.13 Ω. The resonance landing on the digit says your capacitor model, your inductor reading and
+your arithmetic all agree. At 2.4 GHz the inductor has a Q of 10.86 and 2.157 Ω of series
+resistance.
+
+The peak impedance is 250.13 Ω and the inductor's Q is 10.86. Work out the relationship. Could a
+better capacitor have made the resonator better?
+
+<details>
+<summary>Answer</summary>
+
 $250.13 / (2\pi \times 2.4\text{GHz} \times 1.554\text{nH}) = 10.7$, close to the inductor's own
-Q at 2.4 GHz, 10.86 (`q_090_2g4` in the `henry` output). So the capacitor contributed almost no
-loss, and the resonator's quality is nearly all the inductor's. That is the usual case on silicon, and it is why people quote on-chip Q for inductors
-and never for capacitors.
+Q at 2.4 GHz, 10.86. So the capacitor contributed almost no loss, and the resonator's quality is
+nearly all the inductor's, so a better capacitor has almost nothing to improve. That is the usual case on silicon,
+and it is why people quote on-chip Q for inductors and never for capacitors.
+
+</details>
 
 The whole resonator is 8,100 µm² of inductor (a lower bound) plus 1,403 µm² of capacitor: 86
 ripple adders for one tuned circuit.
 
-## Part 9 (optional): Parasitic capacitance in SiliWiz
+## Finishing
+
+You're done when `make mine check`, run on the C1 and C2 sides you worked out in Part 6, prints
+`PASS -- every number matches the reference run.`
+
+AC operating points have no randomness in them, so on the pinned image (ngspice-47, `sky130A`,
+`tt` corner, 27 °C) your numbers match the ones on this page.
+
+Question:
+
+1. C1 and C2 made the same mistake. Why did C2 miss by 10.35 % and C1 by only 2.94 %?
+
+   <details>
+   <summary>Answer</summary>
+
+   Same type of plate, but C2 is 3.7 times smaller, and the edge term grows relative to the area
+   term as $4/s$ (Part 6, step 1). Its error is 3.5 times bigger.
+
+   </details>
+
+After yours pass, read
+[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-02-how-big-is-a-picofarad/solutions/README.md)
+for the reference sizes, why C3 passed, and a check of what inductor geometry the PDK's GDS
+actually contains.
+
+Submit: nothing for this lab.
+
+## Going further (optional)
+
+None of these is in the time estimate, and no later part needs them.
+
+### Plot the inductor sweep
+
+`make henry` also leaves `results/ind_sweep.txt`, the whole 100 MHz to 100 GHz sweep. To see it as
+a plot (nothing to install):
+
+```bash
+python3 src/plot_inductors.py      # -> results/inductors.svg
+```
+
+It prints `wrote results/inductors.svg`. The plot marks each self-resonance, where the apparent
+inductance crosses zero. Above that line the device behaves as a capacitor, even though it is
+still called an inductor.
+
+### Part 9 (optional): Parasitic capacitance in SiliWiz
 
 [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) is easier to believe once you
 see that a wire is a bar hanging over a plane. SiliWiz draws the cross-section live.
@@ -468,29 +598,6 @@ capacitor as [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md).
 > for teaching. Use it for the shape of the answer (closer means more, a thicker gap means less,
 > edges matter) and use the PDK's `parameters/typical.spice` (see
 > [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md)) for the value.
-
-## Finishing
-
-You are done when `make mine check` prints `PASS -- every number matches the reference run.`
-
-AC operating points have no randomness in them, so on the pinned image (ngspice-47, `sky130A`,
-`tt` corner, 27 °C) your numbers match these:
-
-```
-MIM square plate, side s :  C[fF] = 2.000000 s^2 + 0.659991 s - 0.017742
-                            (etch bias d = 25.00 nm per side falls out of it)
-1 pF                     :  MIM 22.1965 um square = 492.68 um^2
-                            MOS 11.2699 um square = 127.01 um^2
-                            VPP                     1096.96 um^2
-MOS cap, gate at 0 V     :  220.72 fF vs 787.69 fF biased -- x3.57
-ind_03_90 at 2.4 GHz     :  L = 1.554019 nH   Q = 10.864   Rs = 2.157 ohm
-2.4 GHz tank             :  peak |Z| = 250.13 ohm at 2.4000 GHz
-```
-
-After yours pass, read
-[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-02-how-big-is-a-picofarad/solutions/README.md)
-for the reference sizes, why C3 passed, and a check of what inductor geometry the PDK's GDS
-actually contains.
 
 Next on the [Course path](README.md#course-path): read
 [What to build instead of an inductor](guide/what-analog-builds-instead.md), then do
