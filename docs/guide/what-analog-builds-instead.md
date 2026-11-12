@@ -91,7 +91,7 @@ thousand µm² and get you a component with a Q of 40 and a value in microhenrie
 The package itself gets used too. A bond wire is roughly 1 nH per millimetre, and RF designers do
 design that inductance into the matching network rather than fighting it.
 
-## Where the spiral is the right answer
+## When to use an on-chip spiral
 
 None of this makes the three SKY130 spirals useless. Above about a gigahertz, where Q climbs past
 10, an on-die inductor is the right answer and often the only one:
@@ -104,7 +104,7 @@ None of this makes the three SKY130 spirals useless. Above about a gigahertz, wh
 That is what those cells are for. It is a narrow, real and well-paid niche, and it is not where
 AD102 or AD103 work.
 
-## Ratios on chip, scale from outside
+## What the four answers have in common
 
 All four answers have the same shape:
 

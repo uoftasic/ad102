@@ -34,7 +34,7 @@ At $t = \tau$ the output has covered $1 - e^{-1} = 0.632120$ of its journey. So 
 is: step the input, find the moment the output crosses 63.2 % of its final value, and that time
 is $\tau$ by definition. Every `meas` in this lab is one line doing exactly that.
 
-## Part 1: The five-picosecond offset
+## Part 1: Measure two time constants you can predict
 
 Part A of `spice/rc.spice` is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck,
 unchanged: a 1 kΩ/2 kΩ divider with 0.7 pF on the tap, driven by a 1.8 V pulse. It is the version
@@ -129,8 +129,8 @@ $10\,\text{k}\Omega \times 7.234\,\text{fF}/2 = 36.2$ ps, against the 36.1 ps yo
 checker fits both strips and gets 0.1994 fF per micrometre of 1 µm-wide poly, plus 1.187 fF of
 ends. You'll use that number in Part 5.
 
-Your resistor is also a capacitor, and always was. Below some size you can ignore that; this lab
-finds where that stops being true.
+So your resistor is also a capacitor. At 10 kΩ it costs you 0.36 %; Part 5 finds the size where
+you can no longer ignore it.
 
 ## Part 3: Sizing without Labs 01 and 02
 
@@ -309,8 +309,9 @@ resistance, the perimeter capacitance, the sizing you got wrong on the first try
 filter whose corner is 0.36 % from the ideal one you drew on paper. The same filter designed
 without those two labs, in Part 3, lands 5.65 % out, sixteen times worse.
 
-An `.ac` and a `.tran` of the same RC must satisfy $f_{-3\text{dB}} = 1/(2\pi\tau)$. Two
-independent measurements agreeing is the only evidence you ever get that a deck is right.
+An `.ac` and a `.tran` of the same RC must satisfy $f_{-3\text{dB}} = 1/(2\pi\tau)$. Checking
+one against the other costs nothing. The two analyses share nothing but the device lines, and two
+independent measurements agreeing is the only evidence you get that a deck is right.
 
 ## Part 8 (optional): The same circuit in XSchem
 
@@ -392,7 +393,7 @@ figures as part E. The picture and the deck agree, because they are the same cir
 
 This is the last time in AD102 you type a device line. [AD103](https://uoftasic.com/ad103/) is
 entirely XSchem (you'll draw a diode, then a transistor, then a CMOS inverter), and it assumes you
-have seen a schematic turn into a netlist once. This was that once.
+have already seen a schematic turn into a netlist, as you just did here.
 
 ## Finishing
 
@@ -434,8 +435,8 @@ Next on the [Course path](README.md#course-path): read
 **Silence.** Each of the two runs in `make` is silent while ngspice loads 12 MB of SKY130 model
 cards.
 
-**`Doing analysis at TEMP = ... and TNOM = 27.000000` appears five times**, at 27 °C, −40 °C and
-+125 °C. That is Part 4: the deck runs the same `.tran` card at three temperatures. `TNOM`
+**`Doing analysis at TEMP = ... and TNOM = 27.000000` appears five times** in `results/rc.log`,
+at 27 °C, −40 °C and +125 °C. That is Part 4: the deck runs the same `.tran` card at three temperatures. `TNOM`
 staying at 27 is correct; it is the temperature the model parameters were extracted at, not the
 one you are simulating.
 

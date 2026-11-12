@@ -201,8 +201,8 @@ $\sqrt{47.6} = 6.90$, so the small pair is about 12 % worse than area explains. 
 wide, below the 0.69 µm point where Lab 01, Part 4 found the sheet resistance starts to change,
 and it also pays head mismatch, which does not scale with $WL$ at all.
 
-This is the main reason analog blocks look enormous next to digital ones. Precision costs square
-micrometres, and there is no discount.
+This is the main reason analog blocks look enormous next to digital ones: precision is paid for
+in square micrometres.
 
 ## Part 5: One ratio drawn two ways
 
@@ -267,8 +267,8 @@ whole class of error, including ones nobody has told you about yet.
 > `AGAUSS` knows nothing about where your devices are, because your netlist does not say where
 > they are; position enters a design at layout, and a SPICE netlist has no coordinates. If you
 > build the interleaved version and run ten thousand dies, you will measure zero benefit, because
-> you are measuring the model, not the silicon. Knowing which effects your simulator contains is
-> the difference between verification and reassurance.
+> you are measuring the model, not the silicon. Before you use a simulation to check a design
+> decision, check that the simulator models the effect the decision is about.
 >
 > Post-layout extraction, which [AD104](https://uoftasic.com/ad104/) covers, does not fix this
 > either: it adds parasitic $R$ and $C$ from your actual geometry, not process gradients.

@@ -55,7 +55,8 @@ of coupling into the substrate, as two 223.7 fF capacitors each draining through
 the `sub` terminal; 205 fF directly across the winding; and a 9.064 Ω resistor modelling loss in
 the silicon underneath.
 
-The inductance takes two lines out of thirteen. The other eleven are the problem.
+Only two of the thirteen lines are inductance. The other eleven are the losses and parasitics, and
+the rest of this page is about what they do to the device.
 
 ## Q
 
