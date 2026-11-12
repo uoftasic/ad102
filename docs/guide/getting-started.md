@@ -5,7 +5,7 @@ descendant of Berkeley SPICE, simulates a circuit and tells you what it would do
 the schematic editor that draws circuits for it. Both are already in the image, so nothing on
 this page installs anything. This page explains how the pieces fit together, the warnings you
 will see every day, and the one mistake that costs students the most time. You'll do the setup
-itself in [Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-set-up-the-workbench).
+itself in [Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
 
 ## What this course assumes
 
