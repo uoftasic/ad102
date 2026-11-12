@@ -325,7 +325,7 @@ poly), the same capacitor (a 22.1965 µm square of MIM), and the same pulse.
 
 The **SKY130** badge in the top right shows which parts catalogue XSchem loaded. If yours says
 **IHP**, stop and redo the PDK steps in
-[Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-set-up-the-workbench).
+[Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
 The resistor symbol prints **`R=9.999k`** beside itself, because the SKY130 symbols compute the
 resistance live from the `W` and `L` you give them. The capacitor shows **`C=1.002p`**.
 

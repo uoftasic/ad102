@@ -21,132 +21,59 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
 over a minute before it prints anything, depending on your machine (see
 [Expected warnings and delays](#expected-warnings-and-delays)).
 
-## Part 1: Set up the workbench
+## Part 1: Load the course
 
-You do this part once. Steps 3 and 5 have to work, because they give you the `mod` command and
-the course files; if either fails, ask for help before going on. The other checks are for your
-information. If `$PDK` is not `sky130A` in step 4, still ask, but you can run the labs in the
-meantime: the lab decks name their model files by absolute path, so `make` does not depend on
-`$PDK`.
+Can you reach the AD102 files, on the tool versions this course's printed outputs come from? If
+you haven't set up the workbench yet, do
+[IC101 Lab 03](https://uoftasic.com/ic101/#/labs/lab-03-launch-the-workbench-overview) first.
 
-1. On your own machine, in your `workspace` clone, start the desktop:
+1. From your `workspace` clone, start the desktop (`./scripts/start_vnc.sh`, or
+   `scripts\start_vnc.bat` on Windows), open <http://localhost/> and open a terminal on the
+   desktop. Type every command in this course in that terminal, not on your laptop.
 
-   ```bash
-   cd workspace
-   ./scripts/start_vnc.sh          # Windows: scripts\start_vnc.bat
-   ```
-
-   Open **http://localhost/** and open a terminal on that desktop. Every command in this lab is
-   typed in that terminal, not on your laptop. For ports, passwords, resolution, and what to do
-   when the page is blank, see
-   [IC101 — Launch the noVNC desktop](https://uoftasic.com/ic101/#/guide/launch-novnc).
-
-2. Check which PDK the terminal is on:
+2. Load the course environment and get the course files:
 
    ```bash
+   . /foss/designs/common/.designinit   # a new terminal usually does this for you; again is harmless
    echo "PDK is: $PDK"
-   ls $PDK_ROOT/$PDK/libs.tech/xschem/ | grep _pr
+   mod add ad102                        # first time only: clones github.com/uoftasic/ad102
+   mod ad102                            # every time after that
    ```
 
-   On the IC101 workbench a new terminal normally loads the course environment by itself, so
-   you will probably see SKY130 already (the output in step 4). If you see the image's default,
-   IHP, this terminal has not loaded it yet:
+   You should see the `ASIC-EDU: PDK=sky130A ...` banner, `PDK is: sky130A`, then
+   `OK  module ready: /foss/designs/modules/ad102`, then `cwd: /foss/designs/modules/ad102`.
+   `mod` and the course files have to work; if they don't, ask for help before going on. The
+   `PDK` setting matters only to XSchem, in the optional last part of Lab 03: every lab deck
+   names its model files by absolute path, so `make` works whatever `$PDK` says.
+   [Getting started](guide/getting-started.md#the-pdk-setting) explains why.
 
-   ```
-   PDK is: ihp-sg13g2
-   sg13g2_pr
-   ```
-
-3. Load the course environment. If a terminal ever shows IHP, this is the fix, and running it in
-   a terminal that already has it does no harm.
-
-   ```bash
-   . /foss/designs/common/.designinit
-   ```
-
-   ```
-   ASIC-EDU: PDK=sky130A  PDK_ROOT=/foss/pdks  designs=/foss/designs
-             run 'mod' to list course modules, or 'mod <name>' to enter one.
-   ```
-
-4. Run the two commands from step 2 again. You should see SKY130:
-
-   ```
-   PDK is: sky130A
-   sky130_fd_pr
-   sky130_fd_pr.patch
-   ```
-
-   Those directories are the symbol libraries XSchem loads.
-   [Getting started](guide/getting-started.md#the-pdk-setting) explains why this matters.
-
-5. Get the course files:
-
-   ```bash
-   mod add ad102      # first time only: clones github.com/uoftasic/ad102
-   mod ad102          # every time after that
-   ```
-
-   ```
-   Cloning https://github.com/uoftasic/ad102.git
-        into /foss/designs/modules/ad102
-   Cloning into '/foss/designs/modules/ad102'...
-   OK  module ready: /foss/designs/modules/ad102
-       run: mod ad102
-   cwd: /foss/designs/modules/ad102
-   ```
-
-   If something goes wrong here, it is usually one of these:
-
-   | What you see | What it means |
-   |---|---|
-   | `bash: mod: command not found` | This terminal has not loaded the course environment. Run step 3 in it. |
-   | `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
-   | `fatal: could not read Username for 'https://github.com'` | git is asking you to log in, which means it could not read the repo anonymously. Check the spelling first. If it is right, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
-
-6. Check the two tool versions this course depends on:
+3. Check the two tool versions this course's numbers were recorded with:
 
    ```bash
    ngspice -v | head -3
    xschem -v | head -1
    ```
 
-   ```
-   ******
-   ** ngspice-47 : Circuit level simulation program
-   ** Compiled with KLU Direct Linear Solver
-   ```
+   You should see `** ngspice-47 : Circuit level simulation program` on the second line and
+   `XSCHEM V3.4.8RC`. If you see different versions, you are on a different image, and commands
+   on these pages may fail in ways this course does not describe.
 
-   ```
-   XSCHEM V3.4.8RC
-   ```
-
-   If you see different versions, you are on a different image, and commands on these pages may
-   fail in ways this course does not describe.
-
-7. (Optional) Check the rest of the image. AD102 doesn't use these; they are the AD104 layout
-   tools, listed so you can confirm the image is complete:
-
-   | Tool | Command | Expect |
-   |---|---|---|
-   | Magic | `magic -dnull -noconsole --version` | `8.3.681` |
-   | KLayout | `klayout -v` | `KLayout 0.30.11` |
-   | Netgen | `netgen -batch quit \| head -1` | `Netgen 1.5.323 compiled on …` |
-
-   `netgen -batch quit` also prints
-   `Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
-   line like it. Those are Tcl namespace notices from the tool itself. They are not about your
-   design, and there is nothing to fix.
-
-8. Go to this lab's folder and list the packages:
+4. Go to this lab's folder and list the packages:
 
    ```bash
    cd /foss/designs/modules/ad102/labs/lab-01-a-resistor-you-designed
    ls ..
    ```
 
-**You should see:** `echo $PDK` prints `sky130A`, `ngspice -v` says `ngspice-47`, and `ls ..`
-lists the four lab packages plus `passives-decks`:
+| If you see | It means |
+|---|---|
+| `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
+| `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check the spelling first. If it is right, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
+
+For anything else, such as a blank desktop page or `mod: command not found`, see IC101's
+[Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
+
+**You should see:** `ls ..` lists the four lab packages plus `passives-decks`:
 
 ```
 lab-01-a-resistor-you-designed     lab-03-a-time-constant-in-silicon  passives-decks
@@ -585,6 +512,24 @@ for the reference sizing and some questions worth arguing about.
 Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
 [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
 [Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
+
+## Going further (optional)
+
+### Check the rest of the image
+
+AD102 doesn't use these tools. They are the AD104 layout tools, listed so you can confirm the
+image is complete:
+
+| Tool | Command | Expect |
+|---|---|---|
+| Magic | `magic -dnull -noconsole --version` | `8.3.681` |
+| KLayout | `klayout -v` | `KLayout 0.30.11` |
+| Netgen | `netgen -batch quit \| head -1` | `Netgen 1.5.323 compiled on …` |
+
+`netgen -batch quit` also prints
+`Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
+line like it. Those are Tcl namespace notices from the tool itself. They are not about your
+design, and there is nothing to fix.
 
 ## Expected warnings and delays
 
