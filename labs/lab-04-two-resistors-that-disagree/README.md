@@ -1,4 +1,4 @@
-# Lab 04 — Two resistors that disagree
+# Lab 04: Two resistors that disagree
 
 Writeup: [`docs/labs/lab-04-two-resistors-that-disagree-overview.md`](../../docs/labs/lab-04-two-resistors-that-disagree-overview.md),
 published at <https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview>.

@@ -1,4 +1,4 @@
-# Lab 03 — A time constant in silicon
+# Lab 03: A time constant in silicon
 
 You designed a resistor in Lab 01 and a capacitor in Lab 02. In this lab you'll put them in one
 circuit, measure its time constant, separate a measurement artefact from a real device effect,
@@ -428,7 +428,7 @@ cannot be built.
 Next on the [Course path](README.md#course-path): read
 [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and
 [Matching and Pelgrom's law](guide/matching-beats-accuracy.md), then do
-[Lab 04 — Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
+[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
 
 ## Expected warnings and delays
 

@@ -150,6 +150,6 @@ capacitors instead ([What to build instead of an inductor](guide/what-analog-bui
 None of that is tradition: it follows from 100 kΩ costing 84 inverters.
 
 Next on the [Course path](README.md#course-path):
-[Lab 01 — A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md). After
+[Lab 01: A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md). After
 that, [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md) asks the same question about
 capacitors, and the area bill is much bigger.

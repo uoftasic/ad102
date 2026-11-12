@@ -181,6 +181,6 @@ topology instead, and analog designers have been working around this since the 1
 a mature set of replacements.
 
 Next on the [Course path](README.md#course-path):
-[Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md). After that,
+[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md). After that,
 [What to build instead of an inductor](guide/what-analog-builds-instead.md) covers the
 replacements.

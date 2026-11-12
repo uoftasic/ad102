@@ -1,4 +1,4 @@
-# Lab 01 — A resistor you designed
+# Lab 01: A resistor you designed
 
 You'll measure the sheet resistance and end resistance of a SKY130 poly resistor from your own
 simulation, use those two numbers to size resistors that land within 1 % of their targets, and
@@ -584,7 +584,7 @@ for the reference sizing and some questions worth arguing about.
 
 Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
 [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
-[Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
+[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
 
 ## Expected warnings and delays
 

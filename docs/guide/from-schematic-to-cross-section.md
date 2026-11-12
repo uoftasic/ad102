@@ -143,4 +143,4 @@ and **parasitic extraction**, which reads your finished layout and hands back a 
 every capacitor from [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md).
 
 Next on the [Course path](README.md#course-path):
-[Capstone — Defend a floor plan](labs/capstone-floor-plan-overview.md).
+[Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md).
