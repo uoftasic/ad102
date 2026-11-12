@@ -1,13 +1,11 @@
 # What a picofarad costs
 
-**Question this page answers:** *Why does every chip schematic have capacitors in
-femtofarads, when the ones in my parts drawer are microfarads?*
-
-Because on a chip you buy capacitance by the square micrometre, and the exchange
+Why does every chip schematic have capacitors in femtofarads, when the ones in your parts drawer
+are microfarads? Because on a chip you buy capacitance by the square micrometre, and the exchange
 rate is bad.
 
-From [the previous page](guide/a-capacitor-is-a-sandwich.md), measured, not quoted:
-a MIM capacitor is **about 2 fF per µm²**. Turn that into floor plan.
+From [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), measured rather than quoted, a
+MIM capacitor gives about 2 fF per µm². Here is what that means in floor plan.
 
 ## The exchange rate
 
@@ -20,45 +18,38 @@ a MIM capacitor is **about 2 fF per µm²**. Turn that into floor plan.
 | 1 nF | 494 000 µm² | 703 × 703 µm | 131 600 |
 | 1 µF | 494.6 mm² | *a plate 2.2 cm on a side* | 132 million |
 
-Those numbers come straight from the measured 30 × 30 device: 1819.782 fF over
-900 µm² is 2.0220 fF/µm², so 1 pF needs $1000/2.0220 = 494.6$ µm².
+These numbers come from the measured 30 × 30 µm device: 1819.782 fF over 900 µm² is
+2.0220 fF/µm², so 1 pF needs $1000/2.0220 = 494.6$ µm².
 
-Read the last row and then look at the 100 nF ceramic chip you would casually
-solder next to a microcontroller. A typical small SKY130 die is about 3 mm × 3 mm,
-which is **9 mm²**. The 1 µF wants 494.6 mm² — **fifty-five entire chips**, for one
-component. It is not that on-chip capacitors are small because designers are timid.
-It is that a 1 µF capacitor is physically impossible on a die, and no cleverness
-closes that gap.
+Compare the last row with the 100 nF ceramic capacitor you would solder next to a
+microcontroller without thinking about it. A typical small SKY130 die is about 3 mm × 3 mm, or
+9 mm². The 1 µF capacitor needs 494.6 mm², which is fifty-five entire chips for one component.
+On-chip capacitors are small because a 1 µF capacitor physically cannot fit on a die, and no
+cleverness closes that gap.
 
-Even the densest option does not rescue you. A MOS capacitor at 7.88 fF/µm² gets
-1 µF down to 126.9 mm² — still fourteen whole dies, and now with a value that
-changes by 3.57× depending on the voltage across it.
+The densest option does not rescue you either. A MOS capacitor at 7.88 fF/µm² brings 1 µF down
+to 126.9 mm². That is still fourteen whole dies, and now the value changes by 3.57× with the
+voltage across it.
 
-## So what does fit?
+## What sizes are practical
 
-| capacitance | what it is used for |
+| capacitance | typical use |
 |---:|---|
-| 1–50 fF | sampling caps in an ADC, compensation on an amplifier, charge redistribution |
+| 1–50 fF | sampling capacitors in an ADC, amplifier compensation, charge redistribution |
 | 50–500 fF | filter capacitors, matched arrays, bandgap compensation |
 | 1–20 pF | serious on-die decoupling, a big integrator, an off-chip driver's load |
-| > 50 pF | you are budgeting a substantial fraction of the die for one component |
+| > 50 pF | you are budgeting a large fraction of the die for one component |
 
-This is the entire reason analog IC design *looks* the way it does. A discrete
-designer builds a 1 kHz low-pass from 16 kΩ and 10 nF. That capacitor is
-**4.94 mm²** on-die — bigger than most whole chips. So the on-chip designer does not
-build that filter. They build a switched-capacitor filter, or they use a very large
-resistance made from a starved transistor, or they push the corner frequency up by
-three decades and filter the rest off-chip. See
-[What analog builds instead](guide/what-analog-builds-instead.md).
+This is why analog IC design looks the way it does. A discrete designer builds a 1 kHz low-pass
+from 16 kΩ and 10 nF. That capacitor would be 4.94 mm² on a die, bigger than most whole chips. So
+the on-chip designer does not build that filter. They build a switched-capacitor filter, or use a
+very large resistance made from a starved transistor, or push the corner frequency up by three
+decades and filter the rest off-chip. See
+[What to build instead of an inductor](guide/what-analog-builds-instead.md).
 
-## Try this: watch the density change with size
+## Density and plate size
 
-```bash
-cd labs/passives-decks
-make capacitor
-```
-
-**What you should see** (already familiar from the previous page):
+Divide each measured MIM capacitor by its drawn area (1, 100 and 900 µm²):
 
 ```
 c_mim_1x1 = 2.642250e-15
@@ -66,72 +57,61 @@ c_mim_10x10 = 2.065822e-13
 c_mim_30x30 = 1.819782e-12
 ```
 
-- **Try this:** divide each by its drawn area — 1, 100 and 900 µm².
-- **What you should see:** 2.64, 2.07, 2.02 fF/µm². The density *falls* as the
-  capacitor gets bigger.
-- **Why an engineer cares:** the extra in the small one is edge field —
-  `cpmimc = 0.19e-15` farads per micron of perimeter. Perimeter grows as the side
-  length; area grows as its square. So the edge bonus is a 24 % windfall at 1 µm and
-  a 1 % rounding error at 30 µm. **Never estimate a small capacitor by area alone.**
+You get 2.64, 2.07 and 2.02 fF/µm². The density falls as the capacitor gets bigger.
 
-## Predict, then be wrong
+The extra in the small one is edge field: `cpmimc = 0.19e-15` farads per micron of perimeter.
+Perimeter grows with the side length, and area grows with its square, so the edge adds 24 % at
+1 µm and 1 % at 30 µm. **Never estimate a small capacitor from area alone.** In
+[Lab 02](labs/lab-02-how-big-is-a-picofarad-overview.md), Parts 1 and 2, you measure a ladder of
+plate sizes and separate the area term from the edge term yourself.
 
-Here is a question worth getting wrong before reading on.
+## Worked example: one plate or a hundred
 
-*You need 1 pF. You have room for a single 23 × 23 µm MIM. Alternatively you could
-place one hundred 2.3 × 2.3 µm MIMs in parallel, which occupies the same 529 µm² of
-plate. Which gives more capacitance?*
+You need 1 pF. You have room for a single 23 × 23 µm MIM. Alternatively, you could place one
+hundred 2.3 × 2.3 µm MIMs in parallel, which uses the same 529 µm² of plate. Which gives more
+capacitance? Try it before reading on.
 
-Most people say "the same". They are not the same, and the perimeter term says why.
-One big plate: $2.00 \times 22.975^2 + 0.19 \times 2 \times (22.975+22.975) = 1055.65 + 17.46 = 1073.1$ fF.
-One hundred small plates: each is $2.00 \times 2.275^2 + 0.19 \times 2 \times (2.275+2.275) = 10.35 + 1.729 = 12.08$ fF,
-times 100 = **1208 fF**. The chopped-up version is **12.6 % bigger** for the same
-plate area, purely because you created a lot more edge.
+Most people say "the same". The perimeter term says otherwise. One big plate:
+$2.00 \times 22.975^2 + 0.19 \times 2 \times (22.975+22.975) = 1055.65 + 17.46 = 1073.1$ fF.
+One hundred small plates: each is
+$2.00 \times 2.275^2 + 0.19 \times 2 \times (2.275+2.275) = 10.35 + 1.729 = 12.08$ fF, times
+100 = 1208 fF. The chopped-up version is 12.6 % bigger for the same plate area, because you
+created a lot more edge.
 
-That is a real technique — it is exactly why VPP capacitors exist, and why
-`sky130_fd_pr__cap_vpp_*` structures are drawn as interleaved fingers rather than
-slabs. (In practice the hundred small plates also need a hundred sets of
-connections and a lot of spacing between them, which is why nobody takes it to that
-extreme. But the direction is right, and the foundry took it as far as it goes when
-they drew the VPP cells.)
+This is a real technique, and it is why VPP capacitors exist and why the
+`sky130_fd_pr__cap_vpp_*` structures are drawn as interleaved fingers rather than slabs. In
+practice, a hundred small plates also need a hundred sets of connections and a lot of spacing
+between them, so nobody takes it to that extreme; the foundry took the idea as far as it goes
+when it drew the VPP cells.
 
-## What a capacitor costs besides area
+## Costs besides area
 
-Three bills that do not appear in the farad number:
+Three costs don't show up in the farad number.
 
-**Bottom-plate parasitic.** A MIM plate is a big sheet of metal sitting over the
-substrate. It has its *own* capacitance to ground, whether you asked for it or not
-— the `.subckt` has a third terminal for exactly this. In a switched-capacitor
-circuit this parasitic is the dominant error source, and the entire art is arranging
-for it to be driven by something that does not care.
+**Bottom-plate parasitic.** A MIM plate is a large sheet of metal above the substrate, and it has
+its own capacitance to ground whether you asked for it or not; the `.subckt` has a third terminal
+for exactly this. In a switched-capacitor circuit this parasitic is the main error source, and
+much of the design work is arranging for it to be driven by something that does not care.
 
-**Series resistance.** Look at the MIM `.subckt` and you find two resistors in
-series with the capacitance:
+**Series resistance.** The MIM `.subckt` has two resistors in series with the capacitance:
 
 ```
 rs1 a  b1 'r1' tc1 = {tc1rm3} tc2 = {tc2rm3}
 rs2 b1 c1 'r2' tc1 = {tc1rvia3} tc2 = {tc2rvia3}
 ```
 
-`r1` is the met3 plate's own sheet resistance; `r2` is the via array. Your capacitor
-is a capacitor *and* a small resistor, and at high frequency the resistor wins.
+`r1` is the met3 plate's own sheet resistance and `r2` is the via array. Your capacitor is a
+capacitor and a small resistor, and at high frequency the resistor dominates.
 
-**Corner spread.** The MIM's area capacitance is `2.00e-15` F/µm² typical, but
-`1.778e-15` at the low corner and `2.231e-15` at the high one — about **±11 %**.
-[Movement IV](guide/the-value-you-drew-is-not-what-you-get.md) is about what to do
-with that.
+**Corner spread.** The MIM's area capacitance is `2.00e-15` F/µm² typical, but `1.778e-15` at
+the low corner and `2.231e-15` at the high one, about ±11 %.
+[Process corners](guide/the-value-you-drew-is-not-what-you-get.md) covers what to do about that.
 
-## Why an engineer cares
+## Reading capacitor values
 
-When you read an analog paper and see "C₁ = 240 fF", that is not an arbitrary
-number — it is 119 µm² of somebody's floor plan, argued over in a design review.
-Area is the currency of this whole field, and capacitors are the most expensive
+When an analog paper says "C₁ = 240 fF", that is 119 µm² of somebody's floor plan, argued over in
+a design review. Area is the currency of this whole field, and capacitors are the most expensive
 thing you can buy with it.
 
-[Lab 02 — How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md)
-makes you separate the area term from the edge term yourself, and then size a
-capacitor to a target.
-
-Next: [The capacitor you did not draw](guide/the-capacitor-you-did-not-draw.md) —
-because the capacitors that cost you the most are the ones nowhere in your
-schematic.
+Next: [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md), the capacitors nobody
+drew in the schematic.
