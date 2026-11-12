@@ -13,7 +13,8 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
   [Ohms per square](guide/ohms-per-square.md) and
   [What a resistor costs in area](guide/what-a-value-costs-in-area.md).
 - You need the workbench from [IC101](https://uoftasic.com/ic101/): the noVNC desktop comes up
-  in your browser and the smoke test passes. Part 1 sets up the rest.
+  in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/#/guide/smoke-test)
+  passes. Part 1 sets up the rest.
 - The circuit theory is Ohm's law and a voltage divider. Nothing else.
 
 **Time:** about 2.5 hours. Each ngspice run is silent for anywhere from about 10 seconds to a
@@ -21,6 +22,10 @@ minute before it prints anything, depending on your machine (see
 [Expected warnings and delays](#expected-warnings-and-delays)).
 
 ## Part 1: Set up the workbench
+
+You do this part once. You need the course files from step 5 to go on. If one of the PDK or
+version checks fails, ask for help, but you can still run the labs: the lab decks name their model
+files by absolute path, so `make` works even when the environment is not set up.
 
 1. On your own machine, in your `workspace` clone, start the desktop:
 
@@ -176,7 +181,8 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    make
    ```
 
-   This runs two ngspice decks and then the checker script, `src/check_res.py`. It ends in
+   This runs two ngspice decks, `spice/sheet.spice` and `spice/my_resistor.spice`, and then the
+   checker script, `src/check_res.py`. It ends in
    `FAIL`, which you fix in Part 7. Leave the output in your terminal, because Parts 2 to 5 read
    from it.
 
@@ -219,7 +225,9 @@ ladder**, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
    against 6722.641.
 
 **You should see:** your line matches every point to the last printed digit, across a 100-to-1
-range of lengths. The checker prints the same extraction:
+range of lengths. The checker prints the same extraction, with the course's own reference run
+in the last column for comparison (the `xhigh_po` row is the other material, which you extract
+yourself in Part 5):
 
 ```
   the two numbers that define the device
@@ -232,14 +240,16 @@ The 378 Ω is a fixed overhead on every resistor: the contact heads where metal 
 a little length the strip has that you did not draw. On a 100 kΩ resistor it is 0.4 % and you
 can ignore it. On a 500 Ω resistor it is most of the device.
 
-> **Where the 378 Ω comes from, if you want it.** Open the model card. The body is declared
+> **Where the 378 Ω comes from, if you want it.** Open the model card from step 1,
+> `sky130_fd_pr__res_high_po.model.spice`. The body is declared
 > `l = {leff}` with `leff = {l + 0.247}`, so the strip is electrically 0.247 µm longer than you
 > drew it, worth $317.2198 \times 0.247 = 78.35\ \Omega$. The head is a second resistor,
-> `rsh = 345.8312` over a width of `weff + 0.1558 = 1.1548`, giving
+> `rsh = 345.8312` over a width of `weff + 0.1558 = 1.1548` (`weff` is the effective width,
+> 0.999 µm for a strip drawn 1 µm wide; Part 4 has more on it), giving
 > $345.8312 / 1.1548 = 299.47\ \Omega$. Its temperature coefficients (`tc1 = -4.3e-4`,
 > `tc2 = 12e-6`, `tnom = 30`) scale that by
 > $1 + (-4.3{\times}10^{-4})(-3) + (12{\times}10^{-6})(9) = 1.001398$ at the 27 °C ngspice
-> simulated at, giving 299.89 Ω. And $299.89 + 78.35 = 378.24$, against the 378.2448 you
+> simulated at ($27 - 30 = -3$, and $(-3)^2 = 9$), giving 299.89 Ω. And $299.89 + 78.35 = 378.24$, against the 378.2448 you
 > measured. The arithmetic closes to five figures using only constants in a text file you can
 > `cat`.
 
@@ -270,7 +280,8 @@ The naive design is 10,373 Ω, 3.7 % too big. The corrected one is 9999.997 Ω, 
 million.
 
 3.7 % sounds small until you remember what resistors are for. A resistor that sets a bias
-current sets it 3.7 % wrong. A pair of them setting a gain of 10 sets it wrong twice. And the
+current sets it 3.7 % wrong. A pair of them setting a gain of 10 gets the gain wrong too, because
+the fixed 378 Ω is a different fraction of a long resistor and a short one. And the
 error is systematic: every chip on every wafer gets the same 3.7 %, so no amount of averaging
 finds it. A random spread is a tolerance, which you budget for; an error that is the same on every
 chip is a mistake, which you fix.
@@ -299,7 +310,9 @@ Read the Ω-per-square column downward: 317.362, 317.220, 317.061, 316.966. Shee
 property of the material, constant to a tenth of a percent, until 0.35 µm, where it jumps 7 % to
 340.074. Below 0.69 µm the model applies `weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip
 drawn 0.35 µm wide conducts as though it were 0.326 µm wide. Lithography and etch do not give
-you the width you drew.
+you the width you drew. The end resistance changes with width as well, from 82.841 Ω at 5 µm to
+958.562 Ω at 0.35 µm, because the contact head is as wide as the strip (the note in Part 2 shows
+its resistance is `rsh` divided by a width).
 
 Now read the last column: 0.36 µm² per kΩ at the narrowest width against 78.9 at the widest.
 Same material, same sheet resistance, a factor of 219 in area. You win twice by going narrow,
@@ -411,7 +424,9 @@ splits into its two parts.
    sized with the design equation, and the same 100 kΩ at four widths. Check that each lands on
    its target.
 
-6. Count the model warnings in the log:
+6. Count the model warnings in the log. They are the harmless ones described under
+   [Expected warnings and delays](#expected-warnings-and-delays); this deck has fewer resistors
+   than `sheet.spice`, so it has fewer of them.
 
    ```bash
    grep -c 'unrecognized parameter' results/r_head_and_body.log
@@ -465,13 +480,14 @@ numbers.
 3. Edit the two `L=` numbers in `spice/my_resistor.spice`. Write them as plain microns, with no
    `u` suffix.
 
-4. Re-run your file and the checker:
+4. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
+   `make check` prints the verdict again:
 
    ```bash
    make mine check
    ```
 
-**You should see:** both resistors marked `PASS`, then
+**You should see:** both resistors marked `PASS` (each must land within 1 % of its target), then
 
 ```
 PASS -- every number matches the reference run.
@@ -554,12 +570,14 @@ Next on the [Course path](README.md#course-path): read
 
 ## Expected warnings and delays
 
-**Silence.** Every ngspice run in this lab loads `.lib sky130.lib.spice tt`, which pulls in
-12 MB of model cards for every device in SKY130, mostly MOSFETs you are not using. ngspice prints
-nothing while it loads: 55–65 s per run in the Makefile's own measurement, and about 10 s on the
-faster machine this page was last checked on. `make` runs the simulator twice. It is not hung.
+**Silence.** Every ngspice run in this lab loads
+`.lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt`, which pulls in 12 MB of model
+cards for every device in SKY130, mostly MOSFETs you are not using. ngspice prints nothing while
+it loads: 55–65 s per run on the pinned image when the Makefile's timings were taken, and about
+10 s on a faster machine. `make` runs the simulator twice. It is not hung.
 
-**170 `unrecognized parameter` lines, in 34 blocks**, in `results/sheet.log`:
+**170 `unrecognized parameter` lines, in 34 blocks**, in `results/sheet.log`. A `rhead_model`
+block has four of these lines and a `rbody_model` block has six; here is a head block:
 
 ```
 Warning: Model issue on line 4842 :

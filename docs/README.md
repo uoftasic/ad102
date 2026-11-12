@@ -25,13 +25,13 @@ this whole course builds on is that **a component value is a geometry, and geome
 
 On a breadboard, component values are free and independent: a 10 kΩ costs the same as a 100 Ω,
 and you can have as many as you like. On silicon neither is true. A 1 pF capacitor, about the
-smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon
-(which simulates at 982.5022 fF). The 4-bit ripple-carry adder that the digital track builds in
+smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
+which simulates at 982.5022 fF (Lab 02 gives you the formula behind that number, and sizes the
+plate exactly). The 4-bit ripple-carry adder that the digital track builds in
 [DD103](https://uoftasic.com/dd103/), twelve SKY130 standard cells, fits in 110.1056 µm² of the
-same process, so that one capacitor takes the area of 4.4 adders. (Lab 02 sizes it exactly: a
-22.1965 µm square, 492.68 µm², 4.47 adders.) The analog habits you'll pick up here all follow
-from that comparison: ratios instead of values, unit devices, and keeping inductors off the chip
-below a gigahertz.
+same process, so that one capacitor takes the area of 4.4 adders. The analog habits you'll pick
+up here all follow from that comparison: ratios instead of values, unit devices, and keeping
+inductors off the chip below a gigahertz.
 
 ## At a glance
 
@@ -39,7 +39,7 @@ below a gigahertz.
 |---|---|
 | **Track** | Analog |
 | **Prerequisites** | [IC101](https://uoftasic.com/ic101/) then [AD101](https://uoftasic.com/ad101/), in that order |
-| **Tools** | ngspice and XSchem, both inside the workbench, plus SiliWiz in a browser tab |
+| **Tools** | ngspice and XSchem, both inside the workbench, plus SiliWiz (a browser layout tool that shows cross-sections) in a browser tab |
 | **PDK** | SKY130 (`sky130A`), included in the image |
 | **Time** | 12–16 hours, self-paced |
 | **Math** | Algebra, $V=IR$, and the $R$, $C$ and frequency material from AD101. No calculus. |
@@ -84,9 +84,10 @@ in your question.
    on a chip.
 3. Build an RC filter from the resistor and capacitor you designed and measure its time
    constant $\tau$. Then measure its corner frequency, check it against $1/(2\pi\tau)$ to six
-   figures, and compare its Bode plot with the ideal one from AD101: 15.8580 MHz for yours
-   against 15.9155 MHz ideal, 0.36 % apart. Optionally, open the same circuit in XSchem and see
-   a schematic turn into the netlist you had been typing by hand.
+   figures, and compare its Bode plot with that of the ideal 10 kΩ × 1 pF filter from AD101:
+   15.8580 MHz for the filter you built against 15.9155 MHz for the ideal one, 0.36 % apart.
+   Optionally, open the same circuit in XSchem and see a schematic turn into the device lines you
+   typed by hand in the earlier labs.
 4. See the same resistor come out different at every process corner, and learn why analog
    designers build ratios rather than values.
 5. Find out how you fabricate an inductor on a chip. Mostly you don't, and you'll see what gets
@@ -101,11 +102,15 @@ This course is pinned to the workbench image **`hpretl/iic-osic-tools:2026.08`**
 flags. When a command here disagrees with the internet, the command here is the one that runs on
 your machine. Lab 01, Part 1 has you check your versions.
 
-The four lab packages (Labs 01–04) run with `make` alone, in a bare container, with no
-environment setup: every deck names its SKY130 model file by absolute path. If a setup step in
-Lab 01, Part 1 fails, try `make` anyway. Only the optional XSchem part of Lab 03 needs the
-desktop. A fifth package, `passives-decks`, holds the decks whose output the guide pages quote;
-some lab parts run it too.
+Each of Labs 01–04 has a **package**: a folder under `labs/` with its SPICE decks, a `Makefile`
+and a checker script. The packages run with `make` alone, with no environment setup, because
+every deck names its SKY130 model file by absolute path. You still do Lab 01, Part 1 once, to get
+the course files and check your tools; if one of its PDK or version checks fails, try `make`
+anyway. Apart from the optional SiliWiz parts, which run in a browser tab, every lab step runs in
+a terminal, and only the optional XSchem part of Lab 03 opens a window on the desktop. A fifth
+package, `passives-decks`, holds the decks whose output the guide pages quote, and some lab parts
+run it too. The capstone has no package: it is one command, a browser exercise and a page of
+arithmetic.
 
 The first time you run each lab, its `make` ends in `FAIL`, on purpose. Each package ships the
 design a first-year student would draw, sized straight off the model card, so that you read your
