@@ -34,21 +34,24 @@ minute before it prints anything, depending on your machine (see
    when the page is blank, see
    [IC101 — Launch the noVNC desktop](https://uoftasic.com/ic101/#/guide/launch-novnc).
 
-2. Before loading anything, check which PDK the terminal starts on:
+2. Check which PDK the terminal is on:
 
    ```bash
    echo "PDK is: $PDK"
    ls $PDK_ROOT/$PDK/libs.tech/xschem/ | grep _pr
    ```
 
-   You should see the image's default, IHP:
+   On the IC101 workbench a new terminal normally loads the course environment by itself, so
+   you will probably see SKY130 already (the output in step 4). If you see the image's default,
+   IHP, this terminal has not loaded it yet:
 
    ```
    PDK is: ihp-sg13g2
    sg13g2_pr
    ```
 
-3. Load the course environment. You'll need to do this in every new terminal.
+3. Load the course environment. If a terminal ever shows IHP, this is the fix, and running it in
+   a terminal that already has it does no harm.
 
    ```bash
    . /foss/designs/common/.designinit
@@ -59,7 +62,7 @@ minute before it prints anything, depending on your machine (see
              run 'mod' to list course modules, or 'mod <name>' to enter one.
    ```
 
-4. Run the two commands from step 2 again. You should now see SKY130:
+4. Run the two commands from step 2 again. You should see SKY130:
 
    ```
    PDK is: sky130A
@@ -269,7 +272,8 @@ million.
 3.7 % sounds small until you remember what resistors are for. A resistor that sets a bias
 current sets it 3.7 % wrong. A pair of them setting a gain of 10 sets it wrong twice. And the
 error is systematic: every chip on every wafer gets the same 3.7 %, so no amount of averaging
-finds it. That is the difference between a tolerance and a mistake.
+finds it. A random spread is a tolerance, which you budget for; an error that is the same on every
+chip is a mistake, which you fix.
 
 ## Part 4: Change the width
 
@@ -314,6 +318,11 @@ rules, with a different implant dose.
 
    ```bash
    grep rsheet /foss/pdks/sky130A/libs.ref/sky130_fd_pr/spice/sky130_fd_pr__res_xhigh_po__base.model.spice
+   ```
+
+   ```
+   .param  rsheet = 2000.0
+   + rbody = {(l*rsheet+rbody_var)*(1+res_match)/w}
    ```
 
 3. Price your resistors in digital logic. In [DD103](https://uoftasic.com/dd103/), a 4-bit
