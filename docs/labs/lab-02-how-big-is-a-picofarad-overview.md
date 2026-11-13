@@ -2,7 +2,7 @@
 
 You'll measure capacitance from an AC current, separate a plate capacitor's area term from its
 edge term, and price one picofarad in each of the capacitor types SKY130 offers. Then you'll size
-three capacitors of your own, measure the inductance, Q and self-resonance of the PDK's on-chip
+two capacitors of your own, measure the inductance, Q and self-resonance of the PDK's on-chip
 spirals, and build a 2.4 GHz resonator from one.
 
 Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad102/tree/main/labs/lab-02-how-big-is-a-picofarad)

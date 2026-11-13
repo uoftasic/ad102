@@ -55,7 +55,7 @@ yourself. Each lab starts by listing the pages to read first.
 | 1 | Read | [Getting started](guide/getting-started.md) · [Resistors on a chip](guide/a-resistor-you-cannot-buy.md) · [Ohms per square](guide/ohms-per-square.md) · [What a resistor costs in area](guide/what-a-value-costs-in-area.md) | 1.5 h |
 | 2 | Do | [Lab 01: A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md). Load the course, measure the sheet and end resistance of SKY130 poly, and size two resistors to within 1 % of their targets. | 2.5 h |
 | 3 | Read | [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md) · [What a picofarad costs](guide/what-a-picofarad-costs.md) · [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) · [Inductors on a chip](guide/the-inductor-problem.md) | 1.5 h |
-| 4 | Do | [Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md). Fit a MIM capacitor's area and edge terms, size three capacitors, and measure the three inductors SKY130 ships. | 2.5 h |
+| 4 | Do | [Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md). Fit a MIM capacitor's area and edge terms, size two capacitors, and measure the three inductors SKY130 ships. | 2.5 h |
 | 5 | Read | [What to build instead of an inductor](guide/what-analog-builds-instead.md) | 30 min |
 | 6 | Do | [Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md). Measure the time constant of your own resistor and capacitor in one circuit, then build a 20 ns RC in under 400 µm². | 2 h |
 | 7 | Read | [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) · [Matching and Pelgrom's law](guide/matching-beats-accuracy.md) | 1 h |
