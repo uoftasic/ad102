@@ -26,7 +26,7 @@ this whole course builds on is that **a component value is a geometry, and geome
 On a breadboard, component values are free and independent: a 10 kΩ costs the same as a 100 Ω,
 and you can have as many as you like. On silicon neither is true. A 1 pF capacitor, about the
 smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
-which simulates at 982.5022 fF (Lab 02 gives you the formula behind that number, and sizes the
+which simulates at 982.5022 fF, a little short of 1 pF (Lab 02 gives you the formula behind that number, and sizes the
 plate exactly). The 4-bit ripple-carry adder that the digital track builds in
 [DD103](https://uoftasic.com/dd103/), twelve SKY130 standard cells, fits in 110.1056 µm² of the
 same process, so that one capacitor takes the area of 4.4 adders. The analog habits you'll pick
@@ -80,7 +80,7 @@ in your question.
    SPICE description of the device) says 317.3885 Ω per square, but one drawn square simulates
    at 695.4646 Ω, more than twice that.
    You'll find where the extra ohms come from, then size a 10 kΩ resistor correctly on the first
-   try (30.3315 µm long, landing at 9999.997 Ω).
+   try (30.3315 µm long, landing at 9999.997 Ω), and two more of your own.
 2. Work out what a picofarad costs in square micrometres, and why nobody puts a 10 µF capacitor
    on a chip.
 3. Build an RC filter from the resistor and capacitor you designed and measure its time
@@ -88,7 +88,7 @@ in your question.
    figures, and compare its Bode plot with that of the ideal 10 kΩ × 1 pF filter from AD101:
    15.8580 MHz for the filter you built against 15.9155 MHz for the ideal one, 0.36 % apart.
    Optionally, open the same circuit in XSchem and see a schematic turn into the device lines you
-   typed by hand in the earlier labs.
+   have been editing by hand.
 4. See the same resistor come out different at every process corner, and learn why analog
    designers build ratios rather than values.
 5. Find out how you fabricate an inductor on a chip. Mostly you don't, and you'll see what gets
@@ -106,8 +106,7 @@ your machine. Lab 01, Part 1 has you check your versions.
 Each of Labs 01–04 has a **package**: a folder under `labs/` with its SPICE decks, a `Makefile`
 and a checker script. The packages run with `make` alone, with no environment setup, because
 every deck names its SKY130 model file by absolute path. You still do Lab 01, Part 1 once, to get
-the course files and check your tools. The lab decks do not depend on the `PDK` setting it
-checks, so if that check goes wrong, `make` still works. Apart from
+the course files and check your tools. Apart from
 the SiliWiz parts, which run in a browser tab, every lab step runs in a terminal, and
 only the optional XSchem part of Lab 03 opens a window on the desktop. A fifth
 package, `passives-decks`, holds the decks whose output the guide pages quote, and some lab parts

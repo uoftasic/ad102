@@ -140,7 +140,7 @@ Work through it in this order:
    [What a resistor costs in area](guide/what-a-value-costs-in-area.md): 1 MΩ of `res_high_po`
    is 3.15 mm of poly. Which of your rows can actually be built on a 3 mm die?
 4. Check the resistor against itself. In
-   [Lab 03, Part 5](labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-one-microsecond),
+   [Lab 03, Part 5](labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-a-one-microsecond-rc),
    a bare 471.98 µm strip of 1 µm poly carried 95.278 fF to the substrate, and half of that added
    to the time constant. At what resistor length does that parasitic become a visible fraction of
    the capacitor you were planning? That is the limit, and it is the reason the answer is not

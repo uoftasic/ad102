@@ -23,12 +23,13 @@ Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad1
 
   This lab needs no environment setup; every deck names its model files by absolute path.
 
-Time: about 2.5 hours, not counting the optional parts at the end. A full `make` runs four
+Parts 1 to 8 are required. Everything under Going further, at the end, is optional.
+
+Time: about 2.5 hours, not counting the optional parts. A full `make` runs four
 ngspice decks (`pf`, `mine`, `henry` and `tank`) and then a checker script, `src/check_cap.py`,
-which fits and prints the results. Three of the decks are silent while the SKY130 model cards
-load, anywhere from about 10 seconds to a minute each depending on your machine. `henry` loads
-three small inductor files instead and finishes almost immediately. The Makefile budgets about
-three and a half minutes for the whole `make` on the pinned image
+which fits and prints the results. Three of the decks are silent for anywhere from about 10
+seconds to a minute each while the SKY130 model cards load; the Makefile budgets about three and
+a half minutes for the whole `make` on the pinned image
 ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-02)).
 
 The only theory you need beyond the guide pages: two plates of area $A$ separated by a dielectric
@@ -44,8 +45,8 @@ $$C = \alpha s^2 + \beta s$$
 
 The edge term matters less the bigger the plate, the same pattern as Lab 01's end resistance.
 
-Every capacitance in this lab is read the same way: the deck hangs the device on a 1 V AC source
-at 1 MHz and reads the current the source supplies. For a capacitor $I = 2\pi f C V$, so
+Every capacitance in this lab's package is read the same way: the deck hangs the device on a 1 V
+AC source at 1 MHz and reads the current the source supplies. For a capacitor $I = 2\pi f C V$, so
 $C = |I| / (2\pi f)$, one division with no fitting.
 
 ## Part 1: The area ladder
@@ -135,7 +136,13 @@ $C = \alpha s^2 + \beta s$ has two unknowns, and you have five measurements.
 
    All three are negative, and they shrink as the plate grows. A fit that was only noisy would
    miss in both directions. A systematic miss that fades with size means something small and
-   constant is missing: a term that does not scale with the plate at all.
+   constant is missing: a term that does not scale with the plate at all. The checker's comment
+   says the same:
+
+   ```
+         -- every residual is negative. Something small and constant
+            is missing, and it does not scale with the plate at all.
+   ```
 
    </details>
 
@@ -156,9 +163,8 @@ $C = \alpha s^2 + \beta s$ has two unknowns, and you have five measurements.
 million, and the area term comes out as 2.000000, the model card's `camimc = 2.00e-15` to seven
 figures.
 
-You now have a model of the device that is better than the headline number, that you built
-yourself, and that you can invert to answer "what side length gives me 250 fF?", which is the
-question you will actually ask it.
+This fit is a better model of the device than the headline number, and you can invert it to
+answer the question you will actually ask: what side length gives me 250 fF?
 
 The card says the perimeter term is `cpmimc = 0.19e-15` farads per micrometre of edge, and a
 square of side $s$ has $4s$ of edge, so you would expect $\beta = 0.76$. You measured 0.659991.
@@ -255,14 +261,14 @@ the MOS capacitors.
        VPP  m1-m4 wafflecap                  0.9116         1096.96     9.96
    ```
 
-   The last column is the area divided by 110.11 µm², the area a 4-bit ripple-carry adder
-   synthesises to in [DD103](https://uoftasic.com/dd103/) (twelve SKY130 standard cells that add
-   two nibbles and produce a carry).
+   The last column is the area in [DD103](https://uoftasic.com/dd103/) 4-bit ripple-carry
+   adders, at 110.11 µm² each, as in Lab 01, Part 5.
 
 4. Find block D, the 10 µm × 10 µm nFET capacitor with the gate at 0 V instead of 1.8 V.
 
-**You should see:** one picofarad of MIM, drawn the way you would actually draw it, costs about
-four and a half ripple-carry adders. And block D:
+**You should see:** one picofarad of MIM, drawn the way you would actually draw it (the
+22.1965 µm square from Part 3, edges included, which is why its density is 2.0297 rather than
+2.00), costs about four and a half ripple-carry adders. And block D:
 
 ```
 --- D. the same MOS cap with the gate at 0 V (farads) ---
@@ -292,9 +298,11 @@ properties, and no device wins on all three.
 
 How does a MOS capacitor's value move with its gate voltage?
 
-The guide pages quote a second set of decks in `labs/passives-decks`. `spice/c_area.spice`
-measures one MIM, VPP and MOS capacitor each at 1 kHz, and `spice/c_moscap_cv.spice` sweeps one
-MOS capacitor's gate from 0 V to 1.8 V in 100 mV steps.
+The guide pages quote a second set of decks in `labs/passives-decks`. Its `spice/c_area.spice`
+measures one MIM, VPP and MOS capacitor each at 1 kHz (the frequency cancels out of
+$C = |I|/(2\pi f)$, so any one works; see
+[ngspice deck recipes](reference/ngspice-decks-that-run.md), section 2), and its
+`spice/c_moscap_cv.spice` sweeps one MOS capacitor's gate from 0 V to 1.8 V in 100 mV steps.
 
 1. Go to the `passives-decks` package and run both:
 
@@ -303,9 +311,10 @@ MOS capacitor's gate from 0 V to 1.8 V in 100 mV steps.
    make capacitor
    ```
 
-2. Divide each MIM capacitance in the first block by its drawn area (1, 100 and 900 µm²).
+2. Divide each MIM capacitance in the first block, `--- capacitance in farads ---`, by its drawn
+   area (1, 100 and 900 µm²).
 
-3. Read `c_000mv` through `c_180mv` in the second block. Find the voltage range where the
+3. Read `c_000mv` through `c_180mv` in the second block, `--- MOS cap, 10 um x 10 um gate ...`. Find the voltage range where the
    capacitance climbs fastest.
 
 4. Go back to the lab folder:
@@ -334,7 +343,7 @@ is a channel under the gate to act as the other plate.
 Can you size two MIM plates from your own three-term fit so that each lands within 1 % of its
 target?
 
-`spice/my_cap.spice` has three plates to size:
+`spice/my_cap.spice` has three capacitors. You size the two MIM plates:
 
 | | device | target |
 |---|---|---|
@@ -372,8 +381,8 @@ two of them:
 
    </details>
 
-2. Solve for the side lengths of C1 and C2 using your three-term fit from Part 2, and write them
-   down. Leave C3 as it is. The checker's explanation of each failure gives the side it would
+2. Solve for the side lengths of C1 and C2 using the three-term fit from Part 2
+   ($2.000000\,s^2 + 0.659991\,s - 0.017742$ fF), and write them down. Leave C3 as it is. The checker's explanation of each failure gives the side it would
    use; compare yours with it only after you have your own.
 3. Edit the sizes in `spice/my_cap.spice`. Write them as plain microns, with no `u` suffix.
 4. Re-run your file and the checker:
@@ -393,8 +402,7 @@ PASS -- every number matches the reference run.
 What inductors does SKY130 give you, and what do they cost in area?
 
 `make` already ran `make henry`, which sweeps the three SKY130 inductor models from 100 MHz to
-100 GHz. It is the fast run, because the inductor models live in three small files outside the
-corner library.
+100 GHz.
 
 1. Find out how many inductors SKY130 offers:
 
@@ -454,7 +462,7 @@ Put the three passives side by side, all from your own runs in the same process:
 
 | you drew | area | in ripple adders |
 |---|---|---|
-| 1 kΩ resistor (Lab 01, strip only) | 1.96 µm² | 0.018 |
+| 1 kΩ resistor (Lab 01, strip only, no contact heads) | 1.96 µm² | 0.018 |
 | 1 pF MIM capacitor | 492.68 µm² | 4.5 |
 | 9.92 nH inductor | ≥ 48,400 µm² | ≥ 440 |
 
@@ -469,9 +477,8 @@ A switching regulator wants microhenries. Could you put 10 µH on the chip?
 No. 9.92 nH is not a useful inductance for anything but radio. Even if inductance scaled linearly
 with area (it doesn't; a spiral does considerably worse), 10 µH would need 4.9 × 10⁷ µm², which
 is 49 mm², larger than most entire chips. That is why every switching regulator you have seen has
-an inductor soldered next to the chip rather than inside it. It also answers one of the three
-questions this course set out to answer, how you fabricate an inductor at the micro scale:
-mostly, you don't.
+an inductor soldered next to the chip rather than inside it. It also answers the question on the
+course's home page, how you fabricate an inductor on a chip: mostly, you don't.
 
 </details>
 
@@ -488,23 +495,26 @@ s = 37.4508\;\mu\mathrm{m}$$
 
 using the three-term fit from Part 2.
 
-1. Do that arithmetic yourself. Note that 1.554019 nH is not the 1.5208 nH the inductor shows at
-   100 MHz: at 2.4 GHz you are at a seventh of its self-resonant frequency, and its apparent
-   inductance has already risen 2.2 %.
-
-2. Find the tank result in the output from Part 1:
-
-   ```
-   fpeak               =  2.40000e+09 with=  2.50130e+02
-   ```
-
-3. Find the `ind_03_90` lines in the `henry` output from Part 1:
+1. Find the `ind_03_90` lines in the `henry` output from Part 1:
 
    ```
    --- B. ind_03_90 at 2.4 GHz ---
    l_090_2g4 = 1.554019e-09
    q_090_2g4 = 1.086413e+01
    r_090_2g4 = 2.157013e+00
+   ```
+
+   Note that 1.554019 nH is not the 1.5208 nH the inductor shows at 100 MHz: at 2.4 GHz you are
+   at a seventh of its self-resonant frequency, and its apparent inductance has already risen
+   2.2 %.
+
+2. Do the sizing arithmetic above yourself, from that inductance and the three-term fit.
+
+3. Find the tank result in the output from Part 1. `fpeak` is the frequency of the impedance
+   peak, and the number after `with=` is the peak impedance in ohms:
+
+   ```
+   fpeak               =  2.40000e+09 with=  2.50130e+02
    ```
 
 **You should see:** resonance at 2.4000 GHz, exactly where you aimed, with a peak impedance of
@@ -536,17 +546,15 @@ You're done when `make mine check`, run on the C1 and C2 sides you worked out in
 AC operating points have no randomness in them, so on the pinned image (ngspice-47, `sky130A`,
 `tt` corner, 27 °C) your numbers match the ones on this page.
 
-Question:
+Question: C1 and C2 made the same mistake. Why did C2 miss by 10.35 % and C1 by only 2.94 %?
 
-1. C1 and C2 made the same mistake. Why did C2 miss by 10.35 % and C1 by only 2.94 %?
+<details>
+<summary>Answer</summary>
 
-   <details>
-   <summary>Answer</summary>
+Same type of plate, but C2's is much smaller, and the edge term's share of a square plate grows
+as $4/s$ as the plate shrinks (Part 6, step 1). The same mistake costs C2 3.5 times as much.
 
-   Same type of plate, but C2 is 3.7 times smaller, and the edge term grows relative to the area
-   term as $4/s$ (Part 6, step 1). Its error is 3.5 times bigger.
-
-   </details>
+</details>
 
 After yours pass, read
 [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-02-how-big-is-a-picofarad/solutions/README.md)
@@ -557,7 +565,8 @@ Submit: nothing for this lab.
 
 ## Going further (optional)
 
-None of these is in the time estimate, and no later part needs them.
+None of these is in the time estimate, and no later part needs them. What to do next on the
+Course path is the last line of this page.
 
 ### Plot the inductor sweep
 
