@@ -207,7 +207,8 @@ How much does leaving out the end resistance cost on a real design?
 2. Work out the corrected length, $L = (10000 - R_{\text{end}})/R_\square$, from the two numbers
    you extracted, and write it down. The deck's version of this design is `r_fixed`.
 
-3. Predict how far from 10 kΩ the naive design lands. Then find block B in the output.
+3. Put the naive length into your line from Part 2 and predict how far from 10 kΩ it lands. Then
+   find block B in the output.
 
 **You should see:**
 
@@ -459,12 +460,14 @@ The file ships with the naive lengths, so the check at the end of Part 2's `make
     got       53001.1 ohm   (+6.00 %)   FAIL
 ```
 
-1. What fraction of a 2.2 kΩ resistor is the 378 Ω of ends?
+1. R1 came out 17.14 % high. Compare that with the 378 Ω of ends as a fraction of 2.2 kΩ. What
+   does it tell you?
 
    <details>
    <summary>Answer</summary>
 
-   About a sixth. On a 2.2 kΩ resistor the ends are no longer a rounding error.
+   $378.2448 / 2200$ is 17.2 %, about a sixth, so almost all of R1's error is the ends that the
+   naive length left out. On a 2.2 kΩ resistor the ends are no longer a rounding error.
 
    </details>
 
@@ -485,7 +488,14 @@ The file ships with the naive lengths, so the check at the end of Part 2's `make
 4. Edit the two `L=` numbers in `spice/my_resistor.spice` with any of the desktop's editors
    (`gedit`, `nano` and `vim` are installed; for example `gedit spice/my_resistor.spice &`).
    Write them as plain microns, with no `u` suffix, to four decimals like the numbers already
-   there.
+   there. The file marks the two lines to change:
+
+   ```
+   X1 r1 0 0 sky130_fd_pr__res_high_po  W=1 L=6.9315
+   *                                          ^^^^^^ R1: 2.2 kohm goes here
+   X2 r2 0 0 sky130_fd_pr__res_xhigh_po W=1 L=25.0000
+   *                                          ^^^^^^^ R2: 50 kohm goes here
+   ```
 
 5. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
    `make check` prints the verdict again:
