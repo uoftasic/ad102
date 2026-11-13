@@ -54,11 +54,12 @@ you haven't set up the workbench yet, do
 
    | If you see | It means |
    |---|---|
+   | `bash: mod: command not found` | This terminal has not loaded the course environment. Run the `.designinit` line again in it. |
    | `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
    | `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check that you typed `ad102`. If you did, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
 
-   For anything else, such as a blank desktop page or `bash: mod: command not found`, see
-   IC101's [Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
+   For anything else, such as a blank desktop page, see IC101's
+   [Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
 
 3. Check the two tool versions this course's numbers were recorded with:
 
@@ -347,9 +348,11 @@ square and a tenth of the fixed overhead. Your price list should match this one:
 | 100 kΩ, `res_high_po`, W = 1 µm | 314.05 µm² | 2.85 |
 | 100 kΩ, `res_xhigh_po`, W = 1 µm | 47.18 µm² | 0.43 |
 
-The checker prints these lengths too, to four decimals, in the block headed
-`and the design that follows from them`: 314.0465 µm and 47.1812 µm for the two 100 kΩ rows. It
-also prints one you didn't need, 4.7036 µm for 10 kΩ of `res_xhigh_po`.
+The checker prints three of these lengths too, to four decimals, in the block headed
+`and the design that follows from them`: 30.3315 µm for 10 kΩ, and 314.0465 µm and 47.1812 µm
+for the two 100 kΩ rows. The same block has rows you don't need here: 4.7036 µm for 10 kΩ of
+`res_xhigh_po`, and a 2200 Ω row for each material. You size a 2200 Ω resistor yourself in
+Part 7, so work that one out before you look at the row.
 
 The card says 2000.0 and your simulation says 2118.7619. Which one do you design with, and why?
 
