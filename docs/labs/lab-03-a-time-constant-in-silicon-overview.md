@@ -489,8 +489,9 @@ t_real              =  1.10412e-08
 Subtract the same 1.005 ns offset from Part 1 and that is $\tau = 10.0362$ ns, the same five
 figures as section E. The picture and the deck agree, because they are the same circuit.
 
-[AD103](https://uoftasic.com/ad103/) is entirely XSchem (you'll draw a diode, then a transistor, then a CMOS inverter), and it assumes you
-have already seen a schematic turn into a netlist, as you just did here.
+[AD103](https://uoftasic.com/ad103/) is entirely XSchem (you'll draw a transistor, a diode and
+then a CMOS inverter). Its Lab 01 starts from an empty canvas and doesn't assume you have used
+XSchem, so this part is a preview, not a prerequisite.
 
 Next on the [Course path](README.md#course-path): read
 [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and

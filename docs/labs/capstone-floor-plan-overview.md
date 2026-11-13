@@ -61,9 +61,9 @@ under your drawing. Open **<https://app.siliwiz.com/?preset=blank>**.
 
 ### The resistor you designed
 
-1. Draw a **poly** rectangle, long and thin: 20 grid units by 2, roughly the shape of your Lab 01
-   resistor.
-2. Put a **contact** at each end and a **metal1** pad over each contact.
+1. Draw a **polyres** rectangle, long and thin: 20 grid units by 2, roughly the shape of your
+   Lab 01 resistor.
+2. Put a **metal1 via** (the contact) at each end and a **metal1** pad over each via.
 3. Label the two pads `a` and `b` (click a pad, then **Set Label** or press `S`), and tick
    **Show SPICE** at the bottom. The resistance is on the line starting `R0`.
 4. Look at the **cross-section** pane and follow the current path: down the metal1 pad, through
