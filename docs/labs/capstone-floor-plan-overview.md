@@ -10,7 +10,8 @@ numbers you have already measured.
 - Finish Labs [01](labs/lab-01-a-resistor-you-designed-overview.md),
   [02](labs/lab-02-how-big-is-a-picofarad-overview.md) and
   [03](labs/lab-03-a-time-constant-in-silicon-overview.md). Part 3 uses their numbers.
-  [Lab 04](labs/lab-04-two-resistors-that-disagree-overview.md) helps with the last question.
+  [Lab 04](labs/lab-04-two-resistors-that-disagree-overview.md)'s corner results help with the
+  last step of Part 3, deciding whether you would build it.
 - Read [From schematic to cross-section](guide/from-schematic-to-cross-section.md).
 - You need a terminal in the workbench for Part 1, a browser tab for Part 2, and paper or a
   spreadsheet for Part 3.
@@ -63,7 +64,8 @@ under your drawing. Open **<https://app.siliwiz.com/?preset=blank>**.
 1. Draw a **poly** rectangle, long and thin: 20 grid units by 2, roughly the shape of your Lab 01
    resistor.
 2. Put a **contact** at each end and a **metal1** pad over each contact.
-3. Label the two pads `a` and `b`.
+3. Label the two pads `a` and `b` (click a pad, then **Set Label** or press `S`), and tick
+   **Show SPICE** at the bottom. The resistance is on the line starting `R0`.
 4. Look at the **cross-section** pane and follow the current path: down the metal1 pad, through
    the contact, along the poly strip, up the far contact, and out the far pad.
 5. Drag the strip longer and watch the resistance.
@@ -131,7 +133,8 @@ Work through it in this order:
 1. Fix the product. $RC = 1/(2\pi f_c) = 159.15$ ns is your only hard constraint, and it fixes
    only the product. Every split of it between $R$ and $C$ is allowed.
 2. Price both halves. From Lab 01, `res_high_po` at $W = 1$ µm needs
-   $L = (R - 378.2448)/317.2198$ µm of length, which at 1 µm wide is the same number in µm². From
+   $L = (R - 378.2448)/317.2198$ µm of length, and `res_xhigh_po` needs
+   $L = (R - 34.2111)/2118.7619$ µm; at 1 µm wide that is the same number in µm². From
    Lab 02, a MIM plate of side $s$ holds $2.000000\,s^2 + 0.659991\,s - 0.017742$ fF and costs
    $s^2$ µm². Tabulate the total area for $R$ = 10 kΩ, 100 kΩ, 1 MΩ and 10 MΩ.
 3. Find the minimum, then find the limit. The area curve has a minimum; you found the same shape
@@ -142,7 +145,8 @@ Work through it in this order:
 4. Check the resistor against itself. In
    [Lab 03, Part 5](labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-a-one-microsecond-rc),
    a bare 471.98 µm strip of 1 µm poly carried 95.278 fF to the substrate, and half of that added
-   to the time constant. At what resistor length does that parasitic become a visible fraction of
+   to the time constant. Lab 03, Part 2 fitted it as 0.1994 fF per µm of length plus 1.187 fF of
+   ends. At what resistor length does that parasitic become a visible fraction of
    the capacitor you were planning? That is the limit, and it is the reason the answer is not
    "use an enormous resistor".
 5. Price it in adders. Convert your best area into DD103 ripple-carry adders, at 110.1056 µm²
@@ -165,5 +169,5 @@ There is no package and no marking scheme for this capstone.
 Submit: nothing. To argue about a floor plan, bring your area table to the
 [team Discord](https://discord.gg/hrJnP5UsGz).
 
-Next on the [Course path](README.md#course-path): that was the last row. The home page lists the
-[next courses](README.md#next-courses).
+Next on the [Course path](README.md#course-path): this capstone is its last row, so you have
+finished AD102. The home page lists the [next courses](README.md#next-courses).

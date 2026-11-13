@@ -115,9 +115,10 @@ ideal 1 pF with your Lab 02 capacitor ($s = 22.1965$ µm), then both.
 
 2. Find lines C, D and E in the checker's table.
 
-3. Find block H in the raw output. It leaves each resistor's far end unconnected and measures
-   what current the source still has to supply, which gives the resistor's own capacitance to the
-   substrate.
+3. Find section H in the raw output, the block headed
+   `--- H. the resistor's own capacitance to substrate`. It leaves each resistor's far end
+   unconnected and measures what current the source still has to supply, which gives the
+   resistor's own capacitance to the substrate.
 
 **You should see:**
 
@@ -135,10 +136,16 @@ cpar_1m = 9.527787e-14
 
 The capacitor makes no difference: swapping a real MIM plate for an ideal 1 pF changes nothing to
 five figures. The resistor adds 36.1 ps, and it adds the same 36.1 ps whether the capacitor next
-to it is real or ideal. The checker fits both strips in block H and gets 0.1994 fF per
-micrometre of 1 µm-wide poly, plus 1.187 fF of ends; you'll use that number in Part 5.
+to it is real or ideal. The checker fits both strips from section H and prints, below its
+table:
 
-How does block H account for the 36 ps?
+```
+    fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1870 fF of ends.
+```
+
+You'll use that 0.1994 fF per µm in Parts 5 and 6.
+
+How does section H account for the 36 ps?
 
 <details>
 <summary>Answer</summary>
@@ -172,7 +179,8 @@ resistance, and area straight from the capacitance density.
   designing without them        : +5.65 %
 ```
 
-The two errors add up to 5.65 % of timing error in one circuit. Neither shows up as a warning or
+Together with the resistor's own 0.36 % from Part 2, the two errors come to 5.65 % of timing
+error in one circuit. Neither shows up as a warning or
 in DRC, and neither averages out across a wafer: every chip gets the same 5.65 %. That is the
 difference between a **tolerance**, which you budget for, and a **mistake**, which you don't know
 about.
@@ -220,7 +228,8 @@ H.
 
 1. Using the 0.1994 fF per µm from Part 2, predict the error before you look.
 
-2. Find lines G and H and the lines below them about the microsecond.
+2. Find lines G and H in the checker's table (not section H of the raw output, which was Part
+   2's), and the lines below the table about the microsecond.
 
 **You should see:**
 
@@ -280,11 +289,13 @@ the budget, so the check in Part 1 failed on area, not on timing:
 2. Work out which way to move $R$ and $C$ to reduce the area while keeping $RC = 20$ ns, and find
    the optimum.
 
-3. Check the resistor's own parasitic, 0.1994 fF per micrometre from Part 2. As the capacitor
-   gets smaller, the resistor's parasitic becomes a visible fraction of it and $\tau$ runs long.
-   Shrink the intended capacitor to pay for it.
+3. Check the resistor's own parasitic, 0.1994 fF per micrometre of length plus 1.187 fF of ends
+   (Part 2). As the capacitor gets smaller, the resistor's parasitic becomes a visible fraction
+   of it and $\tau$ runs long: half of the parasitic adds to the capacitor, so
+   $\tau \approx R\,(C + C_{\text{par}}/2)$. Shrink the intended capacitor to pay for it.
 
-4. Edit the two numbers in `spice/my_rc.spice`, as plain microns with no `u` suffix, and re-run:
+4. In `spice/my_rc.spice`, change the resistor's `L=` and the capacitor's `W=` and `L=` (keep
+   the plate square), as plain microns with no `u` suffix, and re-run:
 
    ```bash
    make mine check
@@ -317,9 +328,9 @@ $$f_{-3\text{dB}} = \frac{1}{2\pi\tau}$$
    make bode
    ```
 
-   It loads the same model library as the other decks, so expect the same short wait. (The
-   Makefile banner says "~2 s" and mentions a pre-flattened library. That library was removed in
-   the 2026.08 image, and this deck now loads the full one.)
+   It loads the same model library as the other decks, so expect the same short wait. The
+   Makefile banner says "~2 s" and mentions a pre-flattened library; the 2026.08 image doesn't
+   ship that library, so ignore the banner's time.
 
 **You should see:**
 
@@ -368,7 +379,9 @@ worse.
 ## Finishing
 
 You're done when `make mine check`, run on the resistor length and capacitor side you chose in
-Part 6, prints `PASS -- every number matches the reference run.`
+Part 6, prints `PASS -- every number matches the reference run.` Your design doesn't have to
+match anyone else's: it passes when $\tau$ is within 1 % of 20 ns and the area is under
+400 µm². "Matches the reference run" is about the `rc.spice` numbers the checker also compares.
 
 A transient analysis of a linear circuit has no randomness in it, so on the pinned image
 (ngspice-47, `sky130A`, `tt` corner) your numbers match the ones on this page.
