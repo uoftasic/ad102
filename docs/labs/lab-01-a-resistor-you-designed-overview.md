@@ -185,9 +185,8 @@ yourself in Part 5):
     xhigh_po         2118.7619     34.2111      2118.7619 / 34.2111
 ```
 
-The 378 Ω is a fixed overhead on every resistor: the contact heads where metal meets poly, plus a
-little length the strip has that you did not draw. What fraction of a 100 kΩ resistor is it, and
-of a 500 Ω one?
+The 378 Ω is a fixed overhead on every resistor, the same whatever length you draw; Part 6 finds
+out where it comes from. What fraction of a 100 kΩ resistor is it, and of a 500 Ω one?
 
 <details>
 <summary>Answer</summary>
@@ -206,7 +205,7 @@ How much does leaving out the end resistance cost on a real design?
    $L = 10000 / 317.3885 = 31.5074$ µm. This is `r_naive` in the deck.
 
 2. Work out the corrected length, $L = (10000 - R_{\text{end}})/R_\square$, from the two numbers
-   you extracted. This is `r_fixed`, which the deck draws at 30.3315 µm; check yours against it.
+   you extracted, and write it down. The deck's version of this design is `r_fixed`.
 
 3. Predict how far from 10 kΩ the naive design lands. Then find block B in the output.
 
@@ -218,8 +217,8 @@ r_naive = 1.037302e+04
 r_fixed = 9.999997e+03
 ```
 
-The naive design is 10,373 Ω, 3.7 % too big. The corrected one is 9999.997 Ω, three parts in ten
-million.
+The naive design is 10,373 Ω, 3.7 % too big. The deck draws `r_fixed` at 30.3315 µm (check your
+length against it), and it lands at 9999.997 Ω, three parts in ten million.
 
 3.7 % sounds small. Why is it worth fixing?
 
@@ -257,7 +256,8 @@ r_v5 = 3.998070e+02
 1. For each width, fit a slope (Ω per µm of length) and an intercept (end Ω) from the two
    lengths, the same way you did in Part 2. That is two subtractions per width.
 2. Multiply each slope by its width to get Ω per square.
-3. For the last column, work out the body area for 1 kΩ: $W \times 1000 / (\Omega \text{ per µm})$.
+3. For each width, work out the body area that 1 kΩ needs: $W \times 1000 / (\Omega \text{ per µm})$.
+   That is the last column of the table below.
 
 **You should see:** (the $W = 1$ µm row comes from the length ladder in Part 2)
 
@@ -352,7 +352,7 @@ The checker prints three of these lengths too, to four decimals, in the block he
 `and the design that follows from them`: 30.3315 µm for 10 kΩ, and 314.0465 µm and 47.1812 µm
 for the two 100 kΩ rows. The same block has rows you don't need here: 4.7036 µm for 10 kΩ of
 `res_xhigh_po`, and a 2200 Ω row for each material. You size a 2200 Ω resistor yourself in
-Part 7, so work that one out before you look at the row.
+Part 7; work it out from your own two numbers rather than copying that row.
 
 The card says 2000.0 and your simulation says 2118.7619. Which one do you design with, and why?
 
@@ -448,27 +448,18 @@ numbers.
 | R1 | `sky130_fd_pr__res_high_po` | 1 µm | 2.2 kΩ |
 | R2 | `sky130_fd_pr__res_xhigh_po` | 1 µm | 50 kΩ |
 
-1. Print the verdict from Part 2 again (it has probably scrolled away):
+The file ships with the naive lengths, so the check at the end of Part 2's `make` failed:
 
-   ```bash
-   make check
-   ```
+```
+  R1  sky130_fd_pr__res_high_po  W=1
+    target     2200.0 ohm
+    got        2577.1 ohm   (+17.14 %)   FAIL
+  R2  sky130_fd_pr__res_xhigh_po W=1
+    target    50000.0 ohm
+    got       53001.1 ohm   (+6.00 %)   FAIL
+```
 
-   The file ships with the naive lengths, so the check failed:
-
-   ```
-     R1  sky130_fd_pr__res_high_po  W=1
-       target     2200.0 ohm
-       got        2577.1 ohm   (+17.14 %)   FAIL
-     R2  sky130_fd_pr__res_xhigh_po W=1
-       target    50000.0 ohm
-       got       53001.1 ohm   (+6.00 %)   FAIL
-   ```
-
-   Below that, the checker explains each failure, and it ends with a note that on a fresh clone
-   this `FAIL` is the lab, not a broken package.
-
-2. What fraction of a 2.2 kΩ resistor is the 378 Ω of ends?
+1. What fraction of a 2.2 kΩ resistor is the 378 Ω of ends?
 
    <details>
    <summary>Answer</summary>
@@ -477,9 +468,19 @@ numbers.
 
    </details>
 
-3. Work out both lengths from the $R_\square$ and $R_{\text{end}}$ you extracted for each device
-   in Parts 2 and 5, and write them down. The checker's explanation of each failure ends with
-   the length it would use; compare yours with it only after you have your own.
+2. Work out both lengths from the $R_\square$ and $R_{\text{end}}$ you extracted for each device
+   in Parts 2 and 5, and write them down.
+
+3. Compare yours with the checker's. Print its verdict again (the Part 2 output has probably
+   scrolled away):
+
+   ```bash
+   make check
+   ```
+
+   Below the two `FAIL` lines, the checker explains each failure and ends the explanation with
+   the length it would use. Its last lines are a note that on a fresh clone this `FAIL` is the
+   lab, not a broken package.
 
 4. Edit the two `L=` numbers in `spice/my_resistor.spice` with any of the desktop's editors
    (`gedit`, `nano` and `vim` are installed; for example `gedit spice/my_resistor.spice &`).

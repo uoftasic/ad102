@@ -283,7 +283,8 @@ while it loads. That takes anywhere from about 10 seconds to just over a minute 
 depending on your machine (the comment at the top of the Makefile records 55–65 s). `make` runs
 the simulator twice, so allow up to about two minutes. It is not hung.
 
-`results/sheet.log` holds 170 `unrecognized parameter` lines, in 34 blocks. A `rhead_model`
+`results/sheet.log` holds 170 `unrecognized parameter` lines, in 34 blocks. `make` writes them
+to the log; from this deck, your terminal shows only the `---` and `r_` lines. A `rhead_model`
 block has four of these lines and a `rbody_model` block has six; here is a head block:
 
 ```
