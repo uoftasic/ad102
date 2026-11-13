@@ -18,7 +18,7 @@ Org: [github.com/uoftasic](https://github.com/uoftasic)
 
 Every package under `labs/` runs with `make` alone, in a bare container, with no environment setup. On a fresh clone every lab's first `make` ends in `FAIL` on purpose: each package ships a naive design for the student to fix.
 
-Students set up through the `workspace` repo from [IC101](https://uoftasic.com/ic101/) instead; that is Part 1 of Lab 01. The command below is a quick check that a lab runs in the image:
+Students instead set up the workbench through the `workspace` repo in [IC101](https://uoftasic.com/ic101/) Lab 03, then load this course into it in Lab 01, Part 1. The command below is a quick check that a lab runs in the image:
 
 ```bash
 git clone https://github.com/uoftasic/ad102.git
@@ -35,7 +35,7 @@ Docs preview (requires Node.js):
 npx docsify-cli serve docs      # -> http://localhost:3000
 ```
 
-Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should document the team workbench setup in-course rather than bundling Docker in every repo.
+Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should use the team workbench that IC101 Lab 03 sets up, rather than bundling Docker in every repo; the course's Lab 01, Part 1 only loads the course into it.
 
 ## Layout
 
