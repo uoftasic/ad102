@@ -18,7 +18,9 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
   passes. Part 1 loads this course into it.
 - The circuit theory is Ohm's law and a voltage divider. Nothing else.
 
-Time: about 2.5 hours, not counting the optional parts at the end. Each ngspice run is silent for
+Parts 1 to 7 are required. Everything under Going further, at the end, is optional.
+
+Time: about 2.5 hours, not counting the optional parts. Each ngspice run is silent for
 anywhere from about 10 seconds to just over a minute before it prints anything, depending on your
 machine ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-01)).
 
@@ -28,11 +30,12 @@ Can you reach the AD102 files, on the tool versions this course's printed output
 you haven't set up the workbench yet, do
 [IC101 Lab 03](https://uoftasic.com/ic101/#/labs/lab-03-launch-the-workbench-overview) first.
 
-1. From your `workspace` clone, start the desktop (`./scripts/start_vnc.sh`, or
+1. On your laptop, from your `workspace` clone, start the desktop (`./scripts/start_vnc.sh`, or
    `scripts\start_vnc.bat` on Windows), open <http://localhost/> and open a terminal on the
-   desktop. Type every command in this course in that terminal, not on your laptop.
+   desktop. Type every other command in this course in that terminal, not on your laptop.
 
-2. Load the course environment and get the course files:
+2. Load the course environment and get the course files. The first time, type all four lines;
+   after that, `mod ad102` on its own takes you back to the course.
 
    ```bash
    . /foss/designs/common/.designinit   # a new terminal usually does this for you; again is harmless
@@ -42,11 +45,20 @@ you haven't set up the workbench yet, do
    ```
 
    You should see the `ASIC-EDU: PDK=sky130A ...` banner, `PDK is: sky130A`, then
-   `OK  module ready: /foss/designs/modules/ad102`, then `cwd: /foss/designs/modules/ad102`.
-   `mod` and the course files have to work; if they don't, ask for help before going on. The
-   `PDK` setting matters only to XSchem, in the optional last part of Lab 03: every lab deck
-   names its model files by absolute path, so `make` works whatever `$PDK` says.
-   [Getting started](guide/getting-started.md#the-pdk-setting) explains why.
+   `OK  module ready: /foss/designs/modules/ad102` from `mod add`, then
+   `cwd: /foss/designs/modules/ad102` from `mod ad102`. `mod` and the course files have to work;
+   if they don't, ask for help before going on. If `$PDK` says something other than `sky130A`,
+   ask too, but carry on: every lab deck names its model files by absolute path, so `make` works
+   whatever `$PDK` says. Only XSchem, in the optional last part of Lab 03, reads it
+   ([Getting started](guide/getting-started.md#the-pdk-setting) explains).
+
+   | If you see | It means |
+   |---|---|
+   | `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
+   | `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check that you typed `ad102`. If you did, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
+
+   For anything else, such as a blank desktop page or `bash: mod: command not found`, see
+   IC101's [Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
 
 3. Check the two tool versions this course's numbers were recorded with:
 
@@ -57,7 +69,8 @@ you haven't set up the workbench yet, do
 
    You should see `** ngspice-47 : Circuit level simulation program` on the second line and
    `XSCHEM V3.4.8RC`. If you see different versions, you are on a different image, and commands
-   on these pages may fail in ways this course does not describe.
+   on these pages may fail in ways this course does not describe; ask in
+   [Discord](https://discord.gg/hrJnP5UsGz) before you go on.
 
 4. Go to this lab's folder and list the packages:
 
@@ -65,14 +78,6 @@ you haven't set up the workbench yet, do
    cd /foss/designs/modules/ad102/labs/lab-01-a-resistor-you-designed
    ls ..
    ```
-
-| If you see | It means |
-|---|---|
-| `mod: no such module: ad102` | You ran `mod ad102` before `mod add ad102`. |
-| `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check the spelling first. If it is right, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
-
-For anything else, such as a blank desktop page or `bash: mod: command not found`, see IC101's
-[Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
 
 **You should see:** `ls ..` lists the four lab packages plus `passives-decks`:
 
@@ -115,7 +120,9 @@ per device, with no curve fitting. The first block is a **length ladder** of
 
    This runs two ngspice decks, `spice/sheet.spice` and `spice/my_resistor.spice`, and then the
    checker script, `src/check_res.py`. It ends in `FAIL`, which you fix in Part 7. Leave the
-   output in your terminal, because Parts 2 to 5 read from it.
+   output in your terminal, because Parts 2 to 5 read from it. If it scrolls away,
+   `grep -E '^---|^r_' results/sheet.log` prints the deck's blocks again, and `make check` prints
+   the checker's part.
 
 4. Find block A in the output and compare it with your predictions:
 
@@ -230,15 +237,28 @@ which you budget for; an error that is the same on every chip is a mistake, whic
 
 Is ohms per square a property of the material alone, and what does a narrow strip buy you?
 
-The length ladder was all at $W = 1$ µm. Blocks C and C2 sweep four other widths at two lengths,
-$L = 10$ µm and $L = 5$ µm.
+The length ladder was all at $W = 1$ µm. Blocks C and C2 of the `make` output from Part 2 sweep
+four other widths at two lengths, $L = 10$ µm and $L = 5$ µm:
+
+```
+--- C. width ladder, L = 10 um (ohms) ---
+r_w0p35 = 1.067497e+04
+r_w0p69 = 5.123000e+03
+r_w2 = 1.785180e+03
+r_w5 = 7.167730e+02
+--- C2. the same four widths at L = 5 um (ohms) ---
+r_v0p35 = 5.816766e+03
+r_v0p69 = 2.823272e+03
+r_v2 = 9.925276e+02
+r_v5 = 3.998070e+02
+```
 
 1. For each width, fit a slope (Ω per µm of length) and an intercept (end Ω) from the two
    lengths, the same way you did in Part 2. That is two subtractions per width.
 2. Multiply each slope by its width to get Ω per square.
-3. For the last column, work out the body area for 1 kΩ: $1000 / (\Omega \text{ per µm}) \times W$.
+3. For the last column, work out the body area for 1 kΩ: $W \times 1000 / (\Omega \text{ per µm})$.
 
-**You should see:**
+**You should see:** (the $W = 1$ µm row comes from the length ladder in Part 2)
 
 | W (µm) | Ω per µm of length | end Ω | Ω per square | µm² of body per kΩ |
 |---|---|---|---|---|
@@ -261,7 +281,7 @@ drew.
 
 The end resistance changes with width as well, from 82.841 Ω at 5 µm to 958.562 Ω at 0.35 µm,
 because the contact head is as wide as the strip. Its resistance is `rsh` divided by a width;
-see [Where the end resistance comes from](#where-the-end-resistance-comes-from) under Going
+see [End resistance from the model card](#end-resistance-from-the-model-card) under Going
 further.
 
 </details>
@@ -286,6 +306,15 @@ digital logic?
 Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`, at five of the lengths (1, 2,
 10, 50 and 100 µm): the same layer and drawing rules, with a different implant dose.
 
+```
+--- D. res_xhigh_po, W = 1 um (ohms) ---
+r_x1 = 2.152973e+03
+r_x2 = 4.271620e+03
+r_x10 = 2.122088e+04
+r_x50 = 1.059694e+05
+r_x100 = 2.119104e+05
+```
+
 1. Extract $R_\square$ and $R_{\text{end}}$ from block D, using the two extremes as in Part 2.
 
 2. Compare with what its model card advertises:
@@ -299,10 +328,12 @@ Block D repeats the length ladder on `sky130_fd_pr__res_xhigh_po`, at five of th
    + rbody = {(l*rsheet+rbody_var)*(1+res_match)/w}
    ```
 
+   As in Part 2, the first line is the number and the second shows how the model uses it.
+
 3. Price your resistors in digital logic. In [DD103](https://uoftasic.com/dd103/), a 4-bit
    ripple-carry adder (twelve SKY130 standard cells that add two nibbles) synthesises to
-   110.11 µm². At $W = 1$ µm a strip's area is its length in µm². From your design equation, work
-   out the length of a 1 kΩ, 10 kΩ and 100 kΩ `res_high_po` and a 100 kΩ `res_xhigh_po`, all at
+   110.11 µm². At $W = 1$ µm a strip's area is its length in µm². With the formula from Part 3,
+   step 2, $L = (R - R_{\text{end}})/R_\square$, work out the length of a 1 kΩ, 10 kΩ and 100 kΩ `res_high_po` and a 100 kΩ `res_xhigh_po`, all at
    $W = 1$ µm, then divide each area by 110.11.
 
 **You should see:** the card says `rsheet = 2000.0`. Your extraction says 2118.7619 Ω/□, 5.9 %
@@ -316,9 +347,9 @@ square and a tenth of the fixed overhead. Your price list should match this one:
 | 100 kΩ, `res_high_po`, W = 1 µm | 314.05 µm² | 2.85 |
 | 100 kΩ, `res_xhigh_po`, W = 1 µm | 47.18 µm² | 0.43 |
 
-The checker's `and the design that follows from them` block prints the same lengths to four
-decimals (314.0465 µm and 47.1812 µm for the two 100 kΩ rows), and the 10 kΩ `res_xhigh_po` one
-too: 4.7036 µm.
+The checker prints these lengths too, to four decimals, in the block headed
+`and the design that follows from them`: 314.0465 µm and 47.1812 µm for the two 100 kΩ rows. It
+also prints one you didn't need, 4.7036 µm for 10 kΩ of `res_xhigh_po`.
 
 The card says 2000.0 and your simulation says 2118.7619. Which one do you design with, and why?
 
@@ -355,6 +386,8 @@ splits into its two parts.
    cd ../passives-decks
    make resistor
    ```
+
+   It runs one deck and prints its blocks; there is no verdict at the end.
 
 2. Before you look at block A, predict: when the strip goes from $L = 1$ µm to $L = 10$ µm,
    which part changes, the head or the body?
@@ -394,7 +427,7 @@ other 78 Ω?
 
 In the body. The model's `leff` makes the strip 0.247 µm longer than you drew it, and that extra
 length is worth 78.35 Ω. The 378.2448 Ω is the 299.89 Ω head plus that 78.35 Ω body extension.
-[Where the end resistance comes from](#where-the-end-resistance-comes-from), under Going
+[End resistance from the model card](#end-resistance-from-the-model-card), under Going
 further, has the arithmetic.
 
 </details>
@@ -445,8 +478,10 @@ numbers.
    in Parts 2 and 5, and write them down. The checker's explanation of each failure ends with
    the length it would use; compare yours with it only after you have your own.
 
-4. Edit the two `L=` numbers in `spice/my_resistor.spice`. Write them as plain microns, with no
-   `u` suffix.
+4. Edit the two `L=` numbers in `spice/my_resistor.spice` with any of the desktop's editors
+   (`gedit`, `nano` and `vim` are installed; for example `gedit spice/my_resistor.spice &`).
+   Write them as plain microns, with no `u` suffix, to four decimals like the numbers already
+   there.
 
 5. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
    `make check` prints the verdict again:
@@ -472,37 +507,38 @@ extracted from them (within 1 %). A DC operating point has no randomness in it, 
 image (ngspice-47, `sky130A`, `tt` corner, 27 °C) your numbers match the ones on this page to
 every digit shown.
 
-Question:
+Question: on area alone, which material would you use for a 100 kΩ resistor, and what does it
+cost in adders?
 
-1. On area alone, which material would you use for a 100 kΩ resistor, and what does it cost in
-   adders?
+<details>
+<summary>Answer</summary>
 
-   <details>
-   <summary>Answer</summary>
+`res_xhigh_po`: 47.18 µm², 0.43 adders, against 314.05 µm² and 2.85 adders for `res_high_po`
+(Part 5). Area doesn't settle it, though. `res_xhigh_po`'s model card has a voltage coefficient,
+`vc1_body = -1.00e-3`: its resistance moves by about 0.1 % per volt across it, which is fine in a
+bias string and is distortion in a signal path. The lab's `solutions/README.md` has the longer
+version.
 
-   `res_xhigh_po`: 47.18 µm², 0.43 adders, against 314.05 µm² and 2.85 adders for `res_high_po`
-   (Part 5). Area doesn't settle it, though: the lab's `solutions/README.md` explains why you
-   wouldn't use `res_xhigh_po` for everything.
-
-   </details>
+</details>
 
 After your own numbers pass, read
 [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-01-a-resistor-you-designed/solutions/README.md)
-for the reference sizing and some questions worth arguing about.
+for the reference sizing and some open questions.
 
 Submit: nothing for this lab.
 
 ## Going further (optional)
 
-None of these is in the time estimate, and no later part needs them.
+None of these is in the time estimate, and no later part needs them. What to do next on the
+Course path is the last line of this page.
 
-### Where the end resistance comes from
+### End resistance from the model card
 
 Open the model card from Part 2, step 1, `sky130_fd_pr__res_high_po.model.spice`. The body is declared
 `l = {leff}` with `leff = {l + 0.247}`, so the strip is electrically 0.247 µm longer than you drew
 it, worth $317.2198 \times 0.247 = 78.35\ \Omega$. The head is a second resistor,
 `rsh = 345.8312` over a width of `weff + 0.1558 = 1.1548` (`weff` is the effective width,
-0.999 µm for a strip drawn 1 µm wide; Part 4 has more on it), giving
+0.999 µm for a strip drawn 1 µm wide; the first answer in Part 4 has more on it), giving
 $345.8312 / 1.1548 = 299.47\ \Omega$. Its temperature coefficients (`tc1 = -4.3e-4`,
 `tc2 = 12e-6`, `tnom = 30`) scale that by
 $1 + (-4.3{\times}10^{-4})(-3) + (12{\times}10^{-6})(9) = 1.001398$ at the 27 °C ngspice

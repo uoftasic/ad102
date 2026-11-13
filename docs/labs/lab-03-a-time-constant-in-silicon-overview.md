@@ -23,7 +23,9 @@ Package: [`labs/lab-03-a-time-constant-in-silicon/`](https://github.com/uoftasic
   The decks need no environment setup. Only the XSchem window in the optional Part 8 needs the
   noVNC desktop and `$PDK` set to `sky130A` (Lab 01, Part 1).
 
-Time: about 2 hours, not counting the optional part at the end. `make` runs two ngspice decks,
+Parts 1 to 7 are required. Part 8, under Going further at the end, is optional.
+
+Time: about 2 hours, not counting the optional part. `make` runs two ngspice decks,
 each silent while the SKY130 model cards load (about a minute each on the pinned image; see
 [Warnings and delays](reference/ngspice-decks-that-run.md#lab-03)).
 
@@ -39,12 +41,12 @@ is $\tau$ by definition. Every `meas` in this lab is one line doing exactly that
 
 Does a `meas` on a simple RC return the $\tau$ you predict?
 
-Part A of `spice/rc.spice` is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck,
+Section A of `spice/rc.spice` is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck,
 unchanged: a 1 kΩ/2 kΩ divider with 0.7 pF on the tap, driven by a 1.8 V pulse. It is the version
-of this circuit a UofT student has most likely already run. Part B is an ideal 10 kΩ and an ideal
+of this circuit a UofT student has most likely already run. Section B is an ideal 10 kΩ and an ideal
 1 pF, so its $\tau$ is 10 ns by construction.
 
-1. Predict both time constants. In part A the capacitor sees the Thévenin resistance, not 1 kΩ:
+1. Predict both time constants. In section A the capacitor sees the Thévenin resistance, not 1 kΩ:
 
    $$R_{\text{th}} = 1\text{k} \parallel 2\text{k} = 666.67\ \Omega
    \qquad \tau = 666.67 \times 0.7\,\text{pF} = 466.67\ \text{ps}$$
@@ -105,7 +107,7 @@ is. The clue here was that the error did not scale.
 
 Does the RC still give 10 ns when the parts are the ones you designed?
 
-Parts C, D and E replace the ideal 10 kΩ with your Lab 01 resistor ($L = 30.3315$ µm), then the
+Sections C, D and E of the deck replace the ideal 10 kΩ with your Lab 01 resistor ($L = 30.3315$ µm), then the
 ideal 1 pF with your Lab 02 capacitor ($s = 22.1965$ µm), then both.
 
 1. Predict all three. You designed both devices to hit their targets to better than one part in
@@ -153,7 +155,7 @@ can no longer ignore it.
 
 What would this circuit have done if you had sized it from the model cards alone?
 
-Part F sizes the identical circuit with the two naive rules: length straight from the sheet
+Section F sizes the identical circuit with the two naive rules: length straight from the sheet
 resistance, and area straight from the capacitance density.
 
 1. Lab 01's end resistance was worth 3.7 % on a 10 kΩ resistor, and Lab 02's fringe was worth
@@ -179,7 +181,7 @@ about.
 
 How much does the same silicon drift between −40 °C and +125 °C?
 
-The deck runs part E again at −40 °C and +125 °C. Nothing about the layout changes.
+The deck runs section E again at −40 °C and +125 °C. Nothing about the layout changes.
 
 1. Predict the direction before you look. Lab 01's `solutions/README.md` gave `res_high_po`'s
    temperature coefficient as `tc1 = 0.514e-3`.
@@ -208,12 +210,13 @@ way to make a clock.
 
 </details>
 
-## Part 5: One microsecond
+## Part 5: A one-microsecond RC
 
 What happens to a real RC when the resistor gets big?
 
-Parts G and H build 1 µs twice: once with an ideal 1 MΩ, and once with a real one, 471.98 µm of
-`res_xhigh_po` sized with your Lab 01 numbers.
+Section G of the deck builds 1 µs twice: once with an ideal 1 MΩ, and once with a real one,
+471.98 µm of `res_xhigh_po` sized with your Lab 01 numbers. The checker's table calls them G and
+H.
 
 1. Using the 0.1994 fF per µm from Part 2, predict the error before you look.
 
@@ -303,7 +306,7 @@ up. The two answers are tied together:
 
 $$f_{-3\text{dB}} = \frac{1}{2\pi\tau}$$
 
-`spice/bode.spice` uses the same two devices as part E, and also simulates the ideal
+`spice/bode.spice` uses the same two devices as section E, and also simulates the ideal
 10 kΩ × 1 pF you would have drawn in AD101.
 
 1. Take your $\tau$ from Part 2, 10.0362 ns, and predict the corner frequency.
@@ -370,22 +373,20 @@ Part 6, prints `PASS -- every number matches the reference run.`
 A transient analysis of a linear circuit has no randomness in it, so on the pinned image
 (ngspice-47, `sky130A`, `tt` corner) your numbers match the ones on this page.
 
-Question:
+Question: in your Part 6 design, compare the resistor's area with the capacitor's. Why should they
+come out roughly equal?
 
-1. In your Part 6 design, compare the resistor's area with the capacitor's. Why should they come
-   out roughly equal?
+<details>
+<summary>Answer</summary>
 
-   <details>
-   <summary>Answer</summary>
+Resistor area is roughly $R/317.22$ µm² and capacitor area roughly $C[\text{fF}]/2$ µm², and
+$C = \tau/R$, so the total has the form $aR + b/R$. Whenever cost has that form, the minimum is
+where the two halves of the bill are the same size. The reference answer in
+[`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-03-a-time-constant-in-silicon/solutions/README.md)
+has 176.36 µm² of resistor and 164.43 µm² of capacitor, and works through why it isn't exactly
+50/50.
 
-   Resistor area is roughly $R/317.22$ µm² and capacitor area roughly $C[\text{fF}]/2$ µm², and
-   $C = \tau/R$, so the total has the form $aR + b/R$. Whenever cost has that form, the minimum is
-   where the two halves of the bill are the same size. The reference answer in
-   [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-03-a-time-constant-in-silicon/solutions/README.md)
-   has 176.36 µm² of resistor and 164.43 µm² of capacitor, and works through why it isn't exactly
-   50/50.
-
-   </details>
+</details>
 
 After yours passes, read the same `solutions/README.md` for one good answer, why the two halves
 of the area bill come out equal, and the millisecond that cannot be built.
@@ -394,14 +395,15 @@ Submit: nothing for this lab.
 
 ## Going further (optional)
 
-Part 8 is not in the time estimate, and no later part of AD102 needs it.
+Part 8 is not in the time estimate, and no later part of AD102 needs it. What to do next on the
+Course path is the last line of this page.
 
 ### Part 8 (optional): The same circuit in XSchem
 
 So far you have typed device lines and ngspice has believed you. The rest of the analog track
 describes circuits the other way: you **draw** them, and the tool writes the device lines for you.
 
-`xschem/rc.sch` is part E of `spice/rc.spice`, drawn: the same resistor (30.3315 µm of high-sheet
+`xschem/rc.sch` is section E of `spice/rc.spice`, drawn: the same resistor (30.3315 µm of high-sheet
 poly), the same capacitor (a 22.1965 µm square of MIM), and the same pulse.
 
 ![XSchem showing rc.sch: a pulse source, a res_high_po symbol annotated R=9.999k, a cap_mim_m3_1 symbol annotated C=1.002p, and the MODELS and CONTROL text blocks below](../assets/img/ad102-xschem-rc.png)
@@ -426,7 +428,7 @@ resistance live from the `W` and `L` you give them. The capacitor shows `C=1.002
    ```
 
    Those are the two device lines XSchem wrote from the picture, and they are the same two lines
-   part E of `spice/rc.spice` has by hand. A schematic is a netlist you can see.
+   section E of `spice/rc.spice` has by hand. A schematic is a netlist you can see.
 
 2. Simulate what XSchem wrote:
 
@@ -472,7 +474,7 @@ t_real              =  1.10412e-08
 ```
 
 Subtract the same 1.005 ns offset from Part 1 and that is $\tau = 10.0362$ ns, the same five
-figures as part E. The picture and the deck agree, because they are the same circuit.
+figures as section E. The picture and the deck agree, because they are the same circuit.
 
 [AD103](https://uoftasic.com/ad103/) is entirely XSchem (you'll draw a diode, then a transistor, then a CMOS inverter), and it assumes you
 have already seen a schematic turn into a netlist, as you just did here.

@@ -43,11 +43,11 @@ and takes as long as the other decks.
 
 | File | What it is |
 |---|---|
-| `spice/rc.spice` | The same RC eight ways: ideal, half-real, fully real, mis-sized, cold, hot, and one microsecond. Also measures the capacitance of a bare strip of poly. Part A is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck, unchanged. |
+| `spice/rc.spice` | The same RC eight ways: ideal, half-real, fully real, mis-sized, cold, hot, and one microsecond. Also measures the capacitance of a bare strip of poly. Section A is [ECE334](https://uoftasic.com/ece334-docs/)'s lab-1 RC deck, unchanged. |
 | `spice/my_rc.spice` | **The file you edit.** One resistor length and one capacitor side. |
-| `spice/bode.spice` | The same devices as part E in the frequency domain, with the ideal 10 kΩ × 1 pF alongside. |
+| `spice/bode.spice` | The same devices as section E in the frequency domain, with the ideal 10 kΩ × 1 pF alongside. |
 | `src/check_rc.py` | The checker. Converts every `meas` into a time constant, after subtracting the 1.005 ns step offset, and prices your design. |
 | `src/plot_bode.py` | Draws `results/ad102-rc-bode.png` from `results/bode.txt`. |
-| `xschem/rc.sch` | Part E of `spice/rc.spice`, drawn. `make netlist` turns it back into device lines; `make edit` opens it. |
+| `xschem/rc.sch` | Section E of `spice/rc.spice`, drawn. `make netlist` turns it back into device lines; `make edit` opens it. |
 | `xschem/xschemrc` | XSchem settings for this folder. |
 | `solutions/` | One good answer, and the discussion of it. Open it after yours passes. |

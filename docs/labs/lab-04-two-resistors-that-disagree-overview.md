@@ -23,7 +23,9 @@ Package: [`labs/lab-04-two-resistors-that-disagree/`](https://github.com/uoftasi
 
   This lab needs no environment setup.
 
-Time: about 2 hours, not counting the optional part at the end. The Monte Carlo runs are silent
+Parts 1 to 6 are required. Everything under Going further, at the end, is optional.
+
+Time: about 2 hours, not counting the optional part. The Monte Carlo runs are silent
 throughout. A full `make` takes between about 30 seconds and two minutes, depending on your
 machine (the Makefile records 106 s and 128 s on the pinned image; see
 [Warnings and delays](reference/ngspice-decks-that-run.md#lab-04)).
@@ -41,9 +43,11 @@ matter.
 
 What moves between process corners, and what stays put?
 
-The corners deck in `labs/passives-decks` is the one quoted on the two guide pages. It builds one
-circuit three times, once per corner (`ll`, `tt`, `hh`), changing only one word on the `.lib`
-line.
+The corners deck in `labs/passives-decks` is the one quoted on the two guide pages. Its circuit is
+two resistors, $R_A$ drawn 1 × 10 µm (`r_a`) and $R_B$ drawn 1 × 40 µm (`r_b`), a divider
+built from the same two shapes, and an RC made of a 1 × 10 µm resistor and a 10 × 10 µm MIM
+capacitor. The deck builds it three times, once per corner (`ll`,
+`tt`, `hh`), changing only one word on the `.lib` line. `ratio` is $R_B/R_A$, drawn 4 to 1.
 
 1. Go to the `passives-decks` package and run the three corners:
 
@@ -56,8 +60,8 @@ line.
    `tt` value.
 
 3. Read the three `RC corner frequency` lines. Before you compare them, work out what the `hh`
-   corner should do to the corner frequency: $R$ goes up by 1.125 and the MIM capacitance by
-   1.13207, so $f$ should scale by $1/(1.125 \times 1.13207)$.
+   corner should do to the corner frequency: $R$ goes up by 1.125 and the MIM capacitance (the
+   `MIM capacitance` lines) by 1.13207, so $f$ should scale by $1/(1.125 \times 1.13207)$.
 
 4. Read the three `ratio and divider (do not move)` blocks.
 
@@ -119,7 +123,7 @@ same order.
    instead of 201, the loop stopped after one die;
    [Warnings and delays](reference/ngspice-decks-that-run.md#lab-04) explains why.
 
-**You should see:** the count, then the nominal die. Part A of the deck forces 1 µA through four
+**You should see:** the count, then the nominal die. Section A of the deck forces 1 µA through four
 single resistors, so dividing `v(s1)` to `v(s4)` by 1 µA gives their nominal resistances:
 695.4646, 1647.124, 1468.119 and 1370.854 Ω. `v(ta)` to `v(td)` are the divider taps you'll
 read in Parts 4 and 5.
@@ -138,13 +142,13 @@ v(td) = 1.350000e+00
 ```
 
 A Monte Carlo result you cannot reproduce is an anecdote, not a measurement. Seeding it costs one
-word, and turns "about 5.6 mV" into a number you can put in a table and have someone else check.
+word, and turns "about 5.6 mV" (a spread you'll meet in Part 5) into a number you can put in a table and have someone else check.
 
 ## Part 3: Pelgrom's law
 
 Does σ halve when the area quadruples?
 
-Part A of the deck puts 1 µA through four single resistors with areas of 1, 4, 16 and 64 µm².
+Section A of the deck puts 1 µA through four single resistors with areas of 1, 4, 16 and 64 µm².
 
 1. Read the mismatch coefficients off the model card:
 
@@ -166,7 +170,7 @@ Part A of the deck puts 1 µA through four single resistors with areas of 1, 4, 
 
 2. Predict all four spreads from `body_pelgrom / sqrt(W*L)`.
 
-3. Find table A in the checker's output.
+3. Find table A in the checker's output (the checker's tables use the deck's section letters).
 
 **You should see:**
 
@@ -190,11 +194,13 @@ Part 6.)
 <summary>Answer</summary>
 
 At $W = 1$, $L = 1$ the resistor's total is 695.46 Ω, and 299.89 Ω of that, 43 %, is contact
-head, not body. `body_pelgrom` describes only the body. The head has its own coefficient
-(`head_pelgrom`, averaged over a different quantity), and on this device its contribution to σ is
-about as large as the body's
-([the worked example](guide/matching-beats-accuracy.md#worked-example-predicting-the-monte-carlo)
-gets 13.067 Ω from the head and 14.051 Ω from the body).
+head, not body. (The rest of Lab 01's 378.2448 Ω of ends is the body's extra 78 Ω, as Lab 01,
+Part 6 found.) `body_pelgrom` describes only the body, so the 3.55 % applies only to the body's
+share of the resistance. The head has its own coefficient (`head_pelgrom`, averaged over a
+different quantity), and on this device its contribution to σ is about as large as the body's.
+[The worked example](guide/matching-beats-accuracy.md#worked-example-predicting-the-monte-carlo)
+gets 13.067 Ω from the head and 14.051 Ω from the body, a σ of 19.188 Ω, which is 2.759 % of
+695.4646 Ω: much closer to what you measured than 3.55 %.
 
 So a mismatch coefficient describes a device *parameter*, not a whole device. When your geometry
 stops looking like the geometry the coefficient was extracted on, the single-number version of
@@ -207,7 +213,7 @@ same fix: measure the thing you are actually going to build.
 
 What does 48 times the area buy you in precision?
 
-Part B builds a 1:1 divider twice: once from two 0.84 µm² devices and once from two 40 µm² ones.
+Section B builds a 1:1 divider twice: once from two 0.84 µm² devices and once from two 40 µm² ones.
 The schematic and ratio are the same; only the size changes.
 
 1. From area alone, predict how much more precise the big pair should be: $\sqrt{40/0.84}$.
@@ -244,10 +250,12 @@ in square micrometres.
 
 Does building a ratio from identical units help its accuracy, its precision, or both?
 
-Part C builds a 3:1 divider from exactly 24 µm² of poly, twice:
+Section C builds a 3:1 divider from exactly 24 µm² of poly, twice, with the tap meant to sit at
+three quarters of the 1.8 V supply:
 
-- `tc`: one device of $L = 6$ and one of $L = 18$. This is the obvious drawing.
-- `td`: four identical $L = 6$ units in series, tapped after the first.
+- `tc`: one device of $L = 6$ from `vdd` to the tap and one of $L = 18$ from the tap to ground.
+  This is the obvious drawing.
+- `td`: four identical $L = 6$ units in series, tapped after the first one down from `vdd`.
 
 They have the same ratio on paper, the same area and the same material.
 
@@ -278,7 +286,8 @@ Lab 01: every resistor pays 378.2448 Ω of end resistance regardless of length, 
 
 $$\frac{R_6}{R_6+R_{18}} = \frac{378.24 + 6(317.22)}{8369.76} = 0.27260$$
 
-and not 0.25. Build both branches from the *same unit* and that overhead appears equally in
+of the supply drops across the top device, and not 0.25, so the tap sits at 1.309327 V instead
+of 1.350000 V. Build both branches from the *same unit* and that overhead appears equally in
 both. The ratio becomes a ratio of **counts**, one unit out of four, and the overhead divides out
 exactly. The measured nominal is `1.350000`.
 
@@ -341,8 +350,9 @@ You can use as many devices as you like. Keep the node called `tap` and the supp
 the checker reads your geometry back out of the file.
 
 The file ships with the divider everybody draws first: one resistor on top three times as long
-as the one underneath (`L=18` and `L=6`, both `W=1`). The check in Part 2 failed two of the
-three:
+as the one underneath (`L=18` and `L=6`, both `W=1`). That is Part 5's `tc` turned upside down,
+in a separate deck with its own 200 dies, which is why its σ is not `tc`'s. The check in Part 2
+failed two of the three:
 
 ```
   1. nominal tap   0.490673 V    target 0.450000 V ( +9.04 %)      FAIL
@@ -372,19 +382,17 @@ You're done when `make mine check`, run on the divider you designed in Part 6, p
 `setseed 1` makes the Monte Carlo reproducible, so on the pinned image (ngspice-47, `sky130A`,
 `tt` corner, seed 1, 200 dies) your numbers match the ones on this page.
 
-Question:
+Question: the shipped divider failed twice. Which failure did area fix, and which did identical
+units fix?
 
-1. The shipped divider failed twice. Which failure did area fix, and which did identical units
-   fix?
+<details>
+<summary>Answer</summary>
 
-   <details>
-   <summary>Answer</summary>
+Identical units fixed the nominal, a systematic error from the end resistance (Part 5). Area
+fixed σ, at four times the area per factor of two (Parts 3 and 4). The lab's
+`solutions/README.md` has one design that does both.
 
-   Identical units fixed the nominal, a systematic error from the end resistance (Part 5). Area
-   fixed σ, at four times the area per factor of two (Parts 3 and 4). The lab's
-   `solutions/README.md` has one design that does both.
-
-   </details>
+</details>
 
 After yours passes, read
 [`solutions/README.md`](https://github.com/uoftasic/ad102/blob/main/labs/lab-04-two-resistors-that-disagree/solutions/README.md)
@@ -394,10 +402,13 @@ Submit: nothing for this lab.
 
 ## Going further (optional)
 
+This is not in the time estimate, and no later part needs it. What to do next on the Course
+path is the last line of this page.
+
 ### The guide page's mismatch run
 
-The guide page's 1 × 1 µm against 10 × 10 µm comparison, with a different seed, is in
-`labs/passives-decks`. To reproduce it:
+[Matching and Pelgrom's law](guide/matching-beats-accuracy.md)'s 1 × 1 µm against 10 × 10 µm
+comparison, with a different seed, is in `labs/passives-decks`. To reproduce it:
 
 ```bash
 cd ../passives-decks
