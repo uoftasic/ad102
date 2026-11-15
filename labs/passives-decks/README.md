@@ -1,8 +1,9 @@
 # `passives-decks`: the ngspice decks behind the AD102 guide pages
 
-This package is not a lab. It holds the decks whose output the guide pages quote, starting at
+This package holds the ngspice decks whose output the guide pages quote, starting at
 [Resistors on a chip](https://uoftasic.com/ad102/guide/a-resistor-you-cannot-buy.html), and `make`
-checks every one of those numbers on your machine. The labs run its targets in specific parts:
+checks every one of those numbers on your machine. It isn't a lab of its own; the labs have you
+run its targets in these parts:
 
 | Target | Run in |
 |---|---|
@@ -22,11 +23,12 @@ cd labs/passives-decks
 make
 ```
 
-No environment setup is needed: no `.designinit`, no `PDK` variable, no `mod`. Every deck names
-the model library by absolute path, so a bare container works.
+You don't need any environment setup (no `.designinit`, no `PDK` variable, no `mod`), because
+every deck names the model library by its absolute path, so a bare container works.
 
-Budget about eight minutes for a full `make`, most of it silent. Each ngspice run spends roughly
-60 seconds reading 12 MB of SKY130 model cards before it prints anything. It is not hung.
+Allow about eight minutes for a full `make`, and expect most of it to be silent. Each ngspice run
+spends roughly 60 seconds reading 12 MB of SKY130 model cards before it prints anything, so a quiet
+terminal doesn't mean it has hung.
 
 ## Targets
 
@@ -59,9 +61,9 @@ Budget about eight minutes for a full `make`, most of it silent. Each ngspice ru
 
 ## Expected warnings
 
-Every log with a poly resistor in it has blocks of `unrecognized parameter` warnings, which are
-harmless ([Getting started](https://uoftasic.com/ad102/guide/getting-started.html) explains them).
-The exact counts, which you can confirm with
+Every log with a poly resistor in it has blocks of `unrecognized parameter` warnings. They are
+harmless, and [Getting started](https://uoftasic.com/ad102/guide/getting-started.html) explains
+why. Here are the exact counts, which you can confirm with
 `grep -c 'unrecognized parameter' results/<file>.log`:
 
 | log | lines |
@@ -72,14 +74,15 @@ The exact counts, which you can confirm with
 | `c_area.log`, `c_moscap_cv.log`, `l_spiral.log` | 0 |
 
 `mismatch.log` has the most because it re-parses the netlist 200 times, so the warnings come back
-200 times. Nothing is wrong. An **`Error`** at the start of a line is different; that one is real.
+with every parse. A line that starts with `Error` is different, and you should treat it as a real
+problem.
 
 **`IKR too small - model effect disabled!`** appears twice, from the parasitic diodes that model a
 diffusion resistor's junction to its well. It is also harmless: a knee-current parameter is below
 the value ngspice will act on, so ngspice skips that term.
 
-The three inductor models are **not** part of `sky130.lib.spice`; `l_spiral.spice` `.include`s
-them explicitly at the top. Leave one out and you get
+The three inductor models aren't part of `sky130.lib.spice`, so `l_spiral.spice` `.include`s them
+explicitly at the top. If you leave one out, ngspice stops with
 `Error: unknown subckt: x1 a 0 ct 0 sky130_fd_pr__ind_05_220`.
 
 ## Reproducible numbers
@@ -87,11 +90,11 @@ them explicitly at the top. Leave one out and you get
 DC operating points and linear AC analyses have no randomness in them, and `mismatch.spice` sets
 `setseed 12345` before its first `reset`, so the Monte Carlo is reproducible too. Every value in
 `src/check_passives.py` is compared at 0.05 % tolerance, and all of them pass on the pinned image.
-If a check fails, the model library has changed, not your work: confirm `ngspice -v` reports
-ngspice-47 and that `/foss/pdks/sky130A` exists.
+A failed check therefore means the model library has changed, and nothing in your work is at
+fault. Confirm that `ngspice -v` reports ngspice-47 and that `/foss/pdks/sky130A` exists.
 
-`W` and `L` on a SKY130 device are plain micron numbers: `W=1`, never `W=1u`. There is no `u` in
-any deck here.
+`W` and `L` on a SKY130 device are plain numbers in microns, so you write `W=1`, never `W=1u`, and
+no deck here has a `u` in it.
 
 ## Figures produced here
 
@@ -100,7 +103,7 @@ any deck here.
 - `docs/assets/img/ad102-mismatch.png`: 200-wafer mismatch histograms
 
 Two more figures in the guide are KLayout renders of
-`libs.ref/sky130_fd_pr/gds/sky130_fd_pr.gds`, not plots (`ad102-spiral-inductor.png`,
-`ad102-spiral-vs-inverters.png`). They are checked in and do not need regenerating.
+`libs.ref/sky130_fd_pr/gds/sky130_fd_pr.gds` rather than plots (`ad102-spiral-inductor.png`,
+`ad102-spiral-vs-inverters.png`). They are checked in, so you never need to regenerate them.
 
 Questions: <https://discord.gg/hrJnP5UsGz>
