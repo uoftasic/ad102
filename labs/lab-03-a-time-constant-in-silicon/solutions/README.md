@@ -35,7 +35,7 @@ A 176 µm strip of poly is also a capacitor to the substrate, and `make rc` meas
 capacitance poly carries per micrometre:
 
 ```
-    fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1870 fF of ends.
+    fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1869 fF of ends.
 ```
 
 176.36 µm of it carries about 36 fF to the substrate. For a uniformly distributed RC line, half
@@ -51,7 +51,7 @@ since the optimum was shallow. `make rc` already shows what happens instead:
 
 ```
 G  ideal 1 Mohm + ideal 1 pF                          999.9950 ns
-H  real 1 Mohm of xhigh poly + your 1 pF             1049.9550 ns
+H  real 1 Mohm of xhigh poly + your 1 pF             1049.8950 ns
 ```
 
 That is 5 % long, from parasitic capacitance alone. The strip that makes the megohm is 472 µm of

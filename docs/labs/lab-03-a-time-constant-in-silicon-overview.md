@@ -135,7 +135,7 @@ ideal 1 pF with your Lab 02 capacitor ($s = 22.1965$ µm), then both.
 ```
 --- H. the resistor's own capacitance to substrate (farads) ---
 cpar_10k = 7.233642e-15
-cpar_1m = 9.527787e-14
+cpar_1m = 9.527372e-14
 ```
 
 Your capacitor makes no difference: replacing the ideal 1 pF with a real MIM plate changes
@@ -144,7 +144,7 @@ capacitor next to it is real or ideal. The checker fits a line through the two s
 section H and prints the result below its table:
 
 ```
-    fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1870 fF of ends.
+    fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1869 fF of ends.
 ```
 
 You'll use that 0.1994 fF per µm in Parts 5 and 6.
@@ -227,7 +227,7 @@ way to make a clock.
 What happens to a real RC when the resistor gets big?
 
 Section G of the deck builds a 1 µs RC twice: once with an ideal 1 MΩ, and once with a real one
-made of 471.98 µm of `res_xhigh_po`, sized with your Lab 01 numbers. The checker's table calls
+made of 471.96 µm of `res_xhigh_po`, sized with your Lab 01 numbers. The checker's table calls
 these two G and H.
 
 1. Using the 0.1994 fF per µm from Part 2, predict the error before you look.
@@ -239,10 +239,10 @@ these two G and H.
 
 ```
   G  ideal 1 Mohm + ideal 1 pF                          999.9950 ns
-  H  real 1 Mohm of xhigh poly + your 1 pF             1049.9550 ns
+  H  real 1 Mohm of xhigh poly + your 1 pF             1049.8950 ns
 
-  the microsecond ran 49.96 ns long.
-    a 471.98 um strip of poly carries 95.278 fF to the substrate, and half of it
+  the microsecond ran 49.90 ns long.
+    a 471.96 um strip of poly carries 95.274 fF to the substrate, and half of it
     adds to the time constant: R*Cpar/2 = 47.64 ns, which is 95 % of what you measured.
 ```
 

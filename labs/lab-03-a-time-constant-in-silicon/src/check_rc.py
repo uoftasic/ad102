@@ -51,10 +51,10 @@ REF_RC = {
     "t_us_ideal":  ("G  ideal 1 Mohm + ideal 1 pF",
                     0.999995e-6, STEP_SLOW),
     "t_us_real":   ("H  real 1 Mohm of xhigh poly + your 1 pF",
-                    1.049955e-6, STEP_SLOW),
+                    1.049895e-6, STEP_SLOW),
 }
-REF_CPAR = {"cpar_10k": 7.233642e-15, "cpar_1m": 9.527787e-14}
-LEN_10K, LEN_1M = 30.3315, 471.9814      # um of poly behind those two
+REF_CPAR = {"cpar_10k": 7.233642e-15, "cpar_1m": 9.527372e-14}
+LEN_10K, LEN_1M = 30.3315, 471.9576      # um of poly behind those two
 
 TAU_TARGET = 20.0e-9
 TAU_TOL = 0.01
@@ -117,7 +117,7 @@ def check_rc(path):
         pred = 1e6 * v["cpar_1m"] / 2
         print()
         print(f"  the microsecond ran {ex*1e9:.2f} ns long.")
-        print(f"    a 471.98 um strip of poly carries "
+        print(f"    a 471.96 um strip of poly carries "
               f"{v['cpar_1m']*1e15:.3f} fF to the substrate, and half of it")
         print(f"    adds to the time constant: R*Cpar/2 = "
               f"{pred*1e9:.2f} ns, which is "
