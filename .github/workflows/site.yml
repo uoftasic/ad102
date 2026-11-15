@@ -1,0 +1,64 @@
+# Build the course site with Quarto and deploy it to GitHub Pages.
+# Pages must be set to Settings -> Pages -> Source: GitHub Actions.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "scripts/check_site.py"
+      - ".github/workflows/site.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "scripts/check_site.py"
+      - ".github/workflows/site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.11.9
+
+      # The site, with a PDF of every page next to its HTML.
+      - name: Render the site
+        run: quarto render docs
+
+      # The whole course as one PDF, linked from the navbar as ad102-course.pdf.
+      - name: Render the course PDF
+        run: |
+          quarto render docs --profile pdf --to typst
+          cp docs/_book/ad102-course.pdf docs/_site/
+
+      - name: Check links and anchors in the rendered site
+        run: python3 scripts/check_site.py docs/_site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_site
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
