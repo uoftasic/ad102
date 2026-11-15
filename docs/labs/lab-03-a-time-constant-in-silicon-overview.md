@@ -353,8 +353,8 @@ Your prediction was
 
 $$\frac{1}{2\pi \times 10.0362\ \text{ns}} = 15.858088\ \text{MHz}$$
 
-and `.ac` measured 15.8580 MHz. They agree to six significant figures, from two analyses that
-share nothing but the two device lines. Agreement between two independent measurements is the
+and `.ac` measured 15.8580 MHz. They agree to five significant figures, about six parts per
+million apart, from two analyses that share nothing but the two device lines. Agreement between two independent measurements is the
 only evidence you get that a deck is right, and checking one against the other costs nothing, so
 make a habit of it. With any RC you have three numbers, $R$, $C$ and $\tau$, and any two of them
 give you the third. If they disagree, one of your decks is wrong, and you've found out cheaply.
