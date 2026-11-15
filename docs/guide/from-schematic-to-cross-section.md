@@ -61,7 +61,7 @@ building, each with the height it starts at and how tall it is:
 | redistribution metal | 7.2611 µm | 3.0 µm |
 
 The top of metal5 is 6.6311 µm above the silicon, so a whole SKY130 chip, every layer of wiring
-included, is about as thick as a red blood cell is wide. Your 100 kΩ resistor was 314.046454 µm
+included, is about as thick as a red blood cell is wide. Your 100 kΩ resistor was 314.046460 µm
 long, which is forty-seven times the thickness of the chip. You'll print this stack yourself in
 [the capstone, Part 1](../labs/capstone-floor-plan-overview.md#part-1-read-the-layer-stack).
 

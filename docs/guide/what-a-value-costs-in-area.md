@@ -20,14 +20,14 @@ uses, sizes three resistors this way and simulates them:
 
 | you want | $L$ from the formula | ngspice says |
 |---:|---:|---:|
-| 1 kΩ | 1.960036 µm | 1000.007 Ω |
-| 10 kΩ | 30.331608 µm | 10 000.03 Ω |
-| 100 kΩ | 314.046454 µm | 100 000.0 Ω |
+| 1 kΩ | 1.960014 µm | 1000.000 Ω |
+| 10 kΩ | 30.331509 µm | 10 000.00 Ω |
+| 100 kΩ | 314.046460 µm | 100 000.0 Ω |
 
 ```
 --- B. sized to 1 k, 10 k, 100 k (ohms) ---
-r_1k = 1.000007e+03
-r_10k = 1.000003e+04
+r_1k = 1.000000e+03
+r_10k = 1.000000e+04
 r_100k = 1.000000e+05
 ```
 
@@ -37,7 +37,7 @@ polysilicon 314 micrometres long.
 To get a sense of scale, compare it with the smallest inverter in the SKY130 standard-cell library,
 `sky130_fd_sc_hd__inv_1`, which has `area : 3.7536` µm² in
 `libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib`. Your 100 kΩ resistor is
-314.046454 × 1 µm = 314.05 µm² of drawn poly, which is the silicon of **84 inverters**. So a
+314.046460 × 1 µm = 314.05 µm² of drawn poly, which is the silicon of **84 inverters**. So a
 passive component you wouldn't think twice about on a breadboard costs as much floor space as a
 small logic block.
 
@@ -72,7 +72,7 @@ r_w5 = 1.000004e+05
 |---:|---:|---:|---:|---:|
 | 0.35 | 101.9319 | 99 999.75 | **35.68** | 9.5 |
 | 0.69 | 216.2792 | 100 000.2 | 149.23 | 39.8 |
-| 1 | 314.046454 | 100 000.0 | 314.05 | 83.7 |
+| 1 | 314.046460 | 100 000.0 | 314.05 | 83.7 |
 | 2 | 629.5313 | 99 999.82 | 1 259.06 | 335.4 |
 | 5 | 1576.1560 | 100 000.4 | 7 880.78 | 2 099.5 |
 
@@ -91,7 +91,7 @@ have a reason to, such as better matching
 ## Changing the material
 
 You choose the width and length freely, but the material has to come from the short list the
-process offers. Section C of the deck draws the same 314.046454 × 1 µm strip with four
+process offers. Section C of the deck draws the same 314.046460 × 1 µm strip with four
 different implants:
 
 | model | value | Ω/□ (measured) |

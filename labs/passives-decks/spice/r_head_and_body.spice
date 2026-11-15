@@ -27,20 +27,20 @@ Xi i 0 0 sky130_fd_pr__res_high_po W=10 L=10
 
 * Three target values, sized from R = 378.2448 + 317.2198 * L  (W = 1 um)
 V3 c 0 1m
-Xc c 0 0 sky130_fd_pr__res_high_po W=1 L=1.960036
+Xc c 0 0 sky130_fd_pr__res_high_po W=1 L=1.960014
 V4 d 0 1m
-Xd d 0 0 sky130_fd_pr__res_high_po W=1 L=30.331608
+Xd d 0 0 sky130_fd_pr__res_high_po W=1 L=30.331509
 V5 e 0 1m
-Xe e 0 0 sky130_fd_pr__res_high_po W=1 L=314.046454
+Xe e 0 0 sky130_fd_pr__res_high_po W=1 L=314.046460
 
 * The same 314 um strip, three other recipes. Same drawing, same area,
 * four different values -- because the implant is different.
 V6 f 0 1m
-Xf f 0 0 sky130_fd_pr__res_xhigh_po W=1 L=314.046454
+Xf f 0 0 sky130_fd_pr__res_xhigh_po W=1 L=314.046460
 V7 g 0 1m
-Xg g 0 0 sky130_fd_pr__res_generic_pd W=1 L=314.046454
+Xg g 0 0 sky130_fd_pr__res_generic_pd W=1 L=314.046460
 V8 h 0 1m
-Xh h 0 0 sky130_fd_pr__res_generic_nd W=1 L=314.046454
+Xh h 0 0 sky130_fd_pr__res_generic_nd W=1 L=314.046460
 
 * ---- 100 kohm four times over, at four different widths. Same value,
 * wildly different area, because A = W*L and L has to grow with W.

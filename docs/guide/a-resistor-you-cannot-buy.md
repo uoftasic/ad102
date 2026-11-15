@@ -81,7 +81,7 @@ course uses.
 
 ## The same strip in four materials
 
-Suppose you draw one strip, 314.046454 µm long and 1 µm wide, and change nothing but the resistor
+Suppose you draw one strip, 314.046460 µm long and 1 µm wide, and change nothing but the resistor
 model it uses. Section C of
 [`spice/r_head_and_body.spice`](https://github.com/uoftasic/ad102/blob/main/labs/passives-decks/spice/r_head_and_body.spice)
 does exactly that:
