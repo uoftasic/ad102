@@ -115,7 +115,7 @@ four devices, all of the same material from the same foundry: **A** and **B** ar
 
 The plot shows two hundred wafers, each with two resistors drawn from the same rectangle. The
 blue histogram is the 1 µm × 1 µm pair, which routinely comes out 5 % apart and sometimes 12 %.
-The orange histogram is the 10 µm × 10 µm pair, and almost all of those are within half a percent
+The orange histogram is the 10 µm × 10 µm pair, and almost all of those are within one percent
 of each other.
 
 ## Pelgrom's law

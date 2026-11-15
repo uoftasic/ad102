@@ -226,7 +226,8 @@ decks give:
 | **divider tap** | **0.3845828 V** | **0.3845828 V** | **0.3845828 V** |
 
 Compare the last two rows with the first four. The absolute values move by ±12.5 % and the
-corner frequency by ±31 %, but **the ratio doesn't change even in the seventh decimal place.**
+corner frequency by +31 % and −22 %, but **the ratio doesn't change even in the seventh
+significant figure.**
 That table is [Matching and Pelgrom's law](../guide/matching-beats-accuracy.md) in miniature,
 and it's the reason analog designers build ratios.
 
@@ -336,8 +337,9 @@ Each of the two runs in `make` is silent while ngspice loads 12 MB of SKY130 mod
 
 `Doing analysis at TEMP = ... and TNOM = 27.000000` appears five times in `results/rc.log`, at
 27 °C, −40 °C and +125 °C. That comes from Part 4, where the deck runs the same `.tran` card at
-three temperatures. `TNOM` stays at 27, and that's correct: it's the temperature at which the
-model parameters were extracted, not the one you're simulating.
+three temperatures. `TNOM` stays at 27, and that's correct: it's the default temperature that
+model parameters are referred to, not the one you're simulating. (A model card can set its own;
+`res_high_po`'s says `tnom = 30`, which is the value Lab 01's Going further uses.)
 
 `Warning: command 'plot' is not available during batch simulation, ignored!` comes from the
 schematic in the lab's XSchem part, which asks for a plot that batch mode can't draw. The `meas`

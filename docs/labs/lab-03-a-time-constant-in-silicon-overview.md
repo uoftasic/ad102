@@ -186,7 +186,8 @@ from the sheet resistance, and the capacitor's area straight from the capacitanc
 Together with the resistor's own 0.36 % from Part 2, the two sizing errors add up to 5.65 % of
 timing error in one circuit. Neither of them shows up as a warning or in DRC, and neither
 averages out across a wafer, because every chip gets the same 5.65 %. That's the difference
-between a **tolerance**, which you budget for, and a **mistake**, which you don't know is there.
+Lab 01, Part 3 drew between a **tolerance**, which you budget for, and a **mistake**, which you
+don't know is there.
 
 ## Part 4: Temperature
 

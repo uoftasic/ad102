@@ -83,7 +83,7 @@ in your question.
    at 695.4646 Ω, more than twice that.
    You'll find where the extra ohms come from, then size a 10 kΩ resistor correctly on the first
    try (30.3315 µm long, landing at 9999.997 Ω), and two more of your own.
-2. Work out what a picofarad costs in square micrometres, and why nobody puts a 10 µF capacitor
+2. Work out what a picofarad costs in square micrometres, and why nobody puts a 1 µF capacitor
    on a chip.
 3. Build an RC filter from the resistor and capacitor you designed and measure its time
    constant $\tau$. Then measure its corner frequency, check it against $1/(2\pi\tau)$ to six
@@ -115,8 +115,8 @@ quote, and some lab parts run it too. The capstone has no package, because all i
 command, a browser exercise and a page of arithmetic.
 
 The first time you run each lab, its `make` ends in `FAIL`, and that's on purpose. Each package
-ships the design a first-year student would draw, sized straight off the model card, so that you
-read your own wrong number before you fix it. The message tells you which line to edit.
+ships the design a first-year student would draw, usually sized straight off the model card, so
+that you read your own wrong number before you fix it. The message tells you which file to edit.
 
 ## What you'll have at the end
 

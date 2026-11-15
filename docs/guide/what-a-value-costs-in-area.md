@@ -44,15 +44,15 @@ small logic block.
 Larger values get expensive quickly, because the length grows in proportion to the resistance. A
 1 MΩ resistor in the same material at the same width needs
 
-$$L = \frac{10^6 - 378.2448}{317.2198} = 3151.6\ \text{µm} = 3.15\ \text{mm}$$
+$$L = \frac{10^6 - 378.2448}{317.2198} = 3151.2\ \text{µm} = 3.15\ \text{mm}$$
 
 which is longer than many whole dies. Folding (later on this page) won't rescue a resistor that
 size, so instead you redesign the circuit so that it doesn't need one.
 
 ## Width and area
 
-One fact decides how every on-chip resistor gets drawn, and it comes from rearranging the
-resistance formula. For a fixed resistance, the length you need is proportional to the width, so
+How every on-chip resistor gets drawn follows from rearranging the resistance formula. For a
+fixed resistance, the length you need is proportional to the width, so
 
 $$L \propto R\,W \quad\Longrightarrow\quad \text{area} = W L \propto R\,W^2$$
 
@@ -77,8 +77,11 @@ r_w5 = 1.000004e+05
 | 5 | 1576.1560 | 100 000.4 | 7 880.78 | 2 099.5 |
 
 Every row gives the same value to five digits, yet the bottom row takes 221 times the area of
-the top row. The square law on its own predicts $(5/0.35)^2 = 204$; the rest of the difference
-comes from the fixed end resistance, which shortens the required length slightly at the wide end.
+the top row. The square law on its own predicts $(5/0.35)^2 = 204$. Most of the rest comes from
+the 0.35 µm strip, which the model treats as slightly narrower than drawn, so it has about 7 %
+more ohms per square than the wider ones and needs less length
+([Lab 01, Part 4](../labs/lab-01-a-resistor-you-designed-overview.md#part-4-change-the-width)
+measures this). Its larger end resistance shortens it a little more.
 
 So draw a resistor at the narrowest width that the design rules and your accuracy budget allow.
 For `res_high_po`, the narrowest width SKY130 permits is 0.35 µm. Make it wider only when you
@@ -93,8 +96,8 @@ different implants:
 
 | model | value | Ω/□ (measured) |
 |---|---:|---:|
-| `res_generic_nd` (n+ diffusion) | 36.89775 kΩ | 120 |
-| `res_generic_pd` (p+ diffusion) | 61.38915 kΩ | 197 |
+| `res_generic_nd` (n+ diffusion) | 36.89775 kΩ | 117.5 |
+| `res_generic_pd` (p+ diffusion) | 61.38915 kΩ | 195.5 |
 | `res_high_po` | 100.0000 kΩ | 317.2198 |
 | `res_xhigh_po` | 665.3872 kΩ | 2118.7619 |
 
@@ -110,7 +113,8 @@ That's still big (472 µm² of poly at 1 µm wide, or 126 inverters), but it fit
 > drew it, because the etch undercuts the edge. At a drawn W = 1 µm the material is really
 > 0.944 µm wide, so the resistance per micron of length is $2000 / 0.944 = 2118.6441\ \Omega$.
 > [Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md) measures 2118.7619, which agrees to
-> five digits; the small remainder is the model's nonlinear body term. This is the first place in
+> four digits; the small remainder is the model's nonlinear body term. After `leff` on
+> [Ohms per square](../guide/ohms-per-square.md#the-design-equation), this is the second place in
 > the course where what you drew and what you got differ by an amount you can calculate, and
 > [Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) is about that gap.
 
@@ -159,8 +163,7 @@ These numbers shape every analog block you'll read about. Bias networks use rati
 resistors instead of one big one, and bandgap references use a handful of matched units rather
 than one exact value. Filters that would need a megohm on a breadboard are built from switched
 capacitors instead ([What to build instead of an inductor](../guide/what-analog-builds-instead.md)).
-None of this is tradition: designers do these things because a 100 kΩ resistor costs as much
-silicon as 84 inverters.
+Designers work this way because a 100 kΩ resistor costs as much silicon as 84 inverters.
 
 Next on the [Course path](../index.md#course-path):
 [Lab 01: A resistor you designed](../labs/lab-01-a-resistor-you-designed-overview.md). After
