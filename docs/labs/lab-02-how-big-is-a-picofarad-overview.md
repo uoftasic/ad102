@@ -9,12 +9,12 @@ Package: [`labs/lab-02-how-big-is-a-picofarad/`](https://github.com/uoftasic/ad1
 
 ## Before you start
 
-- Finish [Lab 01](labs/lab-01-a-resistor-you-designed-overview.md): `make mine check` in
+- Finish [Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md): `make mine check` in
   `labs/lab-01-a-resistor-you-designed` prints `PASS`.
-- Read [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md),
-  [What a picofarad costs](guide/what-a-picofarad-costs.md),
-  [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) and
-  [Inductors on a chip](guide/the-inductor-problem.md).
+- Read [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md),
+  [What a picofarad costs](../guide/what-a-picofarad-costs.md),
+  [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md) and
+  [Inductors on a chip](../guide/the-inductor-problem.md).
 - Open a terminal in the workbench and go to the lab folder:
 
   ```bash
@@ -30,7 +30,7 @@ ngspice decks (`pf`, `mine`, `henry` and `tank`) and then a checker script, `src
 which fits and prints the results. Three of the decks are silent for anywhere from about 10
 seconds to a minute each while the SKY130 model cards load; the Makefile budgets about three and
 a half minutes for the whole `make` on the pinned image
-([Warnings and delays](reference/ngspice-decks-that-run.md#lab-02)).
+([Warnings and delays](../reference/ngspice-decks-that-run.md#lab-02)).
 
 The only theory you need beyond the guide pages: two plates of area $A$ separated by a dielectric
 of thickness $t$ give $C = \varepsilon A / t$. On a chip $\varepsilon$ and $t$ are both fixed, so
@@ -231,7 +231,7 @@ fringe term throws that precision away.
 Which construction gives the most capacitance per square micrometre, and what does it cost you?
 
 Block C measures the other two kinds of capacitor from
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md): MOS (an nFET gate and a pFET gate,
+[Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md): MOS (an nFET gate and a pFET gate,
 biased at 1.8 V) and VPP (interleaved metal fingers). Block D takes the bias away from one of
 the MOS capacitors.
 
@@ -289,7 +289,7 @@ other plate. Remove the bias and 72 % of the capacitance goes with it. A capacit
 on the voltage across it causes distortion, so MOS capacitors go on the supply rails by the
 million, where the voltage never moves, and stay out of signal paths. Density, linearity and mask
 cost (MIM needs extra masks; see the table on
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md#choosing-between-them)) are separate
+[Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md#choosing-between-them)) are separate
 properties, and no device wins on all three.
 
 </details>
@@ -301,7 +301,7 @@ How does a MOS capacitor's value move with its gate voltage?
 The guide pages quote a second set of decks in `labs/passives-decks`. Its `spice/c_area.spice`
 measures one MIM, VPP and MOS capacitor each at 1 kHz (the frequency cancels out of
 $C = |I|/(2\pi f)$, so any one works; see
-[ngspice deck recipes](reference/ngspice-decks-that-run.md), section 2), and its
+[ngspice deck recipes](../reference/ngspice-decks-that-run.md), section 2), and its
 `spice/c_moscap_cv.spice` sweeps one MOS capacitor's gate from 0 V to 1.8 V in 100 mV steps.
 
 1. Go to the `passives-decks` package and run both:
@@ -326,7 +326,7 @@ $C = |I|/(2\pi f)$, so any one works; see
 **You should see:** MIM densities of 2.64, 2.07 and 2.02 fF/µm², falling as the plate grows. In
 the sweep, 220.7182 fF at 0 V (`c_000mv = 2.207182e-13`), a steep climb between 0.3 V and
 0.7 V, and a flattening toward 787.6883 fF at 1.8 V (`c_180mv = 7.876883e-13`). That is the
-curve plotted on [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md#mos-capacitance-and-gate-voltage).
+curve plotted on [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md#mos-capacitance-and-gate-voltage).
 
 What sets the voltage where the curve is steepest?
 
@@ -455,7 +455,7 @@ What inductors does SKY130 give you, and what do they cost in area?
 
 **You should see:** in the `make inductor` output, `q_1khz = 1.50516e-05` for `ind_05_220`: at
 1 kHz the largest inductor is almost entirely resistance, as
-[Inductors on a chip](guide/the-inductor-problem.md) explains. The best Q for `ind_03_90` is
+[Inductors on a chip](../guide/the-inductor-problem.md) explains. The best Q for `ind_03_90` is
 about 21.1, near 6.4 GHz, matching the `henry` table.
 
 Put the three passives side by side, all from your own runs in the same process:
@@ -583,7 +583,7 @@ still called an inductor.
 
 ### Part 9 (optional): Parasitic capacitance in SiliWiz
 
-[Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) is easier to believe once you
+[Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md) is easier to believe once you
 see that a wire is a bar hanging over a plane. SiliWiz draws the cross-section live.
 
 1. Open **<https://app.siliwiz.com/?preset=blank>**.
@@ -601,14 +601,14 @@ horizontal gap you can draw between two wires on the same layer.
 
 There is a guided walkthrough at <https://tinytapeout.com/siliwiz/parasitics/>, and the capacitor
 tutorial at <https://tinytapeout.com/siliwiz/capacitors/> builds the same three kinds of
-capacitor as [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md).
+capacitor as [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md).
 
 > **Warning:** SiliWiz is not SKY130. Its layer stack, permittivities and numbers are simplified
 > for teaching. Use it for the shape of the answer (closer means more, a thicker gap means less,
 > edges matter) and use the PDK's `parameters/typical.spice` (see
-> [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md)) for the value.
+> [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md)) for the value.
 
-Next on the [Course path](README.md#course-path): read
-[What to build instead of an inductor](guide/what-analog-builds-instead.md), then do
-[Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md), which
+Next on the [Course path](../index.md#course-path): read
+[What to build instead of an inductor](../guide/what-analog-builds-instead.md), then do
+[Lab 03: A time constant in silicon](../labs/lab-03-a-time-constant-in-silicon-overview.md), which
 puts your resistor and capacitor into the same circuit.

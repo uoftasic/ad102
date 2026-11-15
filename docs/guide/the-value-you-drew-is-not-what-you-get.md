@@ -6,7 +6,7 @@ tell you where until the wafer is measured.
 
 That is not a defect. It is the normal, documented behaviour of a semiconductor process, and the
 PDK ships the numbers so you can design around them. This page is about how large the variation
-is. The [next page](guide/matching-beats-accuracy.md) is about the technique that makes it
+is. The [next page](../guide/matching-beats-accuracy.md) is about the technique that makes it
 manageable.
 
 ## Global variation and local mismatch
@@ -65,7 +65,7 @@ The same files also hold a second mechanism, a list of *width* tolerances:
 
 Your poly comes out ±28.7 nm narrower or wider than you drew it. On a 1 µm-wide resistor that
 is ±2.9 %. On a 0.35 µm-wide one, the width
-[What a resistor costs in area](guide/what-a-value-costs-in-area.md) recommended because area goes
+[What a resistor costs in area](../guide/what-a-value-costs-in-area.md) recommended because area goes
 as $W^2$, it is ±8.2 %. That is your first real design trade-off: narrow is cheap, and narrow is
 inaccurate.
 
@@ -101,7 +101,7 @@ That is exactly ∓12.5 %, because that is exactly what the corner file said. Th
 ```
 
 179.7322 fF, 206.5822 fF and 233.8667 fF: 0.87003× to 1.13208× typical. You'll run this deck in
-[Lab 04, Part 1](labs/lab-04-two-resistors-that-disagree-overview.md#part-1-process-corners).
+[Lab 04, Part 1](../labs/lab-04-two-resistors-that-disagree-overview.md#part-1-process-corners).
 
 ## R and C errors together
 
@@ -144,11 +144,11 @@ and even two resistors on the same die disagree. `labs/passives-decks/spice/mism
 ```
 
 (It also prints two ratio rows and an area line, which
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md) uses.)
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md) uses.)
 
 A and B are drawn identically, 1 µm × 1 µm, in the same simulation on the same wafer, and each
 carries 2.8 % of its own random variation on top of whatever the corner did.
-[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md)
+[Lab 04: Two resistors that disagree](../labs/lab-04-two-resistors-that-disagree-overview.md)
 is about that number.
 
 ## A rule for specifications
@@ -161,4 +161,4 @@ Which raises a question: if absolute values are this poor, how does anyone build
 whose job is to be accurate to one part in four thousand? The answer is in the same three corner
 runs.
 
-Next: [Matching and Pelgrom's law](guide/matching-beats-accuracy.md).
+Next: [Matching and Pelgrom's law](../guide/matching-beats-accuracy.md).

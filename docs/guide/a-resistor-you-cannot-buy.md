@@ -19,11 +19,11 @@ silicon), so come back to it after you have read those as well.
      dist/ResistorGeometry.web.mp4 from tooling/manim/scenes/ad102_resistor_geometry.py;
      deploy copies it here alongside its poster frame. -->
 <video controls loop muted playsinline preload="none"
-       poster="assets/img/ad102-resistor-geometry.poster.png"
+       poster="../assets/img/ad102-resistor-geometry.poster.png"
        style="width:100%;max-width:820px;border-radius:8px">
-  <source src="assets/img/ad102-resistor-geometry.web.mp4" type="video/mp4">
+  <source src="../assets/img/ad102-resistor-geometry.web.mp4" type="video/mp4">
   Your browser will not play embedded video —
-  <a href="assets/img/ad102-resistor-geometry.web.mp4">download the clip</a>.
+  <a href="../assets/img/ad102-resistor-geometry.web.mp4">download the clip</a>.
 </video>
 
 *Source: [`tooling/manim/scenes/ad102_resistor_geometry.py`](https://github.com/uoftasic/ad102)
@@ -100,10 +100,10 @@ r_ndiff = 3.689775e+04
 
 Same drawing, same silicon area, an 18:1 spread in value. Choosing the material is the first
 design decision, and it is the only one that does not cost area. You'll run this deck yourself
-in [Lab 01, Part 6](labs/lab-01-a-resistor-you-designed-overview.md#part-6-split-a-resistor-into-head-and-body).
+in [Lab 01, Part 6](../labs/lab-01-a-resistor-you-designed-overview.md#part-6-split-a-resistor-into-head-and-body).
 
 When you do, the run prints a block of model warnings first (see
-[Getting started](guide/getting-started.md#expected-warnings)). The `rbody_model` warning shows
+[Getting started](../guide/getting-started.md#expected-warnings)). The `rbody_model` warning shows
 `rsh` as `3.173885e+02`. That number is the sheet resistance of `res_high_po` in ohms per
 square: the most important parameter of the device, sitting in a warning you would normally
 scroll past.
@@ -122,8 +122,8 @@ puts the device outside every bin its model was fitted over. On a MOSFET that st
 `could not find a valid modelname`. On a resistor the run does not stop: the strip that reads
 3550.443 Ω written `W=1 L=10` reads 3193.812 Ω written `W=1u L=10u`, an ordinary-looking
 resistance 10 % off, and ngspice still exits with status 0.
-[Getting started](guide/getting-started.md#the-u-suffix-trap) goes through it in detail. Apart
+[Getting started](../guide/getting-started.md#the-u-suffix-trap) goes through it in detail. Apart
 from Lab 01's `u_trap.spice`, which exists to show the mistake, there is no `u` in any deck in
 this course, and there should be none in yours.
 
-Next: [Ohms per square](guide/ohms-per-square.md), the unit that turns a rectangle into ohms.
+Next: [Ohms per square](../guide/ohms-per-square.md), the unit that turns a rectangle into ohms.

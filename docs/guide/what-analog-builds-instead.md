@@ -13,7 +13,7 @@ corner depends on R × C, and you already know what those cost:
 $$f_{-3\text{dB}} = \frac{1}{2\pi R C}$$
 
 A 1 kHz corner needs $RC = 159$ µs. Pair the 100 kΩ from
-[What a resistor costs in area](guide/what-a-value-costs-in-area.md) (314 µm² of poly) with the
+[What a resistor costs in area](../guide/what-a-value-costs-in-area.md) (314 µm² of poly) with the
 1.6 nF that requires, and the capacitor alone is 791 300 µm²: 0.79 mm², about 9 % of a
 3 mm × 3 mm die, or 210 800 inverters, for one pole. Nobody builds that.
 
@@ -28,7 +28,7 @@ f3db                =  2.15410e+08
 That is 215.410 MHz: a resistor and a capacitor you can afford give you a corner five orders of
 magnitude above the 1 kHz you wanted. Anything slower than a few megahertz gets filtered
 off-chip, or by one of the next two techniques.
-[Lab 03](labs/lab-03-a-time-constant-in-silicon-overview.md) builds an RC from the resistor and
+[Lab 03](../labs/lab-03-a-time-constant-in-silicon-overview.md) builds an RC from the resistor and
 capacitor you designed and measures its time constant in the time domain.
 
 ## 2. Switched capacitors
@@ -60,7 +60,7 @@ It has two more advantages:
 - **The time constant becomes a capacitor ratio.** An RC made from a switched capacitor $C_1$ and
   an integrating capacitor $C_2$ has $\tau = R_{eq}C_2 = C_2/(f_{clk} C_1)$: a ratio of
   capacitors times a clock period. A ratio of matched devices is the most accurate thing on a
-  chip (see [Matching and Pelgrom's law](guide/matching-beats-accuracy.md)). This is why almost
+  chip (see [Matching and Pelgrom's law](../guide/matching-beats-accuracy.md)). This is why almost
   every ADC you will meet is built from switched capacitors.
 
 The cost is that the circuit is now sampled: it only works below $f_{clk}/2$, and it folds noise.
@@ -119,6 +119,6 @@ bandgap reference's output is a resistor ratio times a physical constant.
 This principle follows directly from a measurement you'll see on the next two pages: on-chip
 absolute values are poor, and on-chip ratios are essentially exact.
 
-Next on the [Course path](README.md#course-path):
-[Lab 03: A time constant in silicon](labs/lab-03-a-time-constant-in-silicon-overview.md).
-After that, read [Process corners](guide/the-value-you-drew-is-not-what-you-get.md).
+Next on the [Course path](../index.md#course-path):
+[Lab 03: A time constant in silicon](../labs/lab-03-a-time-constant-in-silicon-overview.md).
+After that, read [Process corners](../guide/the-value-you-drew-is-not-what-you-get.md).

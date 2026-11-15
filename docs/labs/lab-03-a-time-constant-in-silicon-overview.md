@@ -9,11 +9,11 @@ Package: [`labs/lab-03-a-time-constant-in-silicon/`](https://github.com/uoftasic
 
 ## Before you start
 
-- Finish [Lab 01](labs/lab-01-a-resistor-you-designed-overview.md) and
-  [Lab 02](labs/lab-02-how-big-is-a-picofarad-overview.md). This lab uses the resistor
+- Finish [Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md) and
+  [Lab 02](../labs/lab-02-how-big-is-a-picofarad-overview.md). This lab uses the resistor
   ($L = 30.3315$ µm) and capacitor ($s = 22.1965$ µm) you sized there, and Lab 01's
   `solutions/README.md`.
-- Read [What to build instead of an inductor](guide/what-analog-builds-instead.md).
+- Read [What to build instead of an inductor](../guide/what-analog-builds-instead.md).
 - Open a terminal in the workbench and go to the lab folder:
 
   ```bash
@@ -27,7 +27,7 @@ Parts 1 to 7 are required. Part 8, under Going further at the end, is optional.
 
 Time: about 2 hours, not counting the optional part. `make` runs two ngspice decks,
 each silent while the SKY130 model cards load (about a minute each on the pinned image; see
-[Warnings and delays](reference/ngspice-decks-that-run.md#lab-03)).
+[Warnings and delays](../reference/ngspice-decks-that-run.md#lab-03)).
 
 A resistor charging a capacitor from a step follows
 
@@ -423,7 +423,7 @@ poly), the same capacitor (a 22.1965 µm square of MIM), and the same pulse.
 
 The **SKY130** badge in the top right shows which parts catalogue XSchem loaded. If yours says
 **IHP**, stop and redo the PDK steps in
-[Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
+[Lab 01, Part 1](../labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
 The resistor symbol prints `R=9.999k` beside itself, because the SKY130 symbols compute the
 resistance live from the `W` and `L` you give them. The capacitor shows `C=1.002p`.
 
@@ -493,7 +493,7 @@ figures as section E. The picture and the deck agree, because they are the same 
 then a CMOS inverter). Its Lab 01 starts from an empty canvas and doesn't assume you have used
 XSchem, so this part is a preview, not a prerequisite.
 
-Next on the [Course path](README.md#course-path): read
-[Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md), then do
-[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
+Next on the [Course path](../index.md#course-path): read
+[Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) and
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md), then do
+[Lab 04: Two resistors that disagree](../labs/lab-04-two-resistors-that-disagree-overview.md).

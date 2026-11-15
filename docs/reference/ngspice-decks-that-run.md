@@ -19,7 +19,7 @@ Write them in this order. ngspice only cares that `.end` is last:
 |---|---|---|
 | 1. title | `* AD102 Lab 01 -- the sheet resistance deck` | **The first line is always a comment**, whatever you put in it. Put a real title there; ngspice will eat a device line that lands in position 1. |
 | 2. models | `.lib /foss/pdks/.../sky130.lib.spice tt` | absolute path, so the deck runs anywhere |
-| 3. devices and sources | `Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=10` | see [the catalogue](reference/sky130-passive-catalogue.md) |
+| 3. devices and sources | `Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=10` | see [the catalogue](../reference/sky130-passive-catalogue.md) |
 | 4. what to do | `.control` … `.endc`, or `.op` / `.ac` / `.tran` cards | |
 | 5. `.end` | `.end` | |
 
@@ -57,7 +57,7 @@ r_l1 = 6.954646e+02
 ```
 
 That is 695.4646 Ω for one drawn square of a device whose model card says 317.3885 Ω/□, which
-is the subject of [Ohms per square](guide/ohms-per-square.md).
+is the subject of [Ohms per square](../guide/ohms-per-square.md).
 
 Three things about that pattern:
 
@@ -109,7 +109,7 @@ That is 206.5822 fF for a 10 × 10 µm MIM plate.
   warning.
 - **1 MHz is arbitrary and cancels out.** Any frequency works, as long as the same number
   appears in `k`. Try a decade either side as a sanity check: if the answer moves, your device
-  is not a pure capacitor (see [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md)).
+  is not a pure capacitor (see [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md)).
 
 ## 3. Inductance: `.ac` and complex arithmetic
 
@@ -217,7 +217,7 @@ One extra word on the `.lib` line picks a section of the model file:
 
 Compare the last two rows with the first four. Absolute values move by ±12.5 % and the corner
 frequency by ±31 %, while **the ratio does not move in the seventh decimal place.** That is
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md) in one table, and it is why analog
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md) in one table, and it is why analog
 designers build ratios.
 
 ### Mismatch: two devices on the same die differ
@@ -378,7 +378,7 @@ r1 b 0 sky130_fd_pr__res_generic_m1 w=1 l=1
 ```
 
 Get it backwards and ngspice tells you, with a different message for each direction; both are
-in the table below. The catalogue lists [which device takes which](reference/sky130-passive-catalogue.md).
+in the table below. The catalogue lists [which device takes which](../reference/sky130-passive-catalogue.md).
 
 ## Units of W and L
 
@@ -386,7 +386,7 @@ In a SKY130 deck, `W`, `L`, `w` and `l` carry **no unit suffix**. `W=1` means on
 other number on the line takes SI suffixes as usual (`1k`, `0.7p`, `3n`), which is why this
 mistake is so easy to make.
 
-On a resistor it gives no error. [Getting started](guide/getting-started.md#the-u-suffix-trap)
+On a resistor it gives no error. [Getting started](../guide/getting-started.md#the-u-suffix-trap)
 goes through it: the same device gives 3550.443 Ω written `W=1 L=10` and 3193.812 Ω written
 `W=1u L=10u`, an ordinary-looking answer 10 % away from the right one, with ngspice exiting `0`.
 
@@ -404,7 +404,7 @@ If a resistance is close but not right, look for a stray `u` before you look any
 | `Error: no such vector as -i(vds).` | put an expression where `meas` wanted a vector. `let id = -i(Vds)` first. |
 | `Error: incomplete or empty netlist` / `no simulations run!` | nothing on its own. It is the second message; the real error is a few lines above it. |
 | `Warning: command 'plot' is not available during batch simulation, ignored!` | asked a batch run for a picture. Harmless: the `meas` lines still ran. Comes up when you netlist a schematic that has `plot` in its control block. |
-| ten × `unrecognized parameter (sw_et) - ignored` | nothing. Every deck with a poly resistor in it prints this. See [Getting started](guide/getting-started.md#expected-warnings). |
+| ten × `unrecognized parameter (sw_et) - ignored` | nothing. Every deck with a poly resistor in it prints this. See [Getting started](../guide/getting-started.md#expected-warnings). |
 
 ## Exit codes
 
@@ -420,7 +420,7 @@ log and prints its own `PASS` or `FAIL`, and any script of yours should too.
 
 ---
 
-Related: [The SKY130 passive catalogue](reference/sky130-passive-catalogue.md): which devices
+Related: [The SKY130 passive catalogue](../reference/sky130-passive-catalogue.md): which devices
 exist, which line type each takes, and what each measures.
 [AD103's ngspice survival card](https://uoftasic.com/ad103/#/reference/ngspice-errors) covers
 the same tool from the transistor side.

@@ -57,7 +57,7 @@ c_mos_0v0 = 2.207182e-13
 | MOS at 0 V | the same device | 220.7182 fF | 2.21 fF/µm² |
 
 You'll run this deck in
-[Lab 02, Part 5](labs/lab-02-how-big-is-a-picofarad-overview.md#part-5-the-mos-capacitors-cv-curve).
+[Lab 02, Part 5](../labs/lab-02-how-big-is-a-picofarad-overview.md#part-5-the-mos-capacitors-cv-curve).
 Two rows of that table need explaining: the MIM density, and the MOS capacitor that changes with
 voltage.
 
@@ -145,5 +145,5 @@ The word "capacitor" covers three different devices with different ways of faili
 wrong one can give you a filter whose corner frequency depends on the input signal, and that kind
 of bug does not show up until the chip is built.
 
-Next: [What a picofarad costs](guide/what-a-picofarad-costs.md), where the density column turns
+Next: [What a picofarad costs](../guide/what-a-picofarad-costs.md), where the density column turns
 into floor plan.

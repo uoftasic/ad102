@@ -5,7 +5,7 @@ descendant of Berkeley SPICE, simulates a circuit and tells you what it would do
 the schematic editor that draws circuits for it. Both are already in the image, so nothing on
 this page installs anything. This page explains how the pieces fit together, the warnings you
 will see every day, and the one mistake that costs students the most time. You'll do the setup
-itself in [Lab 01, Part 1](labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
+itself in [Lab 01, Part 1](../labs/lab-01-a-resistor-you-designed-overview.md#part-1-load-the-course).
 
 ## What this course assumes
 
@@ -109,7 +109,7 @@ Warning: r.xb.rbody: resistance too low or not given, set to 1 mOhm
 ```
 
 ngspice still exits with status 0. You'll run this deck yourself in
-[Lab 01, Part 8](labs/lab-01-a-resistor-you-designed-overview.md#part-8-optional-the-u-suffix-trap).
+[Lab 01, Part 8](../labs/lab-01-a-resistor-you-designed-overview.md#part-8-optional-the-u-suffix-trap).
 
 Transistors fail louder. The same mistake on a MOSFET, which you'll meet again in
 [AD103](https://uoftasic.com/ad103/), stops the simulator:
@@ -162,10 +162,10 @@ resistance is unaffected.
 The block does tell you something useful. Each resistor has two models, not one: a
 `rhead_model` at `rsh = 345.8312` Ω per square and a `rbody_model` at `rsh = 317.3885` Ω per
 square. ("Ohms per square" is the unit chip designers use for a material's resistance;
-[Ohms per square](guide/ohms-per-square.md) explains it.) The ends of a drawn resistor are not made of the same material as the middle. That is
+[Ohms per square](../guide/ohms-per-square.md) explains it.) The ends of a drawn resistor are not made of the same material as the middle. That is
 why one drawn square of this device measures 695.4646 Ω rather than the 317.3885 Ω on the card,
 and explaining that gap is the first job in
-[Lab 01](labs/lab-01-a-resistor-you-designed-overview.md).
+[Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md).
 
 To tell a warning from a real failure: a genuine ngspice failure starts a line with `Error:`, and
 the run ends with `no simulations run!`. `Warning:` lines like the ones above can be ignored.
@@ -184,7 +184,7 @@ so the PDK setting above cannot affect them. If your setup went wrong, run `make
 still work, by design.
 
 The exception is an optional GUI step. `make edit` in
-[Lab 03](labs/lab-03-a-time-constant-in-silicon-overview.md) opens the RC circuit in XSchem, and
+[Lab 03](../labs/lab-03-a-time-constant-in-silicon-overview.md) opens the RC circuit in XSchem, and
 XSchem does read `$PDK` from your environment, so that step needs `.designinit` to have worked.
 The `make` that produces Lab 03's verdict does not.
 
@@ -210,7 +210,7 @@ Part of this course is looking at a **cross-section**: what a resistor or capaci
 sliced through, layer by layer. [SiliWiz](https://tinytapeout.com/siliwiz/) does that in a
 browser with nothing to install. You draw shapes on a simplified SKY130 layer stack, and it shows
 you the silicon underneath and simulates it. You'll use it in optional parts of Labs 01 and 02
-and in the [capstone](labs/capstone-floor-plan-overview.md).
+and in the [capstone](../labs/capstone-floor-plan-overview.md).
 
 ## Launch GUI tools from a terminal
 
@@ -235,4 +235,4 @@ The course is self-paced, but you don't have to work alone.
   please report it. Every command here was run before it was written, so a mismatch means
   something has drifted and we want to know.
 
-Next: [Resistors on a chip](guide/a-resistor-you-cannot-buy.md).
+Next: [Resistors on a chip](../guide/a-resistor-you-cannot-buy.md).

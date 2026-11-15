@@ -104,7 +104,7 @@ The best any of them manages is Q = 21.1, and only at 6.38 GHz. Compare that wit
 you have been simulating all course, whose value you can hit to five digits.
 
 You'll run this deck, and the Lab 02 inductor sweep, in
-[Lab 02, Part 7](labs/lab-02-how-big-is-a-picofarad-overview.md#part-7-the-three-inductors).
+[Lab 02, Part 7](../labs/lab-02-how-big-is-a-picofarad-overview.md#part-7-the-three-inductors).
 
 ## Self-resonance
 
@@ -180,7 +180,7 @@ No layout trick, fold or metal stack fixes $Q = 1.5\times10^{-5}$ at 1 kHz. You 
 topology instead, and analog designers have been working around this since the 1960s, so there is
 a mature set of replacements.
 
-Next on the [Course path](README.md#course-path):
-[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md). After that,
-[What to build instead of an inductor](guide/what-analog-builds-instead.md) covers the
+Next on the [Course path](../index.md#course-path):
+[Lab 02: How big is a picofarad?](../labs/lab-02-how-big-is-a-picofarad-overview.md). After that,
+[What to build instead of an inductor](../guide/what-analog-builds-instead.md) covers the
 replacements.
