@@ -151,7 +151,7 @@ Work through it in this order:
    die?
 4. Check the resistor against itself. In
    [Lab 03, Part 5](../labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-a-one-microsecond-rc),
-   a bare 471.98 µm strip of 1 µm poly carried 95.278 fF to the substrate, and half of that was
+   a bare 471.96 µm strip of 1 µm poly carried 95.274 fF to the substrate, and half of that was
    added to the time constant. Lab 03, Part 2 fitted that capacitance as 0.1994 fF per µm of
    length plus 1.187 fF for the ends. At what resistor length does the parasitic become a visible
    fraction of the capacitor you were planning? That length is the limit, and it's the reason the
