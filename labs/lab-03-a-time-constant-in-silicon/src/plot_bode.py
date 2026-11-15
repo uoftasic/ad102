@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw the Bode plot of the RC you designed, over the ideal one from AD101.
+"""Draw the Bode plot of the RC you designed, over an ideal 10 kohm x 1 pF.
 
 Reads only results/bode.txt, which `make bode` produced, so the picture and
 the printed numbers cannot drift apart.
@@ -54,7 +54,7 @@ fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8.4, 6.6), sharex=True,
 # other. Draw the ideal as a wide pale band and the real one thin on top, so
 # the overlap is visible as an overlap rather than as one missing curve.
 ax1.semilogx(f, db_ideal, color=ORANGE, lw=5.5, alpha=0.55,
-             label="ideal 10 kΩ × 1 pF  (the one you drew in AD101)")
+             label="ideal 10 kΩ × 1 pF")
 ax1.semilogx(f, db_real, color=BLUE, lw=1.8,
              label="your Lab 01 resistor × your Lab 02 capacitor")
 ax1.axhline(-3.0103, color=INK2, lw=0.9, ls=":")

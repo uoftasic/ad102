@@ -323,8 +323,8 @@ find where the output stops keeping up. The two answers are tied together by
 
 $$f_{-3\text{dB}} = \frac{1}{2\pi\tau}$$
 
-`spice/bode.spice` uses the same two devices as section E, and also simulates the ideal
-10 kΩ × 1 pF you would have drawn in AD101.
+`spice/bode.spice` uses the same two devices as section E, and also simulates an ideal 10 kΩ and
+an ideal 1 pF, the same pair as section B of `rc.spice`, for comparison.
 
 1. Take your $\tau$ from Part 2, 10.0362 ns, and predict the corner frequency.
 
@@ -334,9 +334,7 @@ $$f_{-3\text{dB}} = \frac{1}{2\pi\tau}$$
    make bode
    ```
 
-   It loads the same model library as the other decks, so expect the same wait. The Makefile
-   banner says "~2 s" and mentions a pre-flattened library, but the 2026.08 image doesn't ship
-   that library, so ignore the time the banner gives.
+   It loads the same model library as the other decks, so expect the same wait.
 
 **You should see:**
 

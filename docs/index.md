@@ -87,8 +87,9 @@ in your question.
    on a chip.
 3. Build an RC filter from the resistor and capacitor you designed and measure its time
    constant $\tau$. Then measure its corner frequency, check it against $1/(2\pi\tau)$ to six
-   figures, and compare its Bode plot with that of the ideal 10 kΩ × 1 pF filter from AD101:
-   15.8580 MHz for the filter you built against 15.9155 MHz for the ideal one, 0.36 % apart.
+   figures, and compare its Bode plot with that of the same filter built from an ideal 10 kΩ and
+   an ideal 1 pF: 15.8580 MHz for the filter you built against 15.9155 MHz for the ideal one,
+   0.36 % apart.
    Optionally, open the same circuit in XSchem and see a schematic turn into the device lines you
    have been editing by hand.
 4. See the same resistor come out different at every process corner, and learn why analog

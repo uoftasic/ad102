@@ -13,14 +13,15 @@
 * and if your tau and your f_-3dB do not satisfy that to three or four
 * figures, one of the two decks is wrong. That check is free; make it a habit.
 *
-* This is the plot you drew for an IDEAL R and C in AD101. Here it is again,
-* built out of a shape you designed.
+* AD101 read this kind of plot for IDEAL R and C. Here it is again, built
+* out of a shape you designed, over the same values drawn ideal.
 *
 * W and L are PLAIN MICRON NUMBERS -- never W=1u.
 *
-* Fast: this deck uses the pre-flattened tt corner (sky130.lib.spice),
-* which is the same models as sky130.lib.spice and about thirty times quicker
-* to read. It can, because it needs no other corner and no mismatch.
+* This deck loads the same sky130.lib.spice tt corner as rc.spice, so it is
+* just as slow to start. It was written for a pre-flattened copy of that
+* corner, about thirty times quicker to read, which the 2026.08 image does
+* not ship.
 
 .lib /foss/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 
@@ -29,7 +30,7 @@ Vr in 0 dc 0 ac 1
 Xr in out 0 sky130_fd_pr__res_high_po W=1 L=30.3315
 Xc out 0 sky130_fd_pr__cap_mim_m3_1 W=22.1965 L=22.1965
 
-* ---- the ideal one you drew in AD101, for the overlay
+* ---- an ideal 10k and 1p (section B of rc.spice), for the overlay
 Vi ini 0 dc 0 ac 1
 Ri ini outi 10k
 Ci outi 0 1p
