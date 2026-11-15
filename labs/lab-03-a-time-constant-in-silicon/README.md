@@ -30,15 +30,15 @@ The decks run without any environment setup, but `make edit` needs the noVNC des
 | `make rc` | the same RC eight ways, plus temperature, plus the parasitic of a bare poly strip |
 | `make mine` | simulate `spice/my_rc.spice`, the file you edit |
 | `make check` | re-run the verdict on logs already in `results/` |
-| `make bode` | the same RC in the frequency domain, plotted against the ideal 10 kΩ × 1 pF from AD101 |
+| `make bode` | the same RC in the frequency domain, plotted against an ideal 10 kΩ × 1 pF |
 | `make figure` | re-render that plot into `docs/assets/img` (maintainers only) |
 | `make netlist` | netlist `xschem/rc.sch`, the same circuit drawn, and print its two device lines |
 | `make edit` | open `xschem/rc.sch` in XSchem (needs the noVNC desktop) |
 | `make clean` | delete the logs, data and plots in `results/`, and `xschem/simulation/` |
 
-The `make bode` banner promises about 2 s, because the deck was written for a pre-flattened
-library. The 2026.08 image doesn't have that library, so `spice/bode.spice` now loads the full
-`sky130.lib.spice` and takes as long as the other decks.
+`spice/bode.spice` loads the full `sky130.lib.spice`, the same as the other decks, so `make bode`
+takes as long as they do. It was written for a pre-flattened library, which the 2026.08 image
+doesn't have.
 
 ## Files
 

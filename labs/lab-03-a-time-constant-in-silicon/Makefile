@@ -5,7 +5,7 @@
 #   make rc       part 1: the same RC eight ways, plus temperature
 #   make mine     part 2: simulate spice/my_rc.spice, the file you edit
 #   make check    re-run the verdict on logs you already have
-#   make bode     the same RC in the frequency domain, and the AD101 overlay
+#   make bode     the same RC in the frequency domain, over an ideal 10k x 1p
 #   make figure   re-render that plot into docs/assets/img (maintainers only)
 #   make netlist  netlist xschem/rc.sch -- the same circuit, drawn
 #   make edit     open xschem/rc.sch in XSchem   (needs the noVNC desktop)
@@ -51,11 +51,10 @@ check:
 	  fi; \
 	  exit $$st
 
-## bode -- the same RC asked a frequency-domain question (about 2 s: fast lib)
+## bode -- the same RC asked a frequency-domain question
 bode: | $(RES)
 	@echo "=============================================================="
-	@echo " THE SAME RC, IN FREQUENCY   (~2 s -- this deck uses the fast"
-	@echo " pre-flattened tt library, because it needs no other corner)"
+	@echo " THE SAME RC, IN FREQUENCY   (~60 s of silence first)"
 	@echo "=============================================================="
 	ngspice -b spice/bode.spice > $(RES)/bode.log 2>&1
 	@grep -E "^f3db|^ph_real|^g_10x|^---" $(RES)/bode.log
