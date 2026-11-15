@@ -11,6 +11,10 @@
 project:
   type: website
   output-dir: _site
+  # quarto preview docs serves the site here (otherwise Quarto picks a random port).
+  preview:
+    port: 4200
+    browser: false
   resources:
     - assets/img/ad102-resistor-geometry.web.mp4
 
