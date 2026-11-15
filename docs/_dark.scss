@@ -3,6 +3,9 @@
 // so inline code was a near-white box on the dark page, and code in a heading
 // (white text) could not be read.
 $code-bg: #2f3338;
+// Quarto's muted text (breadcrumbs, previous/next links, TOC) used the light
+// palette's #6c757d, which is 2.1:1 on the dark breadcrumb bar.
+$text-muted: #c1c7cd;
 
 /*-- scss:rules --*/
 // Keyboard keys in the steps, such as Esc or Ctrl.
@@ -14,4 +17,13 @@ kbd {
   border-radius: 4px;
   background: #2f3338;
   color: #e9ecef;
+}
+
+// The breadcrumb bar at phone width: #adadad on #434343 was 4.4:1.
+.quarto-secondary-nav nav.quarto-page-breadcrumbs,
+.quarto-secondary-nav nav.quarto-page-breadcrumbs a {
+  color: #d0d4d8;
+}
+.quarto-secondary-nav nav.quarto-page-breadcrumbs .breadcrumb-item::before {
+  color: #b0b5ba;
 }

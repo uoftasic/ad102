@@ -3,3 +3,46 @@
 video {
   max-width: 100%;
 }
+
+/* At phone width, wide display math and tables scroll sideways inside the
+   page instead of making the whole page wider than the screen. */
+/* position: relative keeps MathJax's hidden screen-reader copy of the formula
+   inside the scroll box too; without it, that copy still widens the page. */
+.math.display,
+mjx-container[display="true"] {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media (max-width: 767.98px) {
+  /* MathJax keeps an invisible copy of each formula for screen readers, and
+     a wide formula's copy still pushes the page wider than the screen.
+     clip doesn't make main a scroll box, so nothing else changes. */
+  main.content {
+    overflow-x: clip;
+  }
+  main table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* Long file paths in inline code wrap instead of running off the screen. */
+main :not(pre) > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* MathJax can't break a line of inline math, so a long one scrolls inside the
+   line instead of widening the page. */
+mjx-container:not([display="true"]) {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
