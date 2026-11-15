@@ -15,8 +15,8 @@ the shipped deck and edit that.
 
 ## The five parts of a deck
 
-Write the parts in this order. The only position ngspice itself insists on is the first: it always
-reads line 1 as the title. It doesn't check that `.end` comes last. On the pinned image a deck
+Write the parts in this order. ngspice itself insists on only one position: whatever is on line 1
+is the title. It doesn't check that `.end` comes last. On the pinned image a deck
 with no `.end` still runs, and a device line after `.end` still gets simulated, so putting `.end`
 last is a convention for whoever reads the deck rather than something ngspice enforces.
 
@@ -354,7 +354,7 @@ Each of the two decks loads the SKY130 model cards (about 55 s on the pinned ima
 evaluates 200 operating points (about 23 s for the bigger of the two), printing nothing while it
 works. Most of that time goes on loading the models rather than on the Monte Carlo itself. On the
 machine this page was last checked on, where the models load in about 10 s, each deck took 14 to
-16 s in all and a full `make` about 30 s, which is where the lab's lower estimate comes from.
+16 s in all and a full `make` about 30 s, the low end of the lab's estimate.
 
 `results/mismatch.log` holds 28,280 `unrecognized parameter (...) - ignored` lines, of which
 5,656 are `(sw_et)`. They're the same harmless lines as in Lab 01. Each of the two hundred

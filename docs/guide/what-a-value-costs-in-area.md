@@ -123,10 +123,10 @@ That's still big (472 µm² of poly at 1 µm wide, or 126 inverters), but it fit
 A strip 314 µm long and 1 µm wide doesn't fit anywhere sensible on a die, so real layouts
 **fold** it. You might draw sixteen strips of 20 µm side by side, for example, and join them end
 to end with short turns of the same poly, so the current runs back and forth like a plough across
-a field. The value shifts when you do this. The straight runs still count square for square, but
+a field. Folding shifts the value, though. The straight runs still count square for square, but
 the current cuts across the inside of each corner, so a corner square counts as only roughly half
-a square, and the folded strip no longer has the value you sized it for. You re-tune the length
-to bring it back. Folding also makes you pay for:
+a square, and you have to re-tune the length to bring the folded strip back to the value you
+sized it for. Folding also makes you pay for:
 
 - the required spacing between neighbouring poly strips;
 - a guard ring, if the resistor needs isolating from its neighbours;
