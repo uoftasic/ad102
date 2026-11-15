@@ -27,3 +27,12 @@ kbd {
 .quarto-secondary-nav nav.quarto-page-breadcrumbs .breadcrumb-item::before {
   color: #b0b5ba;
 }
+
+// Two dark-mode syntax colours, alerts and errors (#f07178), were 4.16:1 on
+// the code-block background.
+body.quarto-dark {
+  code span.al,
+  code span.er {
+    color: #ff8a92;
+  }
+}
