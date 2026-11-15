@@ -16,7 +16,7 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
 - You need the workbench from [IC101](https://uoftasic.com/ic101/): the noVNC desktop comes up
   in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/guide/smoke-test.html)
   passes. Part 1 loads this course into it.
-- The circuit theory is Ohm's law and a voltage divider. Nothing else.
+- The only circuit theory you need is Ohm's law and a voltage divider.
 
 Parts 1 to 7 are required. Everything under Going further, at the end, is optional.
 
@@ -92,8 +92,8 @@ lab-02-how-big-is-a-picofarad      lab-04-two-resistors-that-disagree
 Does the one number on the model card predict what a strip of `res_high_po` measures?
 
 `spice/sheet.spice` builds twenty-two strips of poly, forces exactly 1 µA through each, and
-prints the voltage across it. Dividing by 1 µA gives the resistance: one application of Ohm's law
-per device, with no curve fitting. The first block is a **length ladder** of
+prints the voltage across it. Dividing that voltage by 1 µA gives the resistance, so each number
+is one application of Ohm's law to one device, with no curve fitting. The first block is a **length ladder** of
 `sky130_fd_pr__res_high_po`, with $W$ fixed at 1 µm and $L$ going from 1 µm to 100 µm.
 
 1. Read the one number the foundry advertises on the model card:
@@ -144,9 +144,10 @@ per device, with no curve fitting. The first block is a **length ladder** of
    <details>
    <summary>Answer</summary>
 
-   You predicted 31,739 Ω for the longest strip, and it measured 32,100 Ω: 1 % high. You
-   predicted 317 Ω for the shortest, and it measured 695 Ω: off by a factor of 2.2, from the same
-   formula. Something is being added that does not depend on how long you drew the strip.
+   You predicted 31,739 Ω for the longest strip, and it measured 32,100 Ω, which is 1 % high. You
+   predicted 317 Ω for the shortest, and it measured 695 Ω, a factor of 2.2 higher. The same
+   formula is that close at one end and that far off at the other, so something is being added
+   that doesn't depend on how long you drew the strip.
 
    A model that is right at one end of your design range and wrong at the other is worse than one
    that is wrong everywhere, because it passes every check you run on the big case.
@@ -155,8 +156,8 @@ per device, with no curve fitting. The first block is a **length ladder** of
 
 5. Each extra micrometre of length adds the same resistance (for example,
    $(1012.684 - 695.4646)/1$ and $(1964.344 - 1012.684)/3$ both come to 317.22 Ω), so $R$ is a
-   straight line in $L$. But the line does not go through the origin. Write it with an
-   intercept:
+   straight line in $L$. The line doesn't pass through the origin, though, so you need to write
+   it with an intercept:
 
    $$R = R_{\text{end}} + R_\square \, \frac{L}{W}$$
 
@@ -191,7 +192,7 @@ out where it comes from. What fraction of a 100 kΩ resistor is it, and of a 500
 <details>
 <summary>Answer</summary>
 
-0.4 % of a 100 kΩ resistor, which you can ignore. Most of a 500 Ω one.
+It's 0.4 % of a 100 kΩ resistor, which you can ignore, but it's most of a 500 Ω one.
 
 </details>
 
@@ -219,9 +220,9 @@ r_fixed = 9.999997e+03
 ```
 
 The naive design is 10,373 Ω, 3.7 % too big. The deck draws `r_fixed` at 30.3315 µm (check your
-length against it), and it lands at 9999.997 Ω, three parts in ten million.
+length against it), and it lands at 9999.997 Ω, within three parts in ten million of the target.
 
-3.7 % sounds small. Why is it worth fixing?
+An error of 3.7 % sounds small, so why is it worth fixing?
 
 <details>
 <summary>Answer</summary>
@@ -275,11 +276,11 @@ Read the Ω-per-square column from the bottom up. Where does it stop being const
 <details>
 <summary>Answer</summary>
 
-316.966, 317.061, 317.220, 317.362: sheet resistance is a property of the material, constant to
-a tenth of a percent, until the top row, 0.35 µm, where it jumps 7 % to 340.074. Below 0.69 µm
-the model applies `weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip drawn 0.35 µm wide
-conducts as though it were 0.326 µm wide. Lithography and etch do not give you the width you
-drew.
+From the bottom up the column reads 316.966, 317.061, 317.220 and 317.362, constant to a tenth of
+a percent, so sheet resistance behaves as a property of the material. That holds until the top
+row, 0.35 µm, where it jumps 7 % to 340.074. Below 0.69 µm the model applies
+`weff = w - 0.001 - 0.0672 * (0.69 - w)`, so a strip drawn 0.35 µm wide conducts as though it
+were 0.326 µm wide, because lithography and etch don't give you exactly the width you drew.
 
 The end resistance changes with width as well, from 82.841 Ω at 5 µm to 958.562 Ω at 0.35 µm,
 because the contact head is as wide as the strip. Its resistance is `rsh` divided by a width;
@@ -295,8 +296,8 @@ a factor of 219 for the same material. Why is that so much more than the ratio o
 <summary>Answer</summary>
 
 You win twice by going narrow, once on width and again on the length you no longer need, so area
-per ohm goes as $W^2$. That makes "just draw it narrow" look free. It isn't: Lab 04 measures what
-narrow costs you in matching.
+per ohm goes as $W^2$. That makes "just draw it narrow" look free, but a narrow strip costs you
+something in matching, and Lab 04 measures how much.
 
 </details>
 
@@ -360,16 +361,17 @@ The card says 2000.0 and your simulation says 2118.7619. Which one do you design
 <details>
 <summary>Answer</summary>
 
-The simulation. The headline number on a model card is a nominal; the device that gets fabricated
-is what the model computes. The implant is also the only knob in this lab that is not geometry.
-The foundry gives you a short menu of implant doses, and choosing from it is the one way to
+Design with the simulation. The headline number on a model card is a nominal value, whereas the
+device that gets fabricated behaves the way the model computes.
+
+The implant is also the only knob in this lab that is not geometry. The foundry gives you a short menu of implant doses, and choosing from it is the one way to
 change ohms per square instead of buying more area.
 
 </details>
 
 The areas above are the strip only. A drawn resistor also needs its two contact heads, spacing to
 whatever is beside it, and usually a guard ring (call it half as much area again), so treat them
-as a floor, not a quote. Even so, at 100 kΩ one of the cheapest things in the analog toolbox
+as a lower bound rather than a quote. Even so, at 100 kΩ one of the cheapest things in the analog toolbox
 outweighs a working arithmetic unit. That is why analog blocks look enormous next to digital ones
 in a die photograph, and why a chip designer never answers "just add a resistor" straight away.
 
@@ -391,7 +393,7 @@ splits into its two parts.
    make resistor
    ```
 
-   It runs one deck and prints its blocks; there is no verdict at the end.
+   It runs one deck and prints its blocks, and there's no `PASS` or `FAIL` at the end.
 
 2. Before you look at block A, predict: when the strip goes from $L = 1$ µm to $L = 10$ µm,
    which part changes, the head or the body?
@@ -421,7 +423,7 @@ did not change the contacts. The bodies scale:
 
 $$\frac{3250.551 - 395.5731}{10 - 1} = \frac{2854.978}{9} = 317.2198\ \Omega/\square$$
 
-That is the sheet resistance you extracted in Part 2, from a different deck.
+That's the same sheet resistance you extracted in Part 2, this time from a different deck.
 
 The head is 299.89 Ω, but the end resistance you extracted in Part 2 is 378.2448 Ω. Where are the
 other 78 Ω?
@@ -429,7 +431,7 @@ other 78 Ω?
 <details>
 <summary>Answer</summary>
 
-In the body. The model's `leff` makes the strip 0.247 µm longer than you drew it, and that extra
+They're in the body. The model's `leff` makes the strip 0.247 µm longer than you drew it, and that extra
 length is worth 78.35 Ω. The 378.2448 Ω is the 299.89 Ω head plus that 78.35 Ω body extension.
 [End resistance from the model card](#end-resistance-from-the-model-card), under Going
 further, has the arithmetic.
@@ -474,7 +476,7 @@ The file ships with the naive lengths, so the check at the end of Part 2's `make
 2. Work out both lengths from the $R_\square$ and $R_{\text{end}}$ you extracted for each device
    in Parts 2 and 5, and write them down.
 
-3. Compare yours with the checker's. Print its verdict again (the Part 2 output has probably
+3. Compare yours with the checker's. Print its report again (the Part 2 output has probably
    scrolled away):
 
    ```bash
@@ -482,8 +484,8 @@ The file ships with the naive lengths, so the check at the end of Part 2's `make
    ```
 
    Below the two `FAIL` lines, the checker explains each failure and ends the explanation with
-   the length it would use. Its last lines are a note that on a fresh clone this `FAIL` is the
-   lab, not a broken package.
+   the length it would use. Its last lines note that on a fresh clone this `FAIL` is expected
+   and doesn't mean the package is broken, because fixing it is the lab.
 
 4. Edit the two `L=` numbers in `spice/my_resistor.spice` with any of the desktop's editors
    (`gedit`, `nano` and `vim` are installed; for example `gedit spice/my_resistor.spice &`).
@@ -497,8 +499,8 @@ The file ships with the naive lengths, so the check at the end of Part 2's `make
    *                                          ^^^^^^^ R2: 50 kohm goes here
    ```
 
-5. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice`, and
-   `make check` prints the verdict again:
+5. Re-run your file and the checker. `make mine` simulates only `spice/my_resistor.spice` and
+   `make check` prints the checker's report again, so you can do both in one command:
 
    ```bash
    make mine check
@@ -529,8 +531,8 @@ cost in adders?
 
 `res_xhigh_po`: 47.18 µm², 0.43 adders, against 314.05 µm² and 2.85 adders for `res_high_po`
 (Part 5). Area doesn't settle it, though. `res_xhigh_po`'s model card has a voltage coefficient,
-`vc1_body = -1.00e-3`: its resistance moves by about 0.1 % per volt across it, which is fine in a
-bias string and is distortion in a signal path. The lab's `solutions/README.md` has the longer
+`vc1_body = -1.00e-3`: its resistance moves by about 0.1 % per volt across it, which doesn't matter
+in a bias string but shows up as distortion in a signal path. The lab's `solutions/README.md` has the longer
 version.
 
 </details>
@@ -648,8 +650,8 @@ image is complete:
 
 `netgen -batch quit` also prints
 `Warning: netgen command 'format' use fully-qualified name '::netgen::format'` and a second
-line like it. Those are Tcl namespace notices from the tool itself. They are not about your
-design, and there is nothing to fix.
+line like it. Those are Tcl namespace notices from the tool itself. They have nothing to do with
+your design, so there's nothing to fix.
 
 Next on the [Course path](../index.md#course-path): read the four pages in row 3, starting with
 [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md), then do
