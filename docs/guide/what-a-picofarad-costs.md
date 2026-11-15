@@ -4,7 +4,7 @@ Why does every chip schematic have capacitors in femtofarads, when the ones in y
 are microfarads? Because on a chip you buy capacitance by the square micrometre, and the exchange
 rate is bad.
 
-From [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), measured rather than quoted, a
+From [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md), measured rather than quoted, a
 MIM capacitor gives about 2 fF per µm². Here is what that means in floor plan.
 
 ## The exchange rate
@@ -45,7 +45,7 @@ from 16 kΩ and 10 nF. That capacitor would be 4.94 mm² on a die, bigger than m
 the on-chip designer does not build that filter. They build a switched-capacitor filter, or use a
 very large resistance made from a starved transistor, or push the corner frequency up by three
 decades and filter the rest off-chip. See
-[What to build instead of an inductor](guide/what-analog-builds-instead.md).
+[What to build instead of an inductor](../guide/what-analog-builds-instead.md).
 
 ## Density and plate size
 
@@ -62,7 +62,7 @@ You get 2.64, 2.07 and 2.02 fF/µm². The density falls as the capacitor gets bi
 The extra in the small one is edge field: `cpmimc = 0.19e-15` farads per micron of perimeter.
 Perimeter grows with the side length, and area grows with its square, so the edge adds 24 % at
 1 µm and 1 % at 30 µm. **Never estimate a small capacitor from area alone.** In
-[Lab 02](labs/lab-02-how-big-is-a-picofarad-overview.md), Parts 1 and 2, you measure a ladder of
+[Lab 02](../labs/lab-02-how-big-is-a-picofarad-overview.md), Parts 1 and 2, you measure a ladder of
 plate sizes and separate the area term from the edge term yourself.
 
 ## Worked example: one plate or a hundred
@@ -105,7 +105,7 @@ capacitor and a small resistor, and at high frequency the resistor dominates.
 
 **Corner spread.** The MIM's area capacitance is `2.00e-15` F/µm² typical, but `1.778e-15` at
 the low corner and `2.231e-15` at the high one, about ±11 %.
-[Process corners](guide/the-value-you-drew-is-not-what-you-get.md) covers what to do about that.
+[Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) covers what to do about that.
 
 ## Reading capacitor values
 
@@ -113,5 +113,5 @@ When an analog paper says "C₁ = 240 fF", that is 119 µm² of somebody's floor
 a design review. Area is the currency of this whole field, and capacitors are the most expensive
 thing you can buy with it.
 
-Next: [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md), the capacitors nobody
+Next: [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md), the capacitors nobody
 drew in the schematic.

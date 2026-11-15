@@ -18,7 +18,7 @@ Each of those is a fact about the side view, which is what this page covers.
 
 ## The layer stack
 
-[Ohms per square](guide/ohms-per-square.md) started from
+[Ohms per square](../guide/ohms-per-square.md) started from
 
 $$R = \rho\frac{L}{Wt} = \left(\frac{\rho}{t}\right)\frac{L}{W} = R_\square\frac{L}{W}$$
 
@@ -61,7 +61,7 @@ That is the main stack of the chip in eleven lines. Read it as a building:
 The top of metal5 is 6.6311 µm above the silicon. A whole SKY130 chip, every layer of wiring
 included, is about as thick as a red blood cell is wide. Your 100 kΩ resistor was 314.046454 µm
 long, forty-seven times longer than the chip is thick. You'll print this stack yourself in
-[the capstone, Part 1](labs/capstone-floor-plan-overview.md#part-1-read-the-layer-stack).
+[the capstone, Part 1](../labs/capstone-floor-plan-overview.md#part-1-read-the-layer-stack).
 
 ## From sheet resistance to resistivity
 
@@ -80,7 +80,7 @@ Do the same for `res_xhigh_po`, which measured 2118.7619 Ω/□ on the same 0.18
 $$\rho = 3.8138\times10^{-4}\ \Omega\,\text{m} = 38.1377\ \text{m}\Omega\,\text{cm}$$
 
 Same layer, same thickness, 6.7 times the resistivity.
-[Resistors on a chip](guide/a-resistor-you-cannot-buy.md) said `res_high_po` and `res_xhigh_po`
+[Resistors on a chip](../guide/a-resistor-you-cannot-buy.md) said `res_high_po` and `res_xhigh_po`
 differ only in implant dose. This is that dose, as a number: less dopant means fewer carriers,
 which means higher resistivity, by a factor of 6.7.
 
@@ -103,7 +103,7 @@ material property, and material properties tell you whether a number is plausibl
 5.7 mΩ·cm is a normal resistivity for a doped semiconductor. If your arithmetic had produced
 5.7 Ω·cm or 5.7 µΩ·cm, something would be wrong.
 
-In [the capstone, Part 2](labs/capstone-floor-plan-overview.md#part-2-look-at-cross-sections-in-siliwiz)
+In [the capstone, Part 2](../labs/capstone-floor-plan-overview.md#part-2-look-at-cross-sections-in-siliwiz)
 you draw a resistor, a capacitor and a wire in SiliWiz and look at each one's cross-section. Then
 Part 3 has you size a filter and defend its area.
 
@@ -119,7 +119,7 @@ AD102 set out to answer three questions:
   µm² for a linear capacitor, so a picofarad is a plate 22 µm on a side.
 - **An inductor?** Mostly, you don't. A spiral of top metal gets you a couple of nanohenries at
   a $Q$ in the teens and costs tens of thousands of square micrometres, and below about 1 GHz
-  [the alternatives](guide/what-analog-builds-instead.md) do the job better.
+  [the alternatives](../guide/what-analog-builds-instead.md) do the job better.
 
 Underneath all three is one habit: **a component value is a geometry, and geometry costs area.**
 Of any analog schematic anyone shows you, ask what shape each part is, and what it costs.
@@ -129,18 +129,18 @@ Of any analog schematic anyone shows you, ask what shape each part is, and what 
 **[AD103 — Nonlinear Circuits](https://uoftasic.com/ad103/)** is the next course. It asks the
 same question, what is this component physically, about devices whose behaviour is no longer
 linear. The MOS capacitor whose value moved by 3.57× with voltage on
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md) was a transistor turning on, and AD103
+[Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md) was a transistor turning on, and AD103
 opens by explaining what you were looking at. It is also where XSchem becomes the main tool;
-[Lab 03, Part 8](labs/lab-03-a-time-constant-in-silicon-overview.md#part-8-optional-the-same-circuit-in-xschem)
+[Lab 03, Part 8](../labs/lab-03-a-time-constant-in-silicon-overview.md#part-8-optional-the-same-circuit-in-xschem)
 was your introduction to it.
 
 **[AD104 — Layout](https://uoftasic.com/ad104/)** is where the cross-section becomes real
 geometry. You draw these devices in Magic, on the real stack in the table above, and prove with
 DRC that a fab could make them and with LVS that what you drew is the circuit you meant. Two
 things from this course come back there: the **unit-device** and **common-centroid** rules from
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md), which become rectangles you draw;
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md), which become rectangles you draw;
 and **parasitic extraction**, which reads your finished layout and hands back a netlist including
-every capacitor from [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md).
+every capacitor from [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md).
 
-Next on the [Course path](README.md#course-path):
-[Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md).
+Next on the [Course path](../index.md#course-path):
+[Capstone: Defend a floor plan](../labs/capstone-floor-plan-overview.md).

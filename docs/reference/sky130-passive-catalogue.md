@@ -12,7 +12,7 @@ with one `grep`.
 
 `W` and `L` on a SKY130 device are **plain micron numbers with no unit suffix**. `W=1` is one
 micrometre. `W=1u` is not, and it fails. The same goes for a capacitor's `W`/`L` and a diode's
-`area`/`perim`. [Getting started](guide/getting-started.md#the-u-suffix-trap) shows what happens
+`area`/`perim`. [Getting started](../guide/getting-started.md#the-u-suffix-trap) shows what happens
 on a resistor, and AD103's
 [Reading a SKY130 device model](https://uoftasic.com/ad103/#/reference/sky130-device-guide) has
 the exact error text for transistors.
@@ -62,7 +62,7 @@ Get that backwards and ngspice says `Error: unknown subckt:` or
 Magic's extraction technology file
 `/foss/pdks/sky130A/libs.tech/magic/sky130A.tech` carries its own copy in milliohms per
 square (`xhrpoly 319800`, `uhrpoly 2000000`, `mrp1 48200`), and it does not agree with the
-ngspice file everywhere. [Ohms per square](guide/ohms-per-square.md) explains which one to
+ngspice file everywhere. [Ohms per square](../guide/ohms-per-square.md) explains which one to
 use when.
 
 ### End resistance of `res_high_po`
@@ -79,7 +79,7 @@ see what the *body* costs:
 That is 317.2198 Ω per micron of length at W = 1 µm, against `rsheet = 317.3885` on the model
 card: 0.05 % apart. The body is the sheet resistance the card promises. The other
 $695.4646 - 317.2198 = 378.24\ \Omega$ is end resistance: the contact head (299.8915 Ω, see
-[Ohms per square](guide/ohms-per-square.md#head-and-body-of-one-resistor)) plus a short body
+[Ohms per square](../guide/ohms-per-square.md#head-and-body-of-one-resistor)) plus a short body
 extension the model adds. It does not shrink when you shorten the resistor, so a one-square
 `res_high_po` is more ends than resistor.
 
@@ -214,7 +214,7 @@ device.
 
 493 µm² is about 130 inverters. This is the number to bring to any "just put a 1 nF cap on it"
 conversation: a nanofarad is half a square millimetre, which is most of a small chip.
-[What a picofarad costs](guide/what-a-picofarad-costs.md) is the long version.
+[What a picofarad costs](../guide/what-a-picofarad-costs.md) is the long version.
 
 ### Parasitic capacitance to substrate
 
@@ -234,7 +234,7 @@ Every layer has capacitance to the substrate whether you asked for one or not. F
 
 A 100 µm × 1 µm met1 wire carries 2.6 fF to ground whether you want it or not, more than a
 quarter of a 10 fF capacitor you might deliberately draw elsewhere.
-[Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md) covers this, including the
+[Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md) covers this, including the
 sidewall terms.
 
 ## Inductors
@@ -243,8 +243,8 @@ There is no good inductor. SKY130 ships three spiral models
 (`sky130_fd_pr__ind_03_90`, `ind_05_125`, `ind_05_220`). `ind_05_220` is 9.92 nH, occupies
 tens of thousands of µm², and has **Q = 0.0000150516 at 1 kHz**; the best Q any of the three
 ever reaches is **21.1, at 6.38 GHz**, and above 3.52777 GHz `ind_05_220`'s reactance changes
-sign. [Inductors on a chip](guide/the-inductor-problem.md) and
-[What to build instead of an inductor](guide/what-analog-builds-instead.md) cover why, and what
+sign. [Inductors on a chip](../guide/the-inductor-problem.md) and
+[What to build instead of an inductor](../guide/what-analog-builds-instead.md) cover why, and what
 replaces it.
 
 ## Corners
@@ -284,7 +284,7 @@ scale the typical answer by hand.**
 
 **Every absolute value on this page moves by roughly ±10 % between corners.** A *ratio* of two
 of the same device does not, which is why analog design is built on ratios; see
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md).
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md).
 
 ## Re-running these numbers
 
@@ -303,6 +303,6 @@ minute.
 
 No environment setup: every deck names the model library by absolute path, so a bare
 container works. Related labs:
-[Lab 01: A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md),
-[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md),
-[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md).
+[Lab 01: A resistor you designed](../labs/lab-01-a-resistor-you-designed-overview.md),
+[Lab 02: How big is a picofarad?](../labs/lab-02-how-big-is-a-picofarad-overview.md),
+[Lab 04: Two resistors that disagree](../labs/lab-04-two-resistors-that-disagree-overview.md).

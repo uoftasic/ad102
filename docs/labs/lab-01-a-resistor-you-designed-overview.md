@@ -9,10 +9,10 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
 
 ## Before you start
 
-- Read [Getting started](guide/getting-started.md),
-  [Resistors on a chip](guide/a-resistor-you-cannot-buy.md),
-  [Ohms per square](guide/ohms-per-square.md) and
-  [What a resistor costs in area](guide/what-a-value-costs-in-area.md).
+- Read [Getting started](../guide/getting-started.md),
+  [Resistors on a chip](../guide/a-resistor-you-cannot-buy.md),
+  [Ohms per square](../guide/ohms-per-square.md) and
+  [What a resistor costs in area](../guide/what-a-value-costs-in-area.md).
 - You need the workbench from [IC101](https://uoftasic.com/ic101/): the noVNC desktop comes up
   in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/#/guide/smoke-test)
   passes. Part 1 loads this course into it.
@@ -22,7 +22,7 @@ Parts 1 to 7 are required. Everything under Going further, at the end, is option
 
 Time: about 2.5 hours, not counting the optional parts. Each ngspice run is silent for
 anywhere from about 10 seconds to just over a minute before it prints anything, depending on your
-machine ([Warnings and delays](reference/ngspice-decks-that-run.md#lab-01)).
+machine ([Warnings and delays](../reference/ngspice-decks-that-run.md#lab-01)).
 
 ## Part 1: Load the course
 
@@ -50,7 +50,7 @@ you haven't set up the workbench yet, do
    if they don't, ask for help before going on. If `$PDK` says something other than `sky130A`,
    ask too, but carry on: every lab deck names its model files by absolute path, so `make` works
    whatever `$PDK` says. Only XSchem, in the optional last part of Lab 03, reads it
-   ([Getting started](guide/getting-started.md#the-pdk-setting) explains).
+   ([Getting started](../guide/getting-started.md#the-pdk-setting) explains).
 
    | If you see | It means |
    |---|---|
@@ -377,8 +377,8 @@ in a die photograph, and why a chip designer never answers "just add a resistor"
 
 Which part of the resistor is the 378 Ω you extracted: the contact head, or the body?
 
-[Resistors on a chip](guide/a-resistor-you-cannot-buy.md) and
-[Ohms per square](guide/ohms-per-square.md) quote a different deck from the one you ran in
+[Resistors on a chip](../guide/a-resistor-you-cannot-buy.md) and
+[Ohms per square](../guide/ohms-per-square.md) quote a different deck from the one you ran in
 Part 2: `labs/passives-decks/spice/r_head_and_body.spice`. `sky130_fd_pr__res_high_po` is a
 subcircuit (`.subckt`), and inside it a node called `rb` sits between the contact head and the
 resistive body. This deck measures the voltage at that node too, so one measured resistance
@@ -578,14 +578,14 @@ Part 6's `make resistor` printed three more blocks.
   ```
 
 - Blocks B and D are the worked examples on
-  [What a resistor costs in area](guide/what-a-value-costs-in-area.md): 1 k, 10 k and 100 k sized
+  [What a resistor costs in area](../guide/what-a-value-costs-in-area.md): 1 k, 10 k and 100 k sized
   with the design equation, and the same 100 kΩ at four widths. Check that each lands on its
   target.
 
 ### Part 8 (optional): The `u` suffix trap
 
 `spice/u_trap.spice` holds the same resistor written twice, once as `W=1 L=10` and once as
-`W=1u L=10u`. [Getting started](guide/getting-started.md#the-u-suffix-trap) explains what goes
+`W=1u L=10u`. [Getting started](../guide/getting-started.md#the-u-suffix-trap) explains what goes
 wrong.
 
 1. Run it:
@@ -632,7 +632,7 @@ There is a guided version of this exercise at <https://tinytapeout.com/siliwiz/r
 > **Warning:** SiliWiz is not SKY130, and its numbers are not the ones in this lab. Its
 > `polyres` layer is documented as *"400 ohms per square"*. SKY130's `res_high_po` is
 > 317.2198 Ω/□ measured, and 319.8 Ω/□ in the Magic layout tool's tables (see
-> [Ohms per square](guide/ohms-per-square.md)). SiliWiz uses round numbers chosen
+> [Ohms per square](../guide/ohms-per-square.md)). SiliWiz uses round numbers chosen
 > for teaching. Use it for the cross-section and ngspice for the value.
 
 ### Check the rest of the image
@@ -651,6 +651,6 @@ image is complete:
 line like it. Those are Tcl namespace notices from the tool itself. They are not about your
 design, and there is nothing to fix.
 
-Next on the [Course path](README.md#course-path): read the four pages in row 3, starting with
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), then do
-[Lab 02: How big is a picofarad?](labs/lab-02-how-big-is-a-picofarad-overview.md).
+Next on the [Course path](../index.md#course-path): read the four pages in row 3, starting with
+[Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md), then do
+[Lab 02: How big is a picofarad?](../labs/lab-02-how-big-is-a-picofarad-overview.md).

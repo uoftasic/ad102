@@ -7,12 +7,12 @@ numbers you have already measured.
 
 ## Before you start
 
-- Finish Labs [01](labs/lab-01-a-resistor-you-designed-overview.md),
-  [02](labs/lab-02-how-big-is-a-picofarad-overview.md) and
-  [03](labs/lab-03-a-time-constant-in-silicon-overview.md). Part 3 uses their numbers.
-  [Lab 04](labs/lab-04-two-resistors-that-disagree-overview.md)'s corner results help with the
+- Finish Labs [01](../labs/lab-01-a-resistor-you-designed-overview.md),
+  [02](../labs/lab-02-how-big-is-a-picofarad-overview.md) and
+  [03](../labs/lab-03-a-time-constant-in-silicon-overview.md). Part 3 uses their numbers.
+  [Lab 04](../labs/lab-04-two-resistors-that-disagree-overview.md)'s corner results help with the
   last step of Part 3, deciding whether you would build it.
-- Read [From schematic to cross-section](guide/from-schematic-to-cross-section.md).
+- Read [From schematic to cross-section](../guide/from-schematic-to-cross-section.md).
 - You need a terminal in the workbench for Part 1, a browser tab for Part 2, and paper or a
   spreadsheet for Part 3.
 
@@ -51,7 +51,7 @@ under your drawing. Open **<https://app.siliwiz.com/?preset=blank>**.
 
 > **Warning:** SiliWiz is not SKY130. Its layer stack, permittivities and numbers are simplified
 > for teaching, and its cross-section is a cartoon of the table on
-> [From schematic to cross-section](guide/from-schematic-to-cross-section.md#the-layer-stack),
+> [From schematic to cross-section](../guide/from-schematic-to-cross-section.md#the-layer-stack),
 > not a rendering of it. Use it for the shape of the answer ("the current turns two corners",
 > "the field bends around the edge", "there is a plate under everything") and use the tech file
 > and your ngspice runs for the values. Guided walkthroughs:
@@ -115,7 +115,7 @@ capacitor. Why is it there?
 <summary>Answer</summary>
 
 The cross-section shows why: the wire is a bar, the substrate is a plane, and the field has
-nowhere to go but down. That is [Parasitic capacitance](guide/the-capacitor-you-did-not-draw.md).
+nowhere to go but down. That is [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md).
 
 </details>
 
@@ -138,12 +138,12 @@ Work through it in this order:
    Lab 02, a MIM plate of side $s$ holds $2.000000\,s^2 + 0.659991\,s - 0.017742$ fF and costs
    $s^2$ µm². Tabulate the total area for $R$ = 10 kΩ, 100 kΩ, 1 MΩ and 10 MΩ.
 3. Find the minimum, then find the limit. The area curve has a minimum; you found the same shape
-   in [Lab 03, Part 6](labs/lab-03-a-time-constant-in-silicon-overview.md#part-6-your-own-20-ns-time-constant).
+   in [Lab 03, Part 6](../labs/lab-03-a-time-constant-in-silicon-overview.md#part-6-your-own-20-ns-time-constant).
    Then check your answer against
-   [What a resistor costs in area](guide/what-a-value-costs-in-area.md): 1 MΩ of `res_high_po`
+   [What a resistor costs in area](../guide/what-a-value-costs-in-area.md): 1 MΩ of `res_high_po`
    is 3.15 mm of poly. Which of your rows can actually be built on a 3 mm die?
 4. Check the resistor against itself. In
-   [Lab 03, Part 5](labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-a-one-microsecond-rc),
+   [Lab 03, Part 5](../labs/lab-03-a-time-constant-in-silicon-overview.md#part-5-a-one-microsecond-rc),
    a bare 471.98 µm strip of 1 µm poly carried 95.278 fF to the substrate, and half of that added
    to the time constant. Lab 03, Part 2 fitted it as 0.1994 fF per µm of length plus 1.187 fF of
    ends. At what resistor length does that parasitic become a visible fraction of
@@ -152,7 +152,7 @@ Work through it in this order:
 5. Price it in adders. Convert your best area into DD103 ripple-carry adders, at 110.1056 µm²
    each, and write the sentence out: "my one filter pole costs N adders."
 6. Decide whether you would build it. Or would you do what
-   [What to build instead of an inductor](guide/what-analog-builds-instead.md) describes, and
+   [What to build instead of an inductor](../guide/what-analog-builds-instead.md) describes, and
    move the pole off-chip or into the digital domain?
 
 **You should see:** an area table with a minimum in it, at least one row you have ruled out as
@@ -169,5 +169,5 @@ There is no package and no marking scheme for this capstone.
 Submit: nothing. To argue about a floor plan, bring your area table to the
 [team Discord](https://discord.gg/hrJnP5UsGz).
 
-Next on the [Course path](README.md#course-path): this capstone is its last row, so you have
-finished AD102. The home page lists the [next courses](README.md#next-courses).
+Next on the [Course path](../index.md#course-path): this capstone is its last row, so you have
+finished AD102. The home page lists the [next courses](../index.md#next-courses).

@@ -38,7 +38,7 @@ whole die.
 This is why the unit exists: it turns an electrical question into a counting question, and you
 can count squares on a drawing.
 
-The animation on [Resistors on a chip](guide/a-resistor-you-cannot-buy.md#animation-resistor-geometry)
+The animation on [Resistors on a chip](../guide/a-resistor-you-cannot-buy.md#animation-resistor-geometry)
 shows this. It draws the squares onto a strip and numbers them, then stretches the strip and
 widens it while the count and the resistance move together. Then it grows length and width at
 the same time, so the count stays at one square and 317 Ω (the sheet resistance; the contacts
@@ -151,7 +151,7 @@ $$\frac{3250.551 - 395.5731}{10 - 1} = \frac{2854.978}{9} = \boxed{317.2198\ \Om
 
 That is the sheet resistance, measured, and it is within 0.06 % of the `rsheet = 317.3885` on
 the model card. You'll run this deck in
-[Lab 01, Part 6](labs/lab-01-a-resistor-you-designed-overview.md#part-6-split-a-resistor-into-head-and-body).
+[Lab 01, Part 6](../labs/lab-01-a-resistor-you-designed-overview.md#part-6-split-a-resistor-into-head-and-body).
 
 ## The design equation
 
@@ -161,7 +161,7 @@ $$R(L) = 378.2448 + 317.2198\,L \qquad (L \text{ in µm})$$
 
 The 378.2448 Ω intercept is the head plus a small fixed body extension the model adds
 (`leff = l + 0.247` on the card: the strip is electrically 0.247 µm longer than you drew it).
-[Lab 01](labs/lab-01-a-resistor-you-designed-overview.md) extracts both constants from a deck of
+[Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md) extracts both constants from a deck of
 22 strips of different lengths and widths, and gets `317.2198 ohm/square  378.2448 ohm of ends`,
 the same two numbers from a different deck. Lab 01, Part 4 also does the fit at other widths,
 where the per-micron slope and the end resistance both change.
@@ -186,5 +186,5 @@ a wire has a resistance you must respect. 1000 µm of minimum-width met1 is
 1000 / 0.14 = 7143 squares × 0.125 Ω/□ = **893 Ω**, a real resistor in your signal path whether
 you drew it or not.
 
-Next: [What a resistor costs in area](guide/what-a-value-costs-in-area.md), where you find out
+Next: [What a resistor costs in area](../guide/what-a-value-costs-in-area.md), where you find out
 how much silicon a 100 kΩ resistor occupies.

@@ -3,7 +3,7 @@
 If a resistance is just a length, how long is a real one, and is that a problem? This page puts
 numbers on it.
 
-From [Ohms per square](guide/ohms-per-square.md), for `sky130_fd_pr__res_high_po` drawn 1 µm
+From [Ohms per square](../guide/ohms-per-square.md), for `sky130_fd_pr__res_high_po` drawn 1 µm
 wide:
 
 $$R(L) = 378.2448 + 317.2198\,L \qquad (L \text{ in µm})$$
@@ -74,7 +74,7 @@ which shortens the required length slightly at the wide end.
 
 The rule: draw a resistor at the narrowest width the design rules and your accuracy budget
 allow. 0.35 µm is the narrowest `res_high_po` SKY130 permits. Widen it only on purpose, to get
-better matching ([Matching and Pelgrom's law](guide/matching-beats-accuracy.md)) or to carry
+better matching ([Matching and Pelgrom's law](../guide/matching-beats-accuracy.md)) or to carry
 current.
 
 ## Changing the material
@@ -99,10 +99,10 @@ That is still big, 472 µm² of poly at 1 µm wide, or 126 inverters, but it fit
 > says `weff = {w-0.056}`: the strip comes out of the fab 56 nm narrower than you drew it,
 > because the etch undercuts the edge. So at a drawn W = 1 µm the material is really 0.944 µm
 > wide, and the resistance per micron of length is $2000 / 0.944 = 2118.6441\ \Omega$.
-> [Lab 01](labs/lab-01-a-resistor-you-designed-overview.md) measures 2118.7619. That agrees to
+> [Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md) measures 2118.7619. That agrees to
 > five digits, and the small remainder is the model's nonlinear body term. This is the first
 > place in the course where what you drew and what you got differ by an amount you can calculate, and
-> [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) is about that gap.
+> [Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) is about that gap.
 
 ## Folding a long resistor
 
@@ -139,17 +139,17 @@ spacing rules, which is why AD104 has you draw one.
 
 For a picture of the layers in "a strip of poly with two contacts", you can draw one in SiliWiz,
 a browser layout tool that shows the cross-section as you draw. That is
-[Lab 01, Part 9](labs/lab-01-a-resistor-you-designed-overview.md#part-9-optional-draw-a-resistor-in-siliwiz).
+[Lab 01, Part 9](../labs/lab-01-a-resistor-you-designed-overview.md#part-9-optional-draw-a-resistor-in-siliwiz).
 
 ## How this shapes analog circuits
 
 Every analog block you will read about is shaped by these numbers. Bias networks use ratios of
 small resistors instead of one big one. Bandgap references use a handful of matched units rather
 than one exact value. Filters that would want a megohm on a breadboard get built from switched
-capacitors instead ([What to build instead of an inductor](guide/what-analog-builds-instead.md)).
+capacitors instead ([What to build instead of an inductor](../guide/what-analog-builds-instead.md)).
 None of that is tradition: it follows from 100 kΩ costing 84 inverters.
 
-Next on the [Course path](README.md#course-path):
-[Lab 01: A resistor you designed](labs/lab-01-a-resistor-you-designed-overview.md). After
-that, [Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md) asks the same question about
+Next on the [Course path](../index.md#course-path):
+[Lab 01: A resistor you designed](../labs/lab-01-a-resistor-you-designed-overview.md). After
+that, [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md) asks the same question about
 capacitors, and the area bill is much bigger.

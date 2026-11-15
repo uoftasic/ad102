@@ -68,12 +68,12 @@ wires are slow", and it is why place-and-route tools spend most of their effort 
 rather than gate count.
 
 The same wire is a resistance problem too. 1000 µm of minimum-width met1 is $1000/0.14 = 7143$
-squares at 0.125 Ω/□ = 893 Ω (see [Ohms per square](guide/ohms-per-square.md)). A wire is a
+squares at 0.125 Ω/□ = 893 Ω (see [Ohms per square](../guide/ohms-per-square.md)). A wire is a
 distributed RC line, not a single node, and the delay through it grows as the square of its
 length.
 
 You can draw two wires in SiliWiz and watch their coupling capacitance change as you move them in
-[Lab 02, Part 9](labs/lab-02-how-big-is-a-picofarad-overview.md#part-9-optional-parasitic-capacitance-in-siliwiz).
+[Lab 02, Part 9](../labs/lab-02-how-big-is-a-picofarad-overview.md#part-9-optional-parasitic-capacitance-in-siliwiz).
 
 ## VPP capacitors and parasitic extraction
 
@@ -81,7 +81,7 @@ First, parasitic capacitance is why a VPP capacitor works. If ordinary metal wir
 their neighbours at about 0.1 fF per micron of edge whether you like it or not, you can use that
 on purpose: interleave enough fingers and the accident becomes the component.
 `sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5` measured 147.3400 fF on
-[Capacitors on a chip](guide/a-capacitor-is-a-sandwich.md), built entirely out of wire.
+[Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md), built entirely out of wire.
 
 Second, every number on this page came from a pre-characterised table, because the real value
 depends on what happens to be nearby. A **parasitic extraction** (PEX) run reads your finished
@@ -93,4 +93,4 @@ Every chip designer at some point sees a circuit that simulated perfectly come b
 extraction 40 % slower, with nothing in the schematic changed. This page is meant to prepare you
 for that.
 
-Next: [Inductors on a chip](guide/the-inductor-problem.md).
+Next: [Inductors on a chip](../guide/the-inductor-problem.md).

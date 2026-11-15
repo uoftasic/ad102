@@ -10,11 +10,11 @@ Package: [`labs/lab-04-two-resistors-that-disagree/`](https://github.com/uoftasi
 
 ## Before you start
 
-- Finish [Lab 01](labs/lab-01-a-resistor-you-designed-overview.md); you'll need its 378.2448 Ω
-  of end resistance. [Lab 02](labs/lab-02-how-big-is-a-picofarad-overview.md) and
-  [Lab 03](labs/lab-03-a-time-constant-in-silicon-overview.md) help but are not required.
-- Read [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) and
-  [Matching and Pelgrom's law](guide/matching-beats-accuracy.md).
+- Finish [Lab 01](../labs/lab-01-a-resistor-you-designed-overview.md); you'll need its 378.2448 Ω
+  of end resistance. [Lab 02](../labs/lab-02-how-big-is-a-picofarad-overview.md) and
+  [Lab 03](../labs/lab-03-a-time-constant-in-silicon-overview.md) help but are not required.
+- Read [Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) and
+  [Matching and Pelgrom's law](../guide/matching-beats-accuracy.md).
 - Open a terminal in the workbench and go to the lab folder:
 
   ```bash
@@ -28,7 +28,7 @@ Parts 1 to 6 are required. Everything under Going further, at the end, is option
 Time: about 2 hours, not counting the optional part. The Monte Carlo runs are silent
 throughout. A full `make` takes between about 30 seconds and two minutes, depending on your
 machine (the Makefile records 106 s and 128 s on the pinned image; see
-[Warnings and delays](reference/ngspice-decks-that-run.md#lab-04)).
+[Warnings and delays](../reference/ngspice-decks-that-run.md#lab-04)).
 
 Labs 01–03 assumed that a device is worth what its geometry says: you sized a resistor to 2200 Ω
 and the simulator returned 2200.006 Ω. That is the end of the design story, but not of the
@@ -88,7 +88,7 @@ and divider did not move in any printed digit. Why not?
 
 A corner applies the same multiplier to every device made of that material, and in a ratio of two
 such devices the multiplier cancels. What is left is a ratio of lengths you drew.
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md#why-the-ratio-holds) works it
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md#why-the-ratio-holds) works it
 through, including why the ratio is 3.680396 rather than 4.
 
 </details>
@@ -121,7 +121,7 @@ same order.
 
 2. Before you trust any statistic, check the count at the top of the output. If it says 2
    instead of 201, the loop stopped after one die;
-   [Warnings and delays](reference/ngspice-decks-that-run.md#lab-04) explains why.
+   [Warnings and delays](../reference/ngspice-decks-that-run.md#lab-04) explains why.
 
 **You should see:** the count, then the nominal die. Section A of the deck forces 1 µA through four
 single resistors, so dividing `v(s1)` to `v(s4)` by 1 µA gives their nominal resistances:
@@ -198,7 +198,7 @@ head, not body. (The rest of Lab 01's 378.2448 Ω of ends is the body's extra 78
 Part 6 found.) `body_pelgrom` describes only the body, so the 3.55 % applies only to the body's
 share of the resistance. The head has its own coefficient (`head_pelgrom`, averaged over a
 different quantity), and on this device its contribution to σ is about as large as the body's.
-[The worked example](guide/matching-beats-accuracy.md#worked-example-predicting-the-monte-carlo)
+[The worked example](../guide/matching-beats-accuracy.md#worked-example-predicting-the-monte-carlo)
 gets 13.067 Ω from the head and 14.051 Ω from the body, a σ of 19.188 Ω, which is 2.759 % of
 695.4646 Ω: much closer to what you measured than 3.55 %.
 
@@ -407,7 +407,7 @@ path is the last line of this page.
 
 ### The guide page's mismatch run
 
-[Matching and Pelgrom's law](guide/matching-beats-accuracy.md)'s 1 × 1 µm against 10 × 10 µm
+[Matching and Pelgrom's law](../guide/matching-beats-accuracy.md)'s 1 × 1 µm against 10 × 10 µm
 comparison, with a different seed, is in `labs/passives-decks`. To reproduce it:
 
 ```bash
@@ -418,6 +418,6 @@ cd ../lab-04-two-resistors-that-disagree
 
 It ends with `100x the area bought 8.38x better matching`.
 
-Next on the [Course path](README.md#course-path): read
-[From schematic to cross-section](guide/from-schematic-to-cross-section.md), then do the
-[Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md).
+Next on the [Course path](../index.md#course-path): read
+[From schematic to cross-section](../guide/from-schematic-to-cross-section.md), then do the
+[Capstone: Defend a floor plan](../labs/capstone-floor-plan-overview.md).

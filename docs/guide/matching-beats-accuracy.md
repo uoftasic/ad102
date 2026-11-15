@@ -9,7 +9,7 @@ analog schematics look like.
 
 ## Ratios across corners
 
-The corners deck from [Process corners](guide/the-value-you-drew-is-not-what-you-get.md) also
+The corners deck from [Process corners](../guide/the-value-you-drew-is-not-what-you-get.md) also
 prints, for each corner, two resistors drawn 1:4 and the output of a divider made from them:
 
 ```
@@ -49,7 +49,7 @@ In one table:
 Every printed digit of the ratio and of the divider output is identical. The two resistors swung
 by a quarter of their value between those runs, and the circuit built from them did not move at
 all. You'll run this in
-[Lab 04, Part 1](labs/lab-04-two-resistors-that-disagree-overview.md#part-1-process-corners).
+[Lab 04, Part 1](../labs/lab-04-two-resistors-that-disagree-overview.md#part-1-process-corners).
 
 ## Why the ratio holds
 
@@ -64,7 +64,7 @@ nanometres.
 
 That also explains why the ratio is 3.680396 rather than the 4.0 you drew. $L_B/L_A = 40/10 = 4$
 for the *bodies*, but each device also carries 378.2448 Ω of ends
-([Ohms per square](guide/ohms-per-square.md)):
+([Ohms per square](../guide/ohms-per-square.md)):
 
 $$\frac{R_B}{R_A} = \frac{378.2448 + 317.2198\times 40}{378.2448 + 317.2198\times 10} = \frac{13067.04}{3550.443} = 3.680397$$
 
@@ -84,7 +84,7 @@ Corners are global, so ratios cancel them completely. Mismatch is local, and it 
 at all; it sets the floor.
 
 `labs/passives-decks/spice/mismatch.spice` runs two hundred Monte Carlo samples with
-`mc_mm_switch=1` and `setseed 12345`, so the numbers are reproducible. ([Lab 04](labs/lab-04-two-resistors-that-disagree-overview.md)
+`mc_mm_switch=1` and `setseed 12345`, so the numbers are reproducible. ([Lab 04](../labs/lab-04-two-resistors-that-disagree-overview.md)
 runs a similar experiment from `setseed 1` and gets 2.5852 % for the 1 µm² device: a different
 draw from the same distribution, not a different answer.) There are four devices: **A** and **B**
 drawn 1 µm × 1 µm, and **C** and **D** drawn 10 µm × 10 µm, one hundred times the area, with the
@@ -210,11 +210,11 @@ depends on an absolute value:
 These all use the same idea. Silicon is very good at making two things the same and poor at
 making one thing a particular value, so analog circuits ask it for copies rather than numbers.
 
-Next on the [Course path](README.md#course-path):
-[Lab 04: Two resistors that disagree](labs/lab-04-two-resistors-that-disagree-overview.md). It
+Next on the [Course path](../index.md#course-path):
+[Lab 04: Two resistors that disagree](../labs/lab-04-two-resistors-that-disagree-overview.md). It
 runs its own Monte Carlo, checks Pelgrom's law across four device sizes, and ends with a divider
 specification that a naive two-resistor layout cannot meet. After that comes
-[From schematic to cross-section](guide/from-schematic-to-cross-section.md), which turns the chip
+[From schematic to cross-section](../guide/from-schematic-to-cross-section.md), which turns the chip
 on its side and takes your measured 317.2198 Ω/□ back to a material property.
 
 Stuck on anything here? Ask in the [team Discord](https://discord.gg/hrJnP5UsGz).
