@@ -48,4 +48,4 @@ quarto preview docs      # -> http://localhost:4200
 
 ## Pull requests
 
-Keep changes focused. For doc-only PRs, check navigation and math in the local preview when you can. On a pull request that touches `docs/**`, `.github/workflows/site.yml` renders the site and runs `scripts/check_site.py` over it, which lists every local link, image or `#anchor` that doesn't resolve (read the job log: the script always exits 0, so a broken link doesn't turn the run red), and `.github/workflows/docs-link-check.yml` checks the links in the Markdown sources, external ones included.
+Keep changes focused. For doc-only PRs, check navigation and math in the local preview when you can. On a pull request that touches `docs/**`, `.github/workflows/site.yml` renders the site and runs `scripts/check_site.py` over it, which lists every local link, image or `#anchor` that doesn't resolve (a broken link fails the run, and the job log lists each one), and `.github/workflows/docs-link-check.yml` checks the links in the Markdown sources, external ones included.

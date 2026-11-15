@@ -38,3 +38,4 @@ for page, tag, v in refs:
         bad.append(f"{os.path.relpath(page, site)}: <{tag}> {v} -> missing anchor #{frag}")
 for b in sorted(set(bad)): print(b)
 print(f"{len(refs)} local references in {len(ids)} pages, {len(set(bad))} broken")
+sys.exit(1 if bad else 0)  # non-zero fails the CI job
