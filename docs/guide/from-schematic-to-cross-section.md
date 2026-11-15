@@ -60,9 +60,10 @@ building, each with the height it starts at and how tall it is:
 | metal5 | 5.3711 µm | 1.26 µm |
 | redistribution metal | 7.2611 µm | 3.0 µm |
 
-The top of metal5 is 6.6311 µm above the silicon, so a whole SKY130 chip, every layer of wiring
-included, is about as thick as a red blood cell is wide. Your 100 kΩ resistor was 314.046460 µm
-long, which is forty-seven times the thickness of the chip. You'll print this stack yourself in
+The top of metal5 is 6.6311 µm above the silicon, so the wiring stack up to metal5 is about as
+thick as a red blood cell is wide. (The redistribution metal above it reaches 10.2611 µm, and the
+substrate underneath isn't counted at all.) Your 100 kΩ resistor was 314.046460 µm long, which is
+forty-seven times the height of that stack. You'll print this stack yourself in
 [the capstone, Part 1](../labs/capstone-floor-plan-overview.md#part-1-read-the-layer-stack).
 
 ## From sheet resistance to resistivity
@@ -98,8 +99,8 @@ To give those numbers a scale, here they are next to two metals:
 
 This is why on-chip resistors are made of poly rather than metal. A resistor's job is to resist,
 and the wiring metal conducts more than a thousand times too well for that. To get 10 kΩ
-from metal1 at the same width you would need $10000/0.125 = 80\,000$ squares, which is
-80 millimetres of wire on a die only three millimetres across.
+from metal1 you would need $10000/0.125 = 80\,000$ squares, which at the 1 µm width of the
+course's poly resistors is 80 millimetres of wire on a die only three millimetres across.
 
 It's worth making a habit of this conversion. Whenever a table gives you Ω/□, you're one
 multiplication away from a material property, and material properties tell you whether a number
