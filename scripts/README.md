@@ -8,6 +8,7 @@ Utilities for **AD102 — Linear Circuits & Fabrication** under the UofT ASIC or
 |--------|---------|
 | `hello.py` | Smoke-check that Python runs in this clone |
 | `init-template.py` | Fill `ad102` / title / description after using the template |
+| `check_site.py` | After `quarto render docs`, list every local link, image and `#anchor` in `docs/_site` that doesn't resolve: `python3 scripts/check_site.py docs/_site`. It always exits 0, so read its last line (`… N broken`) |
 
 ## Usage
 
