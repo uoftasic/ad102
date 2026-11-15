@@ -2,7 +2,7 @@
 
 Writeup: [`docs/labs/lab-02-how-big-is-a-picofarad-overview.md`](../../docs/labs/lab-02-how-big-is-a-picofarad-overview.md),
 published at <https://uoftasic.com/ad102/labs/lab-02-how-big-is-a-picofarad-overview.html>. The
-steps and expected output are there; this file is a quick reference.
+writeup has the steps and the expected output; this file is a quick reference.
 
 ## Run it
 
@@ -18,7 +18,8 @@ clone it ends in `FAIL`, because `spice/my_cap.spice` ships with the naive sizin
 `pf`, `mine` and `tank` are each silent for about a minute while the SKY130 model cards load;
 `henry` loads three small inductor files and finishes almost immediately.
 
-No environment setup is needed: every deck names the model library by absolute path.
+You don't need any environment setup, because every deck names the model library by its absolute
+path.
 
 ## Targets
 
@@ -41,12 +42,12 @@ No environment setup is needed: every deck names the model library by absolute p
 | `spice/henry.spice` | The three SKY130 inductor models, swept from 100 MHz to 100 GHz. |
 | `spice/tank.spice` | A 2.4 GHz resonator built from `ind_03_90` and a MIM capacitor. |
 | `src/check_cap.py` | The checker. Fits the plate capacitor's terms, prices a picofarad four ways, and checks the inductors. |
-| `src/plot_inductors.py` | Optional. Draws `results/ind_sweep.txt` as L and Q against frequency, with the self-resonances marked. Nothing to install. |
+| `src/plot_inductors.py` | Optional. Draws `results/ind_sweep.txt` as L and Q against frequency, with the self-resonances marked. It needs nothing installed. |
 | `solutions/` | Reference sizing and discussion. Open it after your numbers pass. |
 
 The capacitors are measured on a 1 V AC source at 1 MHz, with $C = |I| / (2\pi f)$. The inductors
 are driven with a 1 A AC current source, so the node voltage is the impedance; then
 $L = \operatorname{Im}(Z)/2\pi f$ and $Q = \operatorname{Im}(Z)/\operatorname{Re}(Z)$.
 
-`W` and `L` on a SKY130 device are plain micron numbers: `W=1`, never `W=1u`. There is no `u`
-suffix anywhere in this package.
+`W` and `L` on a SKY130 device are plain numbers in microns, so you write `W=1`, never `W=1u`, and
+you won't find a `u` suffix anywhere in this package.
