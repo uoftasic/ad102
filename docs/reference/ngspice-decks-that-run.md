@@ -270,7 +270,7 @@ all of it is MOSFET models that a passive deck never uses.
 
 | `.lib` line | wall clock, `spice/sheet.spice` |
 |---|---:|
-| `sky130.lib.spice tt` | 55–66 s on the pinned image; about 10 s on the machine this page was last checked on |
+| `sky130.lib.spice tt` | 55–65 s on the pinned image; about 10 s on the machine this page was last checked on |
 
 Those are wall-clock seconds, so they change with how busy the machine is, whereas the
 resistances don't change at all.
@@ -349,7 +349,9 @@ line under the warning still gives you the answer.
 
 Each of the two decks loads the SKY130 model cards (about 55 s on the pinned image) and then
 evaluates 200 operating points (about 23 s for the bigger of the two), printing nothing while it
-works. Most of that time goes on loading the models rather than on the Monte Carlo itself.
+works. Most of that time goes on loading the models rather than on the Monte Carlo itself. On the
+machine this page was last checked on, where the models load in about 10 s, each deck took 14 to
+16 s in all and a full `make` about 30 s, which is where the lab's lower estimate comes from.
 
 `results/mismatch.log` holds 28,280 `unrecognized parameter (...) - ignored` lines, of which
 5,656 are `(sw_et)`. They're the same harmless lines as in Lab 01. Each of the two hundred

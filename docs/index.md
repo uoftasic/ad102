@@ -86,7 +86,7 @@ in your question.
 2. Work out what a picofarad costs in square micrometres, and why nobody puts a 1 µF capacitor
    on a chip.
 3. Build an RC filter from the resistor and capacitor you designed and measure its time
-   constant $\tau$. Then measure its corner frequency, check it against $1/(2\pi\tau)$ to six
+   constant $\tau$. Then measure its corner frequency, check it against $1/(2\pi\tau)$ to five
    figures, and compare its Bode plot with that of the same filter built from an ideal 10 kΩ and
    an ideal 1 pF: 15.8580 MHz for the filter you built against 15.9155 MHz for the ideal one,
    0.36 % apart.
