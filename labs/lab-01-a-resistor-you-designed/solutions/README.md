@@ -76,5 +76,5 @@ gives you one device for each.
   or ratioed, never absolute. What tolerance would you defend to a colleague, and would you
   defend the same number for a bias string and for a gain-setting element?
 - The lab measured at 27 °C. `res_high_po` has `tc1 = 0.514e-3`, and a part qualified to 125 °C
-  is not unusual. Work out what your 2.2 kΩ becomes at 125 °C before you get to Lab 03, which
-  measures it.
+  is not unusual. Work out what your 2.2 kΩ becomes at 125 °C. Lab 03, Part 4 measures the same
+  drift on the 10 kΩ resistor of its RC, at −40 °C and +125 °C.
