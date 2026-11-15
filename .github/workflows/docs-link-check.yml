@@ -24,10 +24,8 @@ jobs:
       # tells you an exit code and nothing else — which is how a broken link sat
       # unnoticed. This prints every result in the log.
       #
-      # --base-url: docsify runs with relativePath:false, so a .md link written
-      #   `guide/x.md` resolves from the docs root, not the file's own directory.
-      # --exclude '/assets/img/': IMAGES are the one thing docsify resolves
-      #   relative to the page (`../assets/img/...`); the next step checks those.
+      # Links are relative to the page they are written in, as Quarto resolves
+      # them, which is also lychee's default, so no --base-url is needed.
       # --accept: 403 and 429 mean a host is refusing a datacentre IP or rate
       #   limiting a bot. Neither means the link is broken, and treating them as
       #   failures makes CI red for reasons no author can fix.
@@ -35,8 +33,6 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/w" -w /w lycheeverse/lychee:latest \
             --verbose --no-progress \
-            --base-url '/w/docs' \
-            --exclude '/assets/img/' \
             --exclude '%7B%7B' \
             --exclude 'localhost' \
             --max-retries 3 \
@@ -48,9 +44,8 @@ jobs:
         run: |
           python3 - <<'PY'
           import os, re, sys
-          # Markdown images are resolved by docsify relative to the page.
-          # Raw <video>/<img> HTML is resolved by the browser against the site
-          # root (docs/), because the hash route does not change the base URL.
+          # Markdown images and raw <video>/<img> HTML are both relative to the
+          # page they are written in.
           md  = re.compile(r'!\[[^\]]*\]\(([^)]+\.(?:png|jpe?g|gif|svg|webp|mp4|webm))\)')
           raw = re.compile(r'(?:src|poster|href)="([^"]+\.(?:png|jpe?g|gif|svg|webp|mp4|webm))"')
           bad = []
@@ -69,7 +64,7 @@ jobs:
                   for ref in raw.findall(text):
                       if ref.startswith(("http:", "https:", "data:")):
                           continue
-                      t = os.path.normpath(os.path.join("docs", ref))
+                      t = os.path.normpath(os.path.join(dp, ref))
                       if not os.path.isfile(t):
                           bad.append(f"{path}: html asset -> {t}")
           for b in bad:
