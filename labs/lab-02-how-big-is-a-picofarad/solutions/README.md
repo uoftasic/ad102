@@ -49,7 +49,7 @@ circuit's behaviour changes with the size of the signal going through it. So:
 | fF per µm² | 2.03 | 7.87 | 0.91 |
 | linear? | yes | **no** | yes |
 | extra mask? | yes | no | **no** |
-| sits above the transistors? | yes | no | partly |
+| sits above the transistors? | yes | no | no: li and met1–met4 |
 
 MOS capacitors are excellent for **supply decoupling**, where the voltage never moves and
 distortion doesn't matter, and every chip you own uses them that way by the million. They are the

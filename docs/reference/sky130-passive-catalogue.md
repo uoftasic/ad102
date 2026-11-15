@@ -219,7 +219,7 @@ can be confident you understand how the device is modelled.
 |---|---:|---|
 | MOS cap at 1.8 V | 127 µm² | only if one plate stays at a rail |
 | MIM | **493 µm²**: 22.2 × 22.2 µm, measured at 1000.314 fF | linear; the usual choice for a signal path |
-| VPP fringe | 913 µm² | it fits *under* your MIM, so its area can cost nothing extra |
+| VPP fringe | 913 µm² | it uses met3 and met4, the MIM's own layers, so it can't share area with a MIM |
 
 493 µm² is about the area of 130 inverters. It's the number to bring to any "just put a 1 nF cap
 on it" conversation, because a nanofarad of MIM is half a square millimetre, the area of about
