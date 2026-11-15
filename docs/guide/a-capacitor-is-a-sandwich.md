@@ -135,7 +135,7 @@ estimate for a MOS capacitor and be within 6 %.
 | linear? | **yes** | no: 3.57× swing | yes |
 | leaks? | no | yes, through 4 nm of oxide | no |
 | needs extra masks? | yes | no | **no** |
-| sits above the transistors? | yes | no | yes |
+| sits above the transistors? | yes | no | no: it uses li and all five metals |
 
 Use **MIM** when the capacitance has to stay at the value you designed: in filters, references,
 and anything else where "3.57× depending on the signal" would break the circuit. Use **MOS** when
