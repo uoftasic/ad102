@@ -122,11 +122,12 @@ That's still big (472 µm² of poly at 1 µm wide, or 126 inverters), but it fit
 
 A strip 314 µm long and 1 µm wide doesn't fit anywhere sensible on a die, so real layouts
 **fold** it. You might draw sixteen strips of 20 µm side by side, for example, and join them end
-to end with short metal straps so the current runs back and forth like a plough across a field.
-The resistance is the same, since squares are still squares and a corner counts as
-roughly half a square, but now you also pay for:
+to end with short turns of the same poly, so the current runs back and forth like a plough across
+a field. The value shifts when you do this. The straight runs still count square for square, but
+the current cuts across the inside of each corner, so a corner square counts as only roughly half
+a square, and the folded strip no longer has the value you sized it for. You re-tune the length
+to bring it back. Folding also makes you pay for:
 
-- the metal straps and the contacts at every turn;
 - the required spacing between neighbouring poly strips;
 - a guard ring, if the resistor needs isolating from its neighbours;
 - **dummy strips** at each end, which are extra resistors connected to nothing. Etching behaves
@@ -139,18 +140,21 @@ at each end.
 
 ![A resistor drawn as a single straight bar of poly, with a metal contact at each end and a boundary drawn around it](../assets/img/ad102-magic-res-strip.png)
 
-Folded, it's the same bar laid back and forth, with a strap carrying the current around each
-turn:
+Folded, it's the same bar laid back and forth. The poly itself turns each corner, and there are
+still only the two contacts, one at each end:
 
-![The same resistor folded into three parallel passes, joined at alternating ends, with the two contacts now at opposite corners](../assets/img/ad102-magic-res-snake.png)
+![The same resistor folded into five parallel passes, joined at alternating ends, with the two contacts now at opposite corners](../assets/img/ad102-magic-res-snake.png)
 
-*This one has three passes rather than the sixteen the 100 kΩ above would need, since the figure
+*This one has five passes rather than the sixteen the 100 kΩ above would need, since the figure
 is there to show the shape, not the count. The red is the resistor body, and the grey blocks at
 the ends are its contacts. Each turn you add buys you height and costs you two corners.*
 
 A folded 100 kΩ resistor with its guard ring and dummies typically occupies two to three times
 its 314 µm² of drawn poly. Nobody publishes an exact multiplier, because it depends on the number
-of folds and on the spacing rules, which is why AD104 has you draw one.
+of folds and on the spacing rules. The spacing alone goes a long way: the SKY130 device generator
+that Magic uses (`/foss/pdks/sky130A/libs.tech/magic/sky130A.tcl`) keeps 0.48 µm between
+neighbouring `res_high_po` strips and 0.48 µm between a strip and its guard ring, so in a fold of
+1 µm strips every strip brings a gap half its own width.
 
 If you'd like to see the layers in "a strip of poly with two contacts", you can draw one in
 SiliWiz, a layout tool that runs in the browser and shows the cross-section as you draw. That's
