@@ -425,7 +425,7 @@ If a resistance is close but not right, look for a stray `u` before you look any
 | `Error: no such vector as -i(vds).` | put an expression where `meas` wanted a vector. Make it a vector first with `let id = -i(Vds)`. |
 | `Error: incomplete or empty netlist` / `no simulations run!` | nothing, on its own. This is the second message, and the real error is a few lines above it. |
 | `Warning: command 'plot' is not available during batch simulation, ignored!` | asked a batch run for a picture. It's harmless, because the `meas` lines still ran. You'll see it when you netlist a schematic that has `plot` in its control block. |
-| ten × `unrecognized parameter (sw_et) - ignored` | nothing wrong. Every deck with a poly resistor in it prints this; see [Getting started](../guide/getting-started.md#expected-warnings). |
+| ten `unrecognized parameter (...) - ignored` lines per `res_high_po`, two of them `(sw_et)` | nothing wrong. Every deck with a `res_high_po` in it prints these; see [Getting started](../guide/getting-started.md#expected-warnings). |
 
 ## Exit codes
 
