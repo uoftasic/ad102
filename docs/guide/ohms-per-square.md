@@ -37,8 +37,8 @@ So $L/W$ is the **number of squares you drew end to end**. A strip 40 µm long a
 twenty squares in series, and that stays true whether you fold it, bend it, or run it across the
 whole die.
 
-That's what makes the unit useful. It turns an electrical question into a counting question,
-and counting squares is something you can do by looking at a drawing.
+The unit is useful because it turns an electrical question into a counting question, and
+counting squares is something you can do by looking at a drawing.
 
 The animation on [Resistors on a chip](../guide/a-resistor-you-cannot-buy.md#animation-resistor-geometry)
 shows this happening. It draws the squares onto a strip and numbers them, then stretches the

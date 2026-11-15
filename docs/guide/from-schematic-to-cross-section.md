@@ -97,7 +97,7 @@ To give those numbers a scale, here they are next to two metals:
 | `res_xhigh_po` | 3.81×10⁻⁴ Ω m | **22 701×** |
 
 This is why on-chip resistors are made of poly rather than metal. A resistor's job is to resist,
-and the wiring metal conducts three and a half thousand times too well for that. To get 10 kΩ
+and the wiring metal conducts more than a thousand times too well for that. To get 10 kΩ
 from metal1 at the same width you would need $10000/0.125 = 80\,000$ squares, which is
 80 millimetres of wire on a die only three millimetres across.
 
@@ -120,7 +120,7 @@ AD102 set out to answer three questions:
 - **A capacitor?** You make it from two plates and a gap: metal3 with a thin dielectric above it
   for a MIM, a gate oxide for a MOS capacitor, or interleaved wire fingers for a VPP. A linear
   capacitor gives you at best about 2 fF per µm², so a picofarad needs a plate 22 µm on a side.
-- **An inductor?** Mostly, you don't make one. A spiral of top metal gets you a couple of
+- **An inductor?** Mostly, you don't make one. A metal spiral gets you single-digit
   nanohenries at a $Q$ in the teens and costs tens of thousands of square micrometres, and below
   about 1 GHz [the alternatives](../guide/what-analog-builds-instead.md) do the job better.
 

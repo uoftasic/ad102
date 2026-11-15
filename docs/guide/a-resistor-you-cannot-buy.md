@@ -1,8 +1,8 @@
 # Resistors on a chip
 
-In ECE110 someone handed you a resistor. It came out of a drawer with four coloured bands on it,
-and someone in a factory had already decided it was 10 kΩ, so your job was to put it in a mesh
-and write KCL. Every equation you learned there still holds on a chip.
+In a first circuits course such as ECE110, someone handed you a resistor. It came out of a drawer
+with four coloured bands on it, and someone in a factory had already decided it was 10 kΩ, so your
+job was to put it in a mesh and write KCL. Every equation you learned there still holds on a chip.
 
 What changes is where the 10 kΩ comes from. There is no drawer of parts on a chip. A chip is one
 crystal of silicon with patterns printed on it, and the only thing you can decide is what shape
@@ -72,8 +72,8 @@ Here is that menu, taken from the header comment of the Magic technology file,
 
 Those seven entries are seven materials rather than seven values. The two `p+ poly` entries,
 `res_high_po` and `res_xhigh_po`, are on the same layer with the same drawing rules, and they
-differ by a factor of about six only because they get a different implant dose. That factor of
-six is the only choice of value the foundry gives you; everything else you get by drawing.
+differ by a factor of about 6.7 only because they get a different implant dose. That factor is
+the only choice of value the foundry gives you; everything else you get by drawing.
 
 `res_high_po` and `res_xhigh_po` are also the **precision** resistors. SkyWater characterised
 them carefully because analog designers build references out of them, and they're the two this
@@ -114,7 +114,8 @@ you would normally scroll past.
 
 ## Writing W and L
 
-On a SKY130 device, `W` and `L` are plain numbers in microns, with no unit suffix:
+As [Getting started](../guide/getting-started.md#the-u-suffix-trap) explained, `W` and `L` on a
+SKY130 device are plain numbers in microns, with no unit suffix:
 
 ```
 Xa a 0 0 sky130_fd_pr__res_high_po W=1 L=10       <- one micron by ten microns
@@ -123,12 +124,10 @@ Xa a 0 0 sky130_fd_pr__res_high_po W=1u L=10u     <- a millionth of that, in bot
 
 Every deck in this course uses the first form. The second multiplies both numbers by 10⁻⁶, which
 puts the device outside every bin its model was fitted over. On a MOSFET that stops the run with
-`could not find a valid modelname`. On a resistor the run carries on, which makes the mistake
-much harder to catch. The strip that reads 3550.443 Ω when it's written `W=1 L=10` reads
-3193.812 Ω when it's written `W=1u L=10u`. That's an ordinary-looking resistance that is 10 %
-off, and ngspice still exits with status 0.
-[Getting started](../guide/getting-started.md#the-u-suffix-trap) goes through this mistake in
-detail. Apart from Lab 01's `u_trap.spice`, which exists to show you the mistake, no deck in this
-course has a `u` in it, and none of yours should either.
+`could not find a valid modelname`, but on a resistor the run carries on, which is what makes the
+mistake so hard to catch: the strip that reads 3550.443 Ω when it's written `W=1 L=10` reads
+3193.812 Ω when it's written `W=1u L=10u`, an ordinary-looking resistance 10 % off, and ngspice
+still exits with status 0. Apart from Lab 01's `u_trap.spice`, which exists to show you the
+mistake, no deck in this course has a `u` in it, and none of yours should either.
 
 Next: [Ohms per square](../guide/ohms-per-square.md), the unit that turns a rectangle into ohms.

@@ -71,8 +71,8 @@ files, because it also defines `mod`.
 
 ## Where your files live
 
-`.designinit` also defines a shell function called `mod`. `mod add ad102` clones this course into
-`/foss/designs/modules/ad102`, and `mod ad102` takes you there afterwards. The folder
+`mod`, the shell function that `.designinit` defines, has two forms: `mod add ad102` clones this
+course into `/foss/designs/modules/ad102`, and `mod ad102` takes you there afterwards. The folder
 `/foss/designs` inside the container is really your `workspace` clone on your own computer,
 shared into the container (a bind mount). That means the course files are in
 `workspace/modules/ad102` on your disk, and deleting the container doesn't delete your work.
@@ -196,8 +196,9 @@ worked. The `make` that produces Lab 03's verdict doesn't need it.
 
 ### Why the first `make` fails
 
-Every AD102 lab package ships with the design a first-year student would draw, the naive one
-sized straight off the model card. The checker rejects it on purpose, and says so:
+Every AD102 lab package ships with the design a first-year student would draw, usually the naive
+one sized straight off the model card. The checker rejects it on purpose, and says so. This is
+Lab 01's message:
 
 ```
   ^ On a fresh clone this FAIL is the lab, not a broken
@@ -206,9 +207,9 @@ sized straight off the model card. The checker rejects it on purpose, and says s
     `make mine check` again.
 ```
 
-Your job is to read your own wrong number, work out where the missing ohms went, and fix the one
-line that was wrong. `make` exits non-zero on a `FAIL`, so at this point a red exit code is what
-you should expect, and it doesn't mean your clone is broken.
+Your job is to read your own wrong number, work out where the missing ohms went, and fix the two
+lengths that were wrong. `make` exits non-zero on a `FAIL`, so at this point a red exit code is
+what you should expect, and it doesn't mean your clone is broken.
 
 ## SiliWiz
 

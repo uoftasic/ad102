@@ -29,9 +29,9 @@ sky130_fd_pr__ind_05_220.model.spice
 > Error: incomplete or empty netlist
 > ```
 >
-> That doesn't mean the PDK is broken. It means the netlist is missing the inductor's model file.
+> That error means the netlist is missing the inductor's model file, and the PDK itself is fine.
 
-`sky130_fd_pr__ind_05_220.model.spice` is thirteen lines long:
+The subcircuit in `sky130_fd_pr__ind_05_220.model.spice` is fourteen lines long:
 
 ```
 .subckt  sky130_fd_pr__ind_05_220 a b ct sub
@@ -56,8 +56,8 @@ of coupling into the substrate, as two 223.7 fF capacitors each draining through
 the `sub` terminal; 205 fF directly across the winding; and a 9.064 Ω resistor modelling loss in
 the silicon underneath.
 
-Only two of the thirteen lines are inductance. The other eleven describe the losses and
-parasitics, and the rest of this page is about what they do to the device.
+Only two of its twelve elements are inductors. The other ten describe the losses and parasitics,
+and the rest of this page is about what they do to the device.
 
 ## Q
 

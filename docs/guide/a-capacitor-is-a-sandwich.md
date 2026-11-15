@@ -2,8 +2,8 @@
 
 There is no ceramic disc on a chip, so what is a capacitor made of?
 
-A capacitor is **two conductors that are near each other but not touching**, and that's the
-whole definition. The dielectric, the plates and the packaging are engineering built around it.
+At bottom, a capacitor is **two conductors that are near each other but not touching**. The
+dielectric, the plates and the packaging are engineering built around that.
 
 Put two flat plates of area $A$ a distance $d$ apart, with a material of relative permittivity
 $\varepsilon_r$ between them:
@@ -35,8 +35,8 @@ met1 through met4, shielded by met5.
 ## Measured capacitance of each type
 
 `labs/passives-decks/spice/c_area.spice` puts a 1 V AC source at 1 kHz across each device and
-reads the current it draws, so $C = \operatorname{Im}(I)/2\pi f$. Nothing is fitted and no
-formula is involved, so each number is exactly what the model produces. The deck prints:
+reads the current it draws, so $C = \operatorname{Im}(I)/2\pi f$. Nothing is fitted to the
+result, so each number is exactly what the model produces. The deck prints:
 
 ```
 --- capacitance in farads ---
@@ -111,8 +111,8 @@ so the second "plate" is now only a few nanometres away. What you're looking at 
 turning on, seen from the capacitance side, and you'll meet this capacitance again in AD103 as
 what sets a transistor's speed.
 
-The dashed line isn't fitted to the curve. It's worked out from the oxide thickness, which the
-nFET model card (`sky130_fd_pr__nfet_01v8__tt.pm3.spice`) gives:
+The dashed line is worked out from the oxide thickness rather than fitted to the curve, and the
+nFET model card (`sky130_fd_pr__nfet_01v8__tt.pm3.spice`) gives that thickness:
 
 ```
 + toxe = {4.148e-09 + ...}

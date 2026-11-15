@@ -44,8 +44,8 @@ with the voltage across it.
 
 These limits explain a lot about how analog IC design looks. A discrete designer builds a 1 kHz
 low-pass filter from 16 kΩ and 10 nF, but that capacitor would take 4.94 mm² on a die, which is
-bigger than most whole chips. So the on-chip designer doesn't build that filter. Instead they
-build a switched-capacitor filter, or use a very large resistance made from a starved transistor,
+more than half of a typical small die. So the on-chip designer doesn't build that filter.
+Instead they build a switched-capacitor filter, or use a very large resistance made from a starved transistor,
 or push the corner frequency up by three decades and filter the rest off-chip. For more on this,
 see [What to build instead of an inductor](../guide/what-analog-builds-instead.md).
 
@@ -75,7 +75,7 @@ hundred 2.3 × 2.3 µm MIMs in parallel, which uses the same 529 µm² of plate.
 capacitance? Work it out before reading on.
 
 Most people say "the same", but the perimeter term makes them differ. One big plate gives
-$2.00 \times 22.975^2 + 0.19 \times 2 \times (22.975+22.975) = 1055.65 + 17.46 = 1073.1$ fF.
+$2.00 \times 22.975^2 + 0.19 \times 2 \times (22.975+22.975) = 1055.70 + 17.46 = 1073.2$ fF.
 Each of the hundred small plates gives
 $2.00 \times 2.275^2 + 0.19 \times 2 \times (2.275+2.275) = 10.35 + 1.729 = 12.08$ fF, and
 a hundred of them give 1208 fF. Cutting the plate into pieces gives you 12.6 % more capacitance
@@ -115,8 +115,8 @@ frequency the resistor dominates.
 ## Reading capacitor values
 
 When an analog paper says "C₁ = 240 fF", that capacitor is 119 µm² of somebody's floor plan, and
-the area was argued over in a design review. Area is the currency of this whole field, and
-capacitors are the most expensive thing you can buy with it.
+the area was argued over in a design review. Area is the currency of this whole field, and apart
+from inductors, capacitors are the most expensive thing you can buy with it.
 
 Next: [Parasitic capacitance](../guide/the-capacitor-you-did-not-draw.md), the capacitors nobody
 drew in the schematic.

@@ -33,11 +33,12 @@ seconds to a minute each while the SKY130 model cards load, so don't take the si
 the Makefile budgets about three and a half minutes for the whole `make` on the pinned image
 ([Warnings and delays](../reference/ngspice-decks-that-run.md#lab-02)).
 
-Beyond the guide pages, you need only one piece of theory. Two plates of area $A$ separated by a
-dielectric of thickness $t$ give $C = \varepsilon A / t$. On a chip, $\varepsilon$ and $t$ are
-both fixed by the process, so capacitor design comes down to one constant, farads per square
-micrometre, and one decision, how much area to spend. You can't make the oxide thinner, so the
-only way you can get more capacitance is to make the plate bigger. The process engineers could
+The theory this lab uses is all on [Capacitors on a chip](../guide/a-capacitor-is-a-sandwich.md),
+and here it is in the form the lab needs. Two plates of area $A$ separated by a dielectric of
+thickness $t$ give $C = \varepsilon A / t$. On a chip, $\varepsilon$ and $t$ are both fixed by
+the process, so capacitor design comes down to one constant, farads per square micrometre, and
+one decision, how much area to spend. You can't make the dielectric thinner, so the only way you
+can get more capacitance is to make the plate bigger. The process engineers could
 raise the density only by making $t$ smaller, which means a lower breakdown voltage and more
 leakage, so density isn't free for them either. Real plates also have edges, where the field
 bulges out and adds capacitance that scales with the perimeter. For a square plate of side $s$:
@@ -550,8 +551,8 @@ area of 86 ripple adders for one tuned circuit.
 You're done when `make mine check`, run on the C1 and C2 sides you worked out in Part 6, prints
 `PASS -- every number matches the reference run.`
 
-AC operating points have no randomness in them, so on the pinned image (ngspice-47, `sky130A`,
-`tt` corner, 27 °C) your numbers will match the ones on this page exactly.
+An AC analysis has no randomness in it, so on the pinned image (ngspice-47, `sky130A`, `tt`
+corner, 27 °C) your numbers will match the ones on this page exactly.
 
 Question: C1 and C2 were sized with the same mistake. Why did C2 miss by 10.35 % and C1 by only
 2.94 %?

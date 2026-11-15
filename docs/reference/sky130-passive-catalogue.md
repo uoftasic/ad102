@@ -112,9 +112,9 @@ If you multiply each figure in the `xhigh` column by its width, you get 1999.80 
 in the model file. All five widths are the same material described by the same sheet resistance.
 
 The same calculation on the `high` column gives 379.9, 325.8, 309.7, 300.8 and 323.5 Ω/□, which
-don't agree with each other. The narrow-width flavours are separately fitted devices, and a
-0.35 µm strip behaves like a 380 Ω/□ material rather than a 317 Ω/□ one. So if you move a design
-from one width to another, re-simulate it instead of scaling the old value by hand.
+don't agree with each other. The narrow-width flavours are separately fitted devices, and
+`res_high_po_0p35` behaves like a 380 Ω/□ material rather than a 317 Ω/□ one. So if you move a
+design from one width to another, re-simulate it instead of scaling the old value by hand.
 
 ### 10 kΩ four ways
 
@@ -222,9 +222,9 @@ can be confident you understand how the device is modelled.
 | VPP fringe | 913 µm² | it fits *under* your MIM, so its area can cost nothing extra |
 
 493 µm² is about the area of 130 inverters. It's the number to bring to any "just put a 1 nF cap
-on it" conversation, because a nanofarad of MIM is half a square millimetre, which is most of a
-small chip. [What a picofarad costs](../guide/what-a-picofarad-costs.md) goes through this at
-length.
+on it" conversation, because a nanofarad of MIM is half a square millimetre, the area of about
+130 000 inverters. [What a picofarad costs](../guide/what-a-picofarad-costs.md) goes through
+this at length.
 
 ### Parasitic capacitance to substrate
 
@@ -260,9 +260,9 @@ replaces it.
 
 ## Corners
 
-`tt` is the transistor corner. Passives have corners of their own, selected by the second word on
-the `.lib` line: `ll` (low resistance, low capacitance) and `hh` (high resistance, high
-capacitance), plus `hl` and `lh`.
+`tt` is the typical corner, for transistors and passives alike. Passives also have corners of
+their own, selected by the same word at the end of the `.lib` line: `ll` (low resistance, low
+capacitance) and `hh` (high resistance, high capacitance), plus `hl` and `lh`.
 
 We measured these spreads rather than reading them off a parameter file, by simulating the same
 four devices three times and changing only the corner name:
@@ -294,7 +294,7 @@ A device doesn't always move by exactly its parameter's percentage. `rp1` shifts
 changes the etch bias that sets the strip's effective width, so **simulate the corner rather
 than scaling the typical answer by hand.**
 
-**Every absolute value on this page moves by roughly ±10 % between corners.** A *ratio*
+**Every device measured above moves by more than ±10 % between corners.** A *ratio*
 of two of the same device stays put, which is why analog design is built on ratios; see
 [Matching and Pelgrom's law](../guide/matching-beats-accuracy.md).
 
