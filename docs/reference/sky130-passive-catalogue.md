@@ -11,8 +11,10 @@ you can check any line on this page with one `grep`.
 ## Units of W and L
 
 `W` and `L` on a SKY130 device are **plain numbers in microns, with no unit suffix**. `W=1` is
-one micrometre, and `W=1u` asks for a millionth of that, so it fails. The same
-rule applies to a capacitor's `W` and `L` and to a diode's `area` and `perim`.
+one micrometre, and `W=1u` asks for a millionth of that. On a resistor the run doesn't stop: a
+strip written `W=1u L=10u` comes out at 3193.812 Ω where `W=1 L=10` gives 3550.443 Ω, with no
+error, and ngspice exits with status 0. The same rule applies to a capacitor's `W` and `L` and to
+a diode's `area` and `perim`.
 [Getting started](../guide/getting-started.md#the-u-suffix-trap) shows what happens on a resistor,
 and AD103's
 [Reading a SKY130 device model](https://uoftasic.com/ad103/reference/sky130-device-guide.html) has
