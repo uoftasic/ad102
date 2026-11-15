@@ -1,7 +1,7 @@
 # Lab 04: Two resistors that disagree
 
 Writeup: [`docs/labs/lab-04-two-resistors-that-disagree-overview.md`](../../docs/labs/lab-04-two-resistors-that-disagree-overview.md),
-published at <https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview>.
+published at <https://uoftasic.com/ad102/labs/lab-04-two-resistors-that-disagree-overview.html>.
 The steps and expected output are there; this file is a quick reference.
 
 ## Run it
@@ -31,7 +31,7 @@ No environment setup is needed.
 | `make clean` | delete the logs in `results/`, keep sources |
 
 Both runs print `operating points (200 dies + 1 nominal) : 201` first. If you see 2 instead of
-201, the Monte Carlo loop stopped after one die; [Warnings and delays](https://uoftasic.com/ad102/#/reference/ngspice-decks-that-run?id=lab-04)
+201, the Monte Carlo loop stopped after one die; [Warnings and delays](https://uoftasic.com/ad102/reference/ngspice-decks-that-run.html#lab-04)
 explains why.
 
 ## Files
