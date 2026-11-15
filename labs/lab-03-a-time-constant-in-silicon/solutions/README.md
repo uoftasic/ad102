@@ -41,8 +41,9 @@ capacitance poly carries per micrometre:
 176.36 µm of it carries about 36 fF to the substrate. For a uniformly distributed RC line, half
 of that adds to the time constant, so the circuit runs $R \times C_{\text{par}}/2 \approx 1.0$ ns
 (5 %) longer than the $RC$ you designed, before you have drawn the capacitor at all. Shrinking the
-intended capacitor from 355.1 fF to 337.3 fF pays for it at a cost of 8.8 µm², rather than the
-176 µm² you would spend lengthening the resistor instead.
+intended capacitor from 355.1 fF to 337.3 fF pays for it, and saves area as well: the plate goes
+from 173.21 µm² to 164.43 µm², 8.8 µm² smaller. Lengthening the resistor can't pay for it,
+because a longer strip makes $R$ and its own parasitic bigger, and the time constant longer still.
 
 ## The limit this lab is about
 
