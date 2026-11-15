@@ -15,7 +15,10 @@ the shipped deck and edit that.
 
 ## The five parts of a deck
 
-Write the parts in this order. ngspice itself only cares that `.end` comes last:
+Write the parts in this order. The only position ngspice itself insists on is the first: it always
+reads line 1 as the title. It doesn't check that `.end` comes last. On the pinned image a deck
+with no `.end` still runs, and a device line after `.end` still gets simulated, so putting `.end`
+last is a convention for whoever reads the deck rather than something ngspice enforces.
 
 | Part | Looks like | Notes |
 |---|---|---|
