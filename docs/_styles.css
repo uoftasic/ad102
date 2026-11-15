@@ -1,0 +1,5 @@
+/* Small additions to the Quarto theme for the course pages.
+   Colours that differ between light and dark mode live in _light.scss and _dark.scss. */
+video {
+  max-width: 100%;
+}
