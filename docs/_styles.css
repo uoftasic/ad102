@@ -46,3 +46,14 @@ mjx-container:not([display="true"]) {
   overflow-y: hidden;
   vertical-align: middle;
 }
+
+/* On a phone, a wide figure keeps its drawn size and scrolls sideways inside its
+   own box, so its labels stay readable instead of shrinking with the screen. */
+@media (max-width: 767.98px) {
+  .quarto-figure:has(img[src$=".svg"]) {
+    overflow-x: auto;
+  }
+  .quarto-figure img[src$=".svg"] {
+    max-width: none;
+  }
+}
