@@ -14,15 +14,15 @@ All three naive sizings made the same mistake: they used `area = C / density` an
 edge term. That cost 2.94 % on C1, 10.35 % on C2, and 0.31 % on C3.
 
 The edge term is a **perimeter** effect, so what matters is perimeter over area, which for a
-square of side $s$ is $4/s$ and grows as the plate shrinks. That explains C1 against C2: same
-type, a plate 3.7 times smaller, and an error 3.5 times bigger.
+square of side $s$ is $4/s$ and grows as the plate shrinks. That explains the gap between C1 and
+C2: they are the same type, but C2's plate is 3.7 times smaller and its error is 3.5 times bigger.
 
 C3 is a different kind of device. Its dielectric is **gate oxide**, the thinnest insulator in the
 process, so its area term is about four times the MIM's, while its edge term comes mostly from the
 gate-to-source and gate-to-drain overlaps, which are small. When the area term is that large, the
 edges have little left to contribute.
 
-**The rule:** the fringe correction on a plate capacitor is roughly `edge / (area × s)`. Big
+As a rule of thumb, the fringe correction on a plate capacitor is roughly `edge / (area × s)`. Big
 plates in a low-density technology are nearly pure area; small plates in a low-density technology
 are not. Decide which one you are drawing before you decide whether you can ignore the fringe.
 
@@ -36,9 +36,10 @@ The MOS capacitor is 3.9 times denser and needs no extra mask, since it is a tra
 c_nmos_off = 2.207181e-13
 ```
 
-That is 220.72 fF, against 787.69 fF for the identical layout at 1.8 V. None of the drawn shapes
-changed. The gate is only a capacitor when there is a channel underneath it to be the other plate;
-take the bias away and the channel goes with it, leaving the much smaller depletion capacitance.
+That is 220.72 fF, against 787.69 fF for the identical layout at 1.8 V, and none of the drawn
+shapes changed. The gate is only a capacitor when there is a channel underneath it to be the other
+plate; take the bias away and the channel goes with it, leaving the much smaller depletion
+capacitance.
 
 In a signal path, a capacitance that depends on the voltage across it is **distortion**: the
 circuit's behaviour changes with the size of the signal going through it. So:
@@ -56,10 +57,10 @@ wrong choice for a filter.
 
 ## Smaller inductors
 
-You may be tempted to shrink the resonator in `tank.spice` by picking a smaller inductor. There
-isn't one. `ind_03_90` is the smallest of the three models SkyWater ships, none of them has a
-width or turn-count parameter, and no drawn cell in the PDK's GDS carries their names. You can
-check the GDS yourself:
+You may be tempted to shrink the resonator in `tank.spice` by picking a smaller inductor, but the
+PDK doesn't have one. `ind_03_90` is the smallest of the three models SkyWater ships, none of them
+has a width or turn-count parameter, and no drawn cell in the PDK's GDS carries their names. You
+can check the GDS yourself:
 
 ```bash
 cat > /tmp/cells.py <<'PY'
@@ -84,8 +85,8 @@ None of the 290 cells is one of the three modelled inductors. The GDS does conta
 spirals, the `rf_test_coil` cells, but they are separate test structures with their own names and
 characterisation, and the smallest is 150.020 × 145.040 µm
 ([Inductors on a chip](../../../docs/guide/the-inductor-problem.md) has all three). SkyWater
-characterised three spirals and gave you the measurements; drawing one that matches a model is
-your problem. That is a fair summary of on-chip inductors in general.
+characterised three spirals and gave you the measurements, but drawing one that matches a model
+is your problem, and that's a fair summary of on-chip inductors in general.
 
 ## Questions to argue about
 
