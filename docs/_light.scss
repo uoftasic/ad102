@@ -9,3 +9,22 @@ kbd {
   background: #f4f6f8;
   color: #1f2933;
 }
+
+// The page also keeps a copy of this light stylesheet loaded in dark mode, so
+// rules here that dark mode doesn't override are scoped to body.quarto-light.
+
+// Quarto's muted grey for blockquotes (our warnings) and figure captions,
+// #6d7a86, is 4.39:1 on white, just under the 4.5:1 that body text needs.
+body.quarto-light {
+  .blockquote,
+  blockquote,
+  .figure-caption,
+  figcaption {
+    color: #4f5b66;
+  }
+
+  // One syntax colour, attributes such as -A3, is 4.43:1 on the code background.
+  code span.at {
+    color: #556219;
+  }
+}
