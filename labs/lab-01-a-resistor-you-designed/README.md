@@ -1,7 +1,7 @@
 # Lab 01: A resistor you designed
 
 Writeup: [`docs/labs/lab-01-a-resistor-you-designed-overview.md`](../../docs/labs/lab-01-a-resistor-you-designed-overview.md),
-published at <https://uoftasic.com/ad102/#/labs/lab-01-a-resistor-you-designed-overview>. The
+published at <https://uoftasic.com/ad102/labs/lab-01-a-resistor-you-designed-overview.html>. The
 steps and expected output are there; this file is a quick reference.
 
 ## Run it

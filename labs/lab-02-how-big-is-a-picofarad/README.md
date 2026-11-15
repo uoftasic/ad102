@@ -1,7 +1,7 @@
 # Lab 02: How big is a picofarad?
 
 Writeup: [`docs/labs/lab-02-how-big-is-a-picofarad-overview.md`](../../docs/labs/lab-02-how-big-is-a-picofarad-overview.md),
-published at <https://uoftasic.com/ad102/#/labs/lab-02-how-big-is-a-picofarad-overview>. The
+published at <https://uoftasic.com/ad102/labs/lab-02-how-big-is-a-picofarad-overview.html>. The
 steps and expected output are there; this file is a quick reference.
 
 ## Run it

@@ -422,5 +422,5 @@ log and prints its own `PASS` or `FAIL`, and any script of yours should too.
 
 Related: [The SKY130 passive catalogue](../reference/sky130-passive-catalogue.md): which devices
 exist, which line type each takes, and what each measures.
-[AD103's ngspice survival card](https://uoftasic.com/ad103/#/reference/ngspice-errors) covers
+[AD103's ngspice survival card](https://uoftasic.com/ad103/reference/ngspice-errors.html) covers
 the same tool from the transistor side.

@@ -1,7 +1,7 @@
 # Lab 03: A time constant in silicon
 
 Writeup: [`docs/labs/lab-03-a-time-constant-in-silicon-overview.md`](../../docs/labs/lab-03-a-time-constant-in-silicon-overview.md),
-published at <https://uoftasic.com/ad102/#/labs/lab-03-a-time-constant-in-silicon-overview>. The
+published at <https://uoftasic.com/ad102/labs/lab-03-a-time-constant-in-silicon-overview.html>. The
 steps and expected output are there; this file is a quick reference.
 
 ## Run it

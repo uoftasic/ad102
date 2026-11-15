@@ -14,7 +14,7 @@ Package: [`labs/lab-01-a-resistor-you-designed/`](https://github.com/uoftasic/ad
   [Ohms per square](../guide/ohms-per-square.md) and
   [What a resistor costs in area](../guide/what-a-value-costs-in-area.md).
 - You need the workbench from [IC101](https://uoftasic.com/ic101/): the noVNC desktop comes up
-  in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/#/guide/smoke-test)
+  in your browser and the [IC101 smoke test](https://uoftasic.com/ic101/guide/smoke-test.html)
   passes. Part 1 loads this course into it.
 - The circuit theory is Ohm's law and a voltage divider. Nothing else.
 
@@ -28,7 +28,7 @@ machine ([Warnings and delays](../reference/ngspice-decks-that-run.md#lab-01)).
 
 Can you reach the AD102 files, on the tool versions this course's printed outputs come from? If
 you haven't set up the workbench yet, do
-[IC101 Lab 03](https://uoftasic.com/ic101/#/labs/lab-03-launch-the-workbench-overview) first.
+[IC101 Lab 03](https://uoftasic.com/ic101/labs/lab-03-launch-the-workbench-overview.html) first.
 
 1. On your laptop, from your `workspace` clone, start the desktop (`./scripts/start_vnc.sh`, or
    `scripts\start_vnc.bat` on Windows), open <http://localhost/> and open a terminal on the
@@ -59,7 +59,7 @@ you haven't set up the workbench yet, do
    | `fatal: could not read Username for 'https://github.com'` | git couldn't read the repo anonymously and is asking you to log in. Check that you typed `ad102`. If you did, ask in [Discord](https://discord.gg/hrJnP5UsGz). Do not type your password. |
 
    For anything else, such as a blank desktop page, see IC101's
-   [Troubleshooting](https://uoftasic.com/ic101/#/reference/troubleshooting) page.
+   [Troubleshooting](https://uoftasic.com/ic101/reference/troubleshooting.html) page.
 
 3. Check the two tool versions this course's numbers were recorded with:
 

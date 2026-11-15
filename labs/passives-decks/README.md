@@ -1,16 +1,16 @@
 # `passives-decks`: the ngspice decks behind the AD102 guide pages
 
 This package is not a lab. It holds the decks whose output the guide pages quote, starting at
-[Resistors on a chip](https://uoftasic.com/ad102/#/guide/a-resistor-you-cannot-buy), and `make`
+[Resistors on a chip](https://uoftasic.com/ad102/guide/a-resistor-you-cannot-buy.html), and `make`
 checks every one of those numbers on your machine. The labs run its targets in specific parts:
 
 | Target | Run in |
 |---|---|
-| `make resistor` | [Lab 01, Part 6](https://uoftasic.com/ad102/#/labs/lab-01-a-resistor-you-designed-overview) |
-| `make capacitor` | [Lab 02, Part 5](https://uoftasic.com/ad102/#/labs/lab-02-how-big-is-a-picofarad-overview) |
-| `make inductor` | [Lab 02, Part 7](https://uoftasic.com/ad102/#/labs/lab-02-how-big-is-a-picofarad-overview) |
-| `make corners` | [Lab 04, Part 1](https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview) |
-| `make mismatch` | [Lab 04, Going further](https://uoftasic.com/ad102/#/labs/lab-04-two-resistors-that-disagree-overview) (optional) |
+| `make resistor` | [Lab 01, Part 6](https://uoftasic.com/ad102/labs/lab-01-a-resistor-you-designed-overview.html) |
+| `make capacitor` | [Lab 02, Part 5](https://uoftasic.com/ad102/labs/lab-02-how-big-is-a-picofarad-overview.html) |
+| `make inductor` | [Lab 02, Part 7](https://uoftasic.com/ad102/labs/lab-02-how-big-is-a-picofarad-overview.html) |
+| `make corners` | [Lab 04, Part 1](https://uoftasic.com/ad102/labs/lab-04-two-resistors-that-disagree-overview.html) |
+| `make mismatch` | [Lab 04, Going further](https://uoftasic.com/ad102/labs/lab-04-two-resistors-that-disagree-overview.html) (optional) |
 
 ## Run it
 
@@ -39,7 +39,7 @@ Budget about eight minutes for a full `make`, most of it silent. Each ngspice ru
 | `make corners` | one circuit at the `tt`, `ll` and `hh` corners |
 | `make mismatch` | 200 Monte Carlo wafers, seed pinned, four resistors |
 | `make check` | re-render the verdict from logs already on disk |
-| `make catalogue` | the extra devices [The SKY130 passive catalogue](https://uoftasic.com/ad102/#/reference/sky130-passive-catalogue) tabulates (not part of `make`) |
+| `make catalogue` | the extra devices [The SKY130 passive catalogue](https://uoftasic.com/ad102/reference/sky130-passive-catalogue.html) tabulates (not part of `make`) |
 | `make figures` | regenerate the three PNGs the guide pages embed |
 | `make clean` | delete the logs in `results/` and the generated corner decks, keep sources |
 
@@ -47,20 +47,20 @@ Budget about eight minutes for a full `make`, most of it silent. Each ngspice ru
 
 | File | Guide page | What it measures |
 |---|---|---|
-| `spice/r_head_and_body.spice` | [Ohms per square](https://uoftasic.com/ad102/#/guide/ohms-per-square) | Splits one resistor into its contact head and its body. Sizes 1 k / 10 k / 100 k. Builds the same 100 k at four widths. |
-| `spice/c_area.spice` | [Capacitors on a chip](https://uoftasic.com/ad102/#/guide/a-capacitor-is-a-sandwich) | MIM vs VPP vs MOS, farads per square micron. |
+| `spice/r_head_and_body.spice` | [Ohms per square](https://uoftasic.com/ad102/guide/ohms-per-square.html) | Splits one resistor into its contact head and its body. Sizes 1 k / 10 k / 100 k. Builds the same 100 k at four widths. |
+| `spice/c_area.spice` | [Capacitors on a chip](https://uoftasic.com/ad102/guide/a-capacitor-is-a-sandwich.html) | MIM vs VPP vs MOS, farads per square micron. |
 | `spice/c_moscap_cv.spice` | same | 19 copies of one MOS capacitor at 19 gate voltages. |
-| `spice/l_spiral.spice` | [Inductors on a chip](https://uoftasic.com/ad102/#/guide/the-inductor-problem) | L, Q and self-resonance of the three SKY130 spirals. |
-| `spice/corners.spice.in` | [Process corners](https://uoftasic.com/ad102/#/guide/the-value-you-drew-is-not-what-you-get) | One circuit, three process corners. `make` writes `corners_tt/ll/hh.spice` from it, so **edit the `.in`, not the generated files.** |
-| `spice/mismatch.spice` | [Matching and Pelgrom's law](https://uoftasic.com/ad102/#/guide/matching-beats-accuracy) | 200 Monte Carlo wafers, seed pinned, four resistors. |
-| `spice/catalogue.spice` | [The SKY130 passive catalogue](https://uoftasic.com/ad102/#/reference/sky130-passive-catalogue) | The devices no other deck here builds: seven resistor materials at one square, both fixed-width precision families, 10 kΩ four ways, and the MIM/varactor rows. |
+| `spice/l_spiral.spice` | [Inductors on a chip](https://uoftasic.com/ad102/guide/the-inductor-problem.html) | L, Q and self-resonance of the three SKY130 spirals. |
+| `spice/corners.spice.in` | [Process corners](https://uoftasic.com/ad102/guide/the-value-you-drew-is-not-what-you-get.html) | One circuit, three process corners. `make` writes `corners_tt/ll/hh.spice` from it, so **edit the `.in`, not the generated files.** |
+| `spice/mismatch.spice` | [Matching and Pelgrom's law](https://uoftasic.com/ad102/guide/matching-beats-accuracy.html) | 200 Monte Carlo wafers, seed pinned, four resistors. |
+| `spice/catalogue.spice` | [The SKY130 passive catalogue](https://uoftasic.com/ad102/reference/sky130-passive-catalogue.html) | The devices no other deck here builds: seven resistor materials at one square, both fixed-width precision families, 10 kΩ four ways, and the MIM/varactor rows. |
 | `src/check_passives.py` | — | The verdict: 39 golden values plus six Monte Carlo standard deviations. |
 | `src/plot_figures.py` | — | Writes the three PNGs into `docs/assets/img/`. |
 
 ## Expected warnings
 
 Every log with a poly resistor in it has blocks of `unrecognized parameter` warnings, which are
-harmless ([Getting started](https://uoftasic.com/ad102/#/guide/getting-started) explains them).
+harmless ([Getting started](https://uoftasic.com/ad102/guide/getting-started.html) explains them).
 The exact counts, which you can confirm with
 `grep -c 'unrecognized parameter' results/<file>.log`:
 

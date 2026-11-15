@@ -14,7 +14,7 @@ with one `grep`.
 micrometre. `W=1u` is not, and it fails. The same goes for a capacitor's `W`/`L` and a diode's
 `area`/`perim`. [Getting started](../guide/getting-started.md#the-u-suffix-trap) shows what happens
 on a resistor, and AD103's
-[Reading a SKY130 device model](https://uoftasic.com/ad103/#/reference/sky130-device-guide) has
+[Reading a SKY130 device model](https://uoftasic.com/ad103/reference/sky130-device-guide.html) has
 the exact error text for transistors.
 
 ## Resistors
