@@ -11,69 +11,72 @@ tap taken between the first and the second counting up from ground.
 
 ## The shipped divider's two failures
 
-Accuracy and precision are paid for differently. That is the point of the whole lab.
+The shipped divider fails on accuracy and on precision, and the whole lab turns on the fact that
+you pay for those two in different ways.
 
-**The +9.04 % nominal error is systematic.** It is identical on every die, every wafer and every
-lot. It comes from Lab 01's 378.2448 Ω of end resistance, which every device pays once regardless
-of its length:
+**The +9.04 % nominal error is systematic.** It is the same on every die, every wafer and every
+lot, because it comes from Lab 01's 378.2448 Ω of end resistance, which every device pays once
+whatever its length:
 
 $$\frac{R_6}{R_6 + R_{18}} = \frac{378.24 + 6 \times 317.22}{(378.24 + 6 \times 317.22)+(378.24 + 18 \times 317.22)} = 0.27260$$
 
-against the 0.25 you wanted. Making the devices bigger does not help; making them *the same*
-does. Four identical units in series put the same overhead in every branch, so the ratio becomes a
-ratio of **counts**, one unit out of four, and every per-device error, known or unknown, divides
-out. The measured nominal is `0.450000 V`, exactly, and it costs nothing.
+against the 0.25 you wanted. Making the devices bigger won't fix this, but making them *the
+same* will. Four identical units in series put the same overhead in every branch, which
+turns the ratio into a ratio of counts (one unit out of four), and every per-device error, known
+or unknown, divides out. The measured nominal is `0.450000 V` exactly, and it costs nothing.
 
-**The σ error is statistical.** It differs from die to die, averages to zero, and follows one law:
+**The σ error is statistical.** It differs from die to die and averages to zero, and its size
+follows one law:
 
 $$\frac{\sigma_R}{R} = \frac{0.03552}{\sqrt{W L}}$$
 
-straight from the `res_high_po` model card's `body_pelgrom`. No topology trick fixes this one. You
-pay for it in area, at four times the area per factor of two.
+which comes straight from the `res_high_po` model card's `body_pelgrom`. No choice of topology
+changes it, so you pay for precision in area: halving σ takes four times the area.
 
-## Unit devices do not help σ
+## Unit devices and σ
 
-This is worth arguing about, because the folklore says otherwise.
+This section is worth arguing about, because the folklore says unit devices reduce σ.
 
 `mismatch.spice` builds the same 3:1 divider twice from exactly 24 µm² of poly: once as one short
 device and one long one, and once as four identical units. The nominal values are very
-different. The spreads are not:
+different, but the spreads are almost the same:
 
 ```
 3:1  one L=6 and one L=18        24 um^2 total  1.309327 V   5.6433 mV
 3:1  four identical L=6 units    24 um^2 total  1.350000 V   5.7290 mV
 ```
 
-**5.6433 against 5.7290: a 1.5 % difference, where 200 samples only pin σ down to ±5 %.** Those
-are the same number. Splitting a resistor into unit cells bought nothing in random mismatch, and
-the algebra says it never will: for independent per-device errors, the σ of a ratio depends on
-total area and on nothing else about how you divided it up.
+5.6433 mV against 5.7290 mV is a 1.5 % difference, and 200 samples only pin σ down to ±5 %, so
+within this run the two are the same number. Splitting a resistor into unit cells bought nothing
+in random mismatch, and the algebra says it never will: for independent per-device errors, the σ
+of a ratio depends on the total area and not on how you divided that area up.
 
-So why does every analog textbook tell you to use unit devices in a common centroid?
-
-Because **this simulation contains only random mismatch.** Real wafers also have *gradients*:
-oxide thickness, implant dose and temperature all vary smoothly across a die, so two devices ten
+Every analog textbook still tells you to use unit devices in a common centroid. The textbooks and
+this run disagree because this simulation contains only random mismatch. Real wafers also have *gradients*: oxide
+thickness, implant dose and temperature all vary smoothly across a die, so two devices ten
 micrometres apart are more alike than two a millimetre apart, and the device on the left of a
 pair sits in a systematically different environment from the one on the right. Unit devices
-interleaved in a common-centroid pattern cancel the linear part of that gradient. It is a real
-and large effect, and it is the main reason the technique exists.
+interleaved in a common-centroid pattern cancel the linear part of that gradient. The effect is
+real and large, and it is the main reason the technique exists.
 
-`AGAUSS` knows nothing about where your devices are, because your netlist does not say. **If you
+`AGAUSS` knows nothing about where your devices are, because your netlist doesn't say. **If you
 try to prove that common-centroid layout helps by running Monte Carlo in ngspice, you will measure
-zero benefit, because you will be measuring the model, not the silicon.** Knowing which effects
-your simulator contains is the difference between verification and reassurance.
+zero benefit, because you will be measuring the model rather than the silicon.** Before you trust
+a simulation to verify a design, check that the simulator contains the effects you're relying on;
+otherwise the run only reassures you.
 
 ## Squeezing it further
 
-112 µm² leaves margin. σ scales as $1/\sqrt{L}$, so $L = 22$ gives $3.0332$ mV, just over the
-3.0 mV budget, and $L = 25$ or so is about the real edge. Whether you would ship a design 1 %
-inside a σ budget depends on how much you trust the model's `body_pelgrom`, which was extracted
-from a finite number of real wafers and is quoted to four figures.
+112 µm² leaves some margin under the 150 µm² limit. σ scales as $1/\sqrt{L}$, so $L = 22$ gives
+$3.0332$ mV, just over the 3.0 mV budget, and the real edge is somewhere around $L = 25$. Whether
+you would ship a design 1 % inside a σ budget depends on how much you trust the model's
+`body_pelgrom`, which was extracted from a finite number of real wafers and is quoted to four
+figures.
 
-Also worth trying: **width**. Every unit here is 1 µm wide. σ depends on area, so `W=2 L=14` has
-the same 28 µm² and the same σ, but half the resistance, twice the current, and (Lab 01, Part 4)
-a sheet resistance closer to the flat part of the curve. There is no single right answer, which is
-why the checker checks area and not shape.
+Width is also worth trying. Every unit here is 1 µm wide, and since σ depends on area, `W=2 L=14`
+has the same 28 µm² and the same σ, but half the resistance, twice the current, and
+(Lab 01, Part 4) a sheet resistance closer to the flat part of the curve. There is no single
+right answer, which is why the checker checks area and not shape.
 
 ## Questions to argue about
 

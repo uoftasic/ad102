@@ -2,7 +2,8 @@
 
 Writeup: [`docs/labs/lab-04-two-resistors-that-disagree-overview.md`](../../docs/labs/lab-04-two-resistors-that-disagree-overview.md),
 published at <https://uoftasic.com/ad102/labs/lab-04-two-resistors-that-disagree-overview.html>.
-The steps and expected output are there; this file is a quick reference.
+The writeup has the steps and the expected output, and this file is a quick reference for running
+the package.
 
 ## Run it
 
@@ -15,8 +16,9 @@ make
 
 `make` runs two Monte Carlo decks (200 dies plus one nominal die each) and then the checker, and
 ends in `PASS` or `FAIL`. On a fresh clone it ends in `FAIL`, because `spice/my_divider.spice`
-ships with the divider everybody draws first. It prints nothing while it works. Two full runs of
-`make` on the pinned image took 106 s and 128 s, most of it loading the SKY130 model cards.
+ships with the divider everybody draws first, and fixing that is the lab. Expect a wait: `make`
+prints nothing while the decks run, and two full runs on the pinned image took 106 s and 128 s,
+most of it spent loading the SKY130 model cards.
 
 No environment setup is needed.
 
@@ -31,7 +33,7 @@ No environment setup is needed.
 | `make clean` | delete the logs in `results/`, keep sources |
 
 Both runs print `operating points (200 dies + 1 nominal) : 201` first. If you see 2 instead of
-201, the Monte Carlo loop stopped after one die; [Warnings and delays](https://uoftasic.com/ad102/reference/ngspice-decks-that-run.html#lab-04)
+201, the Monte Carlo loop stopped after one die, and [Warnings and delays](https://uoftasic.com/ad102/reference/ngspice-decks-that-run.html#lab-04)
 explains why.
 
 ## Files
