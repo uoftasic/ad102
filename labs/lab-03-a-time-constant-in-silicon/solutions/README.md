@@ -25,13 +25,14 @@ against 173.21 µm² of capacitor, a total of 349.6 µm², split within 2 % of e
 exactly 50/50 because the approximations above drop Lab 01's 378 Ω and Lab 02's fringe term; put
 those back and the balance shifts by a couple of square micrometres.)
 
-The equal split is not special to this problem. Whenever cost is $aR + b/R$, the minimum is where
-the two halves of the bill are the same size. It is worth remembering, because it lets you answer
-"which one should I make bigger?" by inspection.
+The equal split isn't peculiar to this problem: whenever the cost has the form $aR + b/R$, the
+minimum is where the two halves of the bill are the same size. That's worth remembering, because
+it lets you answer "which one should I make bigger?" by inspection.
 
 ## Why the answer is 337.3 fF and not 355.1 fF
 
-A 176 µm strip of poly is not just a resistance. `make rc` measured what one carries:
+A 176 µm strip of poly is also a capacitor to the substrate, and `make rc` measured how much
+capacitance poly carries per micrometre:
 
 ```
     fitting both strips: 0.1994 fF per um of 1 um-wide poly, plus 1.1870 fF of ends.
@@ -39,9 +40,9 @@ A 176 µm strip of poly is not just a resistance. `make rc` measured what one ca
 
 176.36 µm of it carries about 36 fF to the substrate. For a uniformly distributed RC line, half
 of that adds to the time constant, so the circuit runs $R \times C_{\text{par}}/2 \approx 1.0$ ns
-long, 5 %, before you have drawn the capacitor at all. Shrinking the intended capacitor from
-355.1 fF to 337.3 fF pays for it, and costs 8.8 µm², rather than the 176 µm² you would spend
-lengthening the resistor instead.
+(5 %) longer than the $RC$ you designed, before you have drawn the capacitor at all. Shrinking the
+intended capacitor from 355.1 fF to 337.3 fF pays for it at a cost of 8.8 µm², rather than the
+176 µm² you would spend lengthening the resistor instead.
 
 ## The limit this lab is about
 
@@ -63,8 +64,8 @@ Now scale it up. A millisecond needs a thousand times this $RC$, say 100 MΩ and
 measured it carries about 9.4 pF to the substrate on its own. The resistor's parasitic is now the
 same size as the capacitor it was supposed to charge, and the circuit does not work at any value.
 
-**You cannot build a millisecond from an RC on a chip.** This is a hard limit, not a tuning
-problem. What chips do instead is count: a crystal or ring oscillator makes a short, repeatable
+**You cannot build a millisecond from an RC on a chip**, and no choice of values gets around it.
+What chips do instead is count: a crystal or ring oscillator makes a short, repeatable
 time, and a digital counter multiplies it. That is why [DD103](https://uoftasic.com/dd103/)'s
 elevator controller measures its door dwell in clock ticks and not with a capacitor. It is one
 of the cleanest examples anywhere of a digital solution to an analog problem.

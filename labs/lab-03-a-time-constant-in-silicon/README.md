@@ -2,7 +2,8 @@
 
 Writeup: [`docs/labs/lab-03-a-time-constant-in-silicon-overview.md`](../../docs/labs/lab-03-a-time-constant-in-silicon-overview.md),
 published at <https://uoftasic.com/ad102/labs/lab-03-a-time-constant-in-silicon-overview.html>. The
-steps and expected output are there; this file is a quick reference.
+writeup has the steps and the output you should expect; this file is a quick reference for the
+package.
 
 ## Run it
 
@@ -18,7 +19,7 @@ clone it ends in `FAIL`, on area: `spice/my_rc.spice` ships with a 20 ns RC that
 times the area budget, so that you get to shrink it. Each ngspice run is silent for about a
 minute while the SKY130 model cards load.
 
-No environment setup is needed for the decks. `make edit` needs the noVNC desktop and
+The decks run without any environment setup, but `make edit` needs the noVNC desktop and
 `PDK=sky130A`.
 
 ## Targets
@@ -35,9 +36,9 @@ No environment setup is needed for the decks. `make edit` needs the noVNC deskto
 | `make edit` | open `xschem/rc.sch` in XSchem (needs the noVNC desktop) |
 | `make clean` | delete the logs, data and plots in `results/`, and `xschem/simulation/` |
 
-The `make bode` banner says it takes about 2 s because it uses a pre-flattened library. That
-library is not in the 2026.08 image; `spice/bode.spice` now loads the full `sky130.lib.spice`
-and takes as long as the other decks.
+The `make bode` banner promises about 2 s, because the deck was written for a pre-flattened
+library. The 2026.08 image doesn't have that library, so `spice/bode.spice` now loads the full
+`sky130.lib.spice` and takes as long as the other decks.
 
 ## Files
 
