@@ -2,7 +2,7 @@
 
 Writeup: [`docs/labs/lab-01-a-resistor-you-designed-overview.md`](../../docs/labs/lab-01-a-resistor-you-designed-overview.md),
 published at <https://uoftasic.com/ad102/labs/lab-01-a-resistor-you-designed-overview.html>. The
-steps and expected output are there; this file is a quick reference.
+writeup has the steps and the expected output; this file is a quick reference to the package.
 
 ## Run it
 
@@ -16,11 +16,11 @@ make
 
 `make` runs two ngspice decks and then the checker, and ends in `PASS` or `FAIL`. On a fresh
 clone it ends in `FAIL`, because `spice/my_resistor.spice` ships with the naive sizing on
-purpose. Each ngspice run is silent while it loads the SKY130 model cards (55–65 s per run
-measured on the pinned image); it is not hung.
+purpose. Each ngspice run prints nothing while it loads the SKY130 model cards, which took
+55–65 s per run on the pinned image, so a quiet terminal doesn't mean it has hung.
 
-No environment setup is needed: no `.designinit`, no `PDK` variable, no `mod`. The decks name
-the model library by absolute path, so a bare container works.
+The decks name the model library by its absolute path, so the package runs in a bare container
+without `.designinit`, the `PDK` variable or `mod`.
 
 ## Targets
 
@@ -44,6 +44,6 @@ the model library by absolute path, so a bare container works.
 | `solutions/` | Reference sizing. Open it after your own numbers pass. |
 | `results/` | Everything ngspice writes. Gitignored except `.gitkeep`. |
 
-`W` and `L` on a SKY130 device are plain micron numbers: `W=1`, never `W=1u`. Apart from
-`spice/u_trap.spice`, which exists to show the mistake, there is no `u` suffix anywhere in this
-package.
+`W` and `L` on a SKY130 device are already in microns, so you write `W=1`, never `W=1u`. Apart
+from `spice/u_trap.spice`, which exists to show the mistake, there is no `u` suffix anywhere in
+this package.
