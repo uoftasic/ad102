@@ -27,7 +27,7 @@ component value is a geometry, and geometry costs area.**
 
 On a breadboard, component values are free and independent of each other: a 10 kΩ costs the
 same as a 100 Ω, and you can have as many as you like. On silicon neither of those is true. A
-1 pF capacitor, about the smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
+1 pF capacitor is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
 which simulates at 982.5022 fF, a little short of 1 pF (Lab 02 gives you the formula behind that number, and sizes the
 plate exactly). The 4-bit ripple-carry adder that the digital track builds in
 [DD103](https://uoftasic.com/dd103/), twelve SKY130 standard cells, fits in 110.1056 µm² of the
