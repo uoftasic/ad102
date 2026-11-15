@@ -23,8 +23,12 @@ body.quarto-light {
     color: #4f5b66;
   }
 
-  // One syntax colour, attributes such as -A3, is 4.43:1 on the code background.
+  // Two syntax colours were just under 4.5:1 on the code background:
+  // attributes such as -A3 (4.43:1) and import keywords (4.42:1).
   code span.at {
     color: #556219;
+  }
+  code span.im {
+    color: #006a8e;
   }
 }
