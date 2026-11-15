@@ -211,8 +211,8 @@ because none of its accuracy depends on an absolute value:
   is a ratio, and the unit is made large enough that Pelgrom's law gives the required $\sigma$;
 - a **current mirror** copies a current by making two transistors identical, without needing to
   know what the current is;
-- a **bandgap reference** produces a voltage from a resistor ratio times $kT/q$, a physical
-  constant, so the absolute sheet resistance drops out;
+- a **bandgap reference** produces a voltage from a resistor ratio times $kT/q$, which depends
+  only on physical constants and the temperature, so the absolute sheet resistance drops out;
 - a **differential pair**, the basic analog building block, only needs its two halves to be the
   same as each other, whatever their actual values turn out to be.
 
