@@ -566,7 +566,7 @@ figures using only constants in a text file you can `cat`.
 
 Part 6's `make resistor` printed three more blocks.
 
-- Block C is one 314.046454 µm × 1 µm strip (the length that gives 100 kΩ of `res_high_po`)
+- Block C is one 314.046460 µm × 1 µm strip (the length that gives 100 kΩ of `res_high_po`)
   simulated as four different resistor models: the two poly implants, and the p+ and n+
   diffusion resistors. The drawing and the silicon area are the same, and the values spread over
   18:1:
