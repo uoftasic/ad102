@@ -370,9 +370,11 @@ change ohms per square instead of buying more area.
 </details>
 
 The areas above are the strip only. A drawn resistor also needs its two contact heads, spacing to
-whatever is beside it, and usually a guard ring (call it half as much area again), so treat them
-as a lower bound rather than a quote. Even so, at 100 kΩ one of the cheapest things in the analog toolbox
-outweighs a working arithmetic unit. That is why analog blocks look enormous next to digital ones
+whatever is beside it, and usually a guard ring, so treat them as a lower bound rather than a
+quote: [What a resistor costs in area](../guide/what-a-value-costs-in-area.md#folding-a-long-resistor)
+puts a folded 100 kΩ, with its guard ring and dummies, at two to three times its drawn poly.
+Even so, at 100 kΩ one of the cheapest things in the analog toolbox outweighs a working
+arithmetic unit. That is why analog blocks look enormous next to digital ones
 in a die photograph, and why a chip designer never answers "just add a resistor" straight away.
 
 ## Part 6: Split a resistor into head and body
