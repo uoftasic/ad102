@@ -3,9 +3,10 @@
 You already know what a resistor does. This course is about what a resistor, a capacitor and an
 inductor are when they are built on silicon, and what each one costs in chip area.
 
-Part of the **UofT ASIC Team** education materials. Published at **https://uoftasic.com/ad102/**.
-Labs run inside the **workbench**: the IIC-OSIC-TOOLS container you start from the `workspace`
-repo you set up in [IC101](https://uoftasic.com/ic101/).
+The course is part of the **UofT ASIC Team** education materials, and it's published at
+**https://uoftasic.com/ad102/**. The labs run inside the **workbench**, which is the
+IIC-OSIC-TOOLS container you start from the `workspace` repo you set up in
+[IC101](https://uoftasic.com/ic101/).
 
 ## Who this course is for
 
@@ -13,19 +14,20 @@ AD102 is the second course in the analog track, for 2nd–3rd year ECE students 
 IC101 and AD101.
 
 ECE110 teaches linear circuit analysis: node voltages, mesh currents, $V = IR$, RC time
-constants, impedance. AD102 does not re-teach any of that and is not a substitute for it. If you
-have taken ECE110 you are ahead; if you have not, [AD101](https://uoftasic.com/ad101/) already
-covered everything this course uses.
+constants, impedance. AD102 doesn't teach any of that again, and it isn't a substitute for it. If
+you have taken ECE110 you are ahead, and if you haven't, [AD101](https://uoftasic.com/ad101/)
+already covered everything this course uses.
 
 What ECE110 leaves out is where the components come from. In a lab kit, a resistor comes out of
-a drawer with its value printed on the side. On a chip there is no drawer. A resistor is a strip
-of doped polysilicon that you draw, and its value follows from the drawing: how long, how wide,
-and which layer. Change the shape and you change the value; there is no other knob. The idea
-this whole course builds on is that **a component value is a geometry, and geometry costs area.**
+a drawer with its value printed on the side. On a chip there's no drawer to take it from: a
+resistor is a strip of doped polysilicon that you draw, and its value follows from the drawing,
+from how long and how wide the strip is and which layer it's on. Changing the shape is the only
+way you have to change the value. The idea that this whole course builds on is that **a
+component value is a geometry, and geometry costs area.**
 
-On a breadboard, component values are free and independent: a 10 kΩ costs the same as a 100 Ω,
-and you can have as many as you like. On silicon neither is true. A 1 pF capacitor, about the
-smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
+On a breadboard, component values are free and independent of each other: a 10 kΩ costs the
+same as a 100 Ω, and you can have as many as you like. On silicon neither of those is true. A
+1 pF capacitor, about the smallest value anyone names in a filter, is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
 which simulates at 982.5022 fF, a little short of 1 pF (Lab 02 gives you the formula behind that number, and sizes the
 plate exactly). The 4-bit ripple-carry adder that the digital track builds in
 [DD103](https://uoftasic.com/dd103/), twelve SKY130 standard cells, fits in 110.1056 µm² of the
@@ -63,8 +65,8 @@ yourself. Each lab starts by listing the pages to read first.
 | 9 | Read | [From schematic to cross-section](guide/from-schematic-to-cross-section.md) | 30 min |
 | 10 | Do | [Capstone: Defend a floor plan](labs/capstone-floor-plan-overview.md). Read the layer stack, look at cross-sections in SiliWiz, and size a 1 MHz low-pass filter whose area you can defend. | 1.5 h |
 
-The times are estimates, and they add up to the 15.5 hours above. Setup is the first part of
-Lab 01.
+The times are estimates, and they add up to the 15.5 hours above. There's no separate setup row,
+because setting up is the first part of Lab 01.
 
 Keep these open while you work; they are for looking things up rather than reading through:
 [The SKY130 passive catalogue](reference/sky130-passive-catalogue.md) ·
@@ -91,36 +93,35 @@ in your question.
    have been editing by hand.
 4. See the same resistor come out different at every process corner, and learn why analog
    designers build ratios rather than values.
-5. Find out how you fabricate an inductor on a chip. Mostly you don't, and you'll see what gets
-   built instead.
+5. Find out how you fabricate an inductor on a chip. Mostly you don't, so you'll also see what
+   gets built instead.
 6. Hit a filter spec using only devices the PDK actually ships, inside an area budget you have
    to defend.
 
 ## The workbench
 
 This course is pinned to the workbench image **`hpretl/iic-osic-tools:2026.08`**, which ships
-**ngspice-47** and **XSchem V3.4.8RC**. Tutorials online describe other versions with different
-flags. When a command here disagrees with the internet, the command here is the one that runs on
-your machine. Lab 01, Part 1 has you check your versions.
+**ngspice-47** and **XSchem V3.4.8RC**. Tutorials online describe other versions, which have
+different flags, so when a command here disagrees with one you find online, use the one here:
+it's the one that runs on your machine. You'll check your versions in Lab 01, Part 1.
 
 Each of Labs 01–04 has a **package**: a folder under `labs/` with its SPICE decks, a `Makefile`
 and a checker script. The packages run with `make` alone, with no environment setup, because
 every deck names its SKY130 model file by absolute path. You still do Lab 01, Part 1 once, to get
-the course files and check your tools. Apart from
-the SiliWiz parts, which run in a browser tab, every lab step runs in a terminal, and
-only the optional XSchem part of Lab 03 opens a window on the desktop. A fifth
-package, `passives-decks`, holds the decks whose output the guide pages quote, and some lab parts
-run it too. The capstone has no package: it is one command, a browser exercise and a page of
-arithmetic.
+the course files and check your tools. Apart from the SiliWiz parts, which run in a browser tab,
+every lab step runs in a terminal, and only the optional XSchem part of Lab 03 opens a window on
+the desktop. A fifth package, `passives-decks`, holds the decks whose output the guide pages
+quote, and some lab parts run it too. The capstone has no package, because all it needs is one
+command, a browser exercise and a page of arithmetic.
 
-The first time you run each lab, its `make` ends in `FAIL`, on purpose. Each package ships the
-design a first-year student would draw, sized straight off the model card, so that you read your
-own wrong number before you fix it. The message tells you which line to edit.
+The first time you run each lab, its `make` ends in `FAIL`, and that's on purpose. Each package
+ships the design a first-year student would draw, sized straight off the model card, so that you
+read your own wrong number before you fix it. The message tells you which line to edit.
 
 ## What you'll have at the end
 
-A filter you designed from devices a real 130 nm process can make, simulated at every corner it
-will be manufactured at, with an area number you can defend. You'll also be in the habit of
+You'll have a filter you designed from devices a real 130 nm process can make, simulated at every
+corner it will be manufactured at, with an area number you can defend. You'll also be in the habit of
 asking, for each part of an analog schematic, what shape it is and what it costs.
 
 ## Next courses
