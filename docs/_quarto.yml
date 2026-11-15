@@ -1,0 +1,138 @@
+# Quarto build of the AD102 docs (replacing Docsify's index.html,
+# _sidebar.md and _navbar.md).
+#
+#   quarto preview docs          # live site at http://localhost:4200
+#   quarto render docs           # site in docs/_site, with a PDF of every page
+#   quarto render docs --profile pdf --to typst
+#                                # the whole course as one PDF in docs/_book
+#
+# The sidebar follows the Course path order on the home page.
+
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - assets/img/ad102-resistor-geometry.web.mp4
+
+website:
+  title: "AD102 — Linear Circuits & Fabrication"
+  description: "Linear analysis, folded together with how passives are actually built on a chip."
+  site-url: https://uoftasic.com/ad102/
+  repo-url: https://github.com/uoftasic/ad102
+  repo-subdir: docs
+  repo-actions: [issue]
+  search: true
+  page-navigation: true
+  navbar:
+    left:
+      - text: "Guide"
+        href: guide/getting-started.md
+      - text: "Labs"
+        href: labs/lab-01-a-resistor-you-designed-overview.md
+    right:
+      - text: Course PDF
+        icon: file-pdf
+        href: ad102-course.pdf
+      - icon: discord
+        href: https://discord.gg/hrJnP5UsGz
+        aria-label: Discord
+      - icon: github
+        href: https://github.com/uoftasic/ad102
+        aria-label: GitHub
+  sidebar:
+    style: docked
+    contents:
+      - text: "Home"
+        href: index.md
+      - section: "1–2. Resistors"
+        contents:
+          - text: "Getting started"
+            href: guide/getting-started.md
+          - text: "Resistors on a chip"
+            href: guide/a-resistor-you-cannot-buy.md
+          - text: "Ohms per square"
+            href: guide/ohms-per-square.md
+          - text: "What a resistor costs in area"
+            href: guide/what-a-value-costs-in-area.md
+          - text: "Lab 01: A resistor you designed"
+            href: labs/lab-01-a-resistor-you-designed-overview.md
+      - section: "3–4. Capacitors and inductors"
+        contents:
+          - text: "Capacitors on a chip"
+            href: guide/a-capacitor-is-a-sandwich.md
+          - text: "What a picofarad costs"
+            href: guide/what-a-picofarad-costs.md
+          - text: "Parasitic capacitance"
+            href: guide/the-capacitor-you-did-not-draw.md
+          - text: "Inductors on a chip"
+            href: guide/the-inductor-problem.md
+          - text: "Lab 02: How big is a picofarad?"
+            href: labs/lab-02-how-big-is-a-picofarad-overview.md
+      - section: "5–6. RC on a chip"
+        contents:
+          - text: "What to build instead of an inductor"
+            href: guide/what-analog-builds-instead.md
+          - text: "Lab 03: A time constant in silicon"
+            href: labs/lab-03-a-time-constant-in-silicon-overview.md
+      - section: "7–8. Variation and matching"
+        contents:
+          - text: "Process corners"
+            href: guide/the-value-you-drew-is-not-what-you-get.md
+          - text: "Matching and Pelgrom's law"
+            href: guide/matching-beats-accuracy.md
+          - text: "Lab 04: Two resistors that disagree"
+            href: labs/lab-04-two-resistors-that-disagree-overview.md
+      - section: "9–10. Capstone"
+        contents:
+          - text: "From schematic to cross-section"
+            href: guide/from-schematic-to-cross-section.md
+          - text: "Capstone: Defend a floor plan"
+            href: labs/capstone-floor-plan-overview.md
+      - section: "Reference"
+        contents:
+          - text: "The SKY130 passive catalogue"
+            href: reference/sky130-passive-catalogue.md
+          - text: "ngspice deck recipes"
+            href: reference/ngspice-decks-that-run.md
+      - section: "Repo"
+        contents:
+          - text: "Lab packages"
+            href: https://github.com/uoftasic/ad102/tree/main/labs
+          - text: "Scripts"
+            href: https://github.com/uoftasic/ad102/tree/main/scripts
+
+filters:
+  - _filters/course.lua
+
+# Collapsed answers move to the end of each page in PDFs; set this to
+# "inline" to print them where they sit instead.
+answers-in-pdf: end
+
+format:
+  html:
+    theme:
+      light: [cosmo, _light.scss]
+      dark: [darkly, _dark.scss]
+    css: _styles.css
+    # Keeps old Docsify links (.../ad102/#/labs/...) working.
+    include-in-header: _docsify-redirect.html
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    lightbox: auto
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml-full.js"
+    # Listing html first stops Quarto adding a second "Typst" link.
+    format-links:
+      - html
+      - format: typst
+        text: PDF
+        icon: file-pdf
+  typst:
+    papersize: us-letter
+    margin:
+      x: 0.9in
+      y: 0.9in
+    fontsize: 10.5pt
+    toc: false

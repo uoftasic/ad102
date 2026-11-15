@@ -1,0 +1,50 @@
+# The whole course as one PDF:
+#   quarto render docs --profile pdf --to typst      # writes docs/_book/*.pdf
+# Chapter order follows the sidebar in _quarto.yml.
+
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "AD102 — Linear Circuits & Fabrication"
+  subtitle: "Linear analysis, folded together with how passives are actually built on a chip."
+  author: "UofT ASIC Team"
+  output-file: ad102-course
+  chapters:
+    - index.md
+    - part: "1–2. Resistors"
+      chapters:
+        - guide/getting-started.md
+        - guide/a-resistor-you-cannot-buy.md
+        - guide/ohms-per-square.md
+        - guide/what-a-value-costs-in-area.md
+        - labs/lab-01-a-resistor-you-designed-overview.md
+    - part: "3–4. Capacitors and inductors"
+      chapters:
+        - guide/a-capacitor-is-a-sandwich.md
+        - guide/what-a-picofarad-costs.md
+        - guide/the-capacitor-you-did-not-draw.md
+        - guide/the-inductor-problem.md
+        - labs/lab-02-how-big-is-a-picofarad-overview.md
+    - part: "5–6. RC on a chip"
+      chapters:
+        - guide/what-analog-builds-instead.md
+        - labs/lab-03-a-time-constant-in-silicon-overview.md
+    - part: "7–8. Variation and matching"
+      chapters:
+        - guide/the-value-you-drew-is-not-what-you-get.md
+        - guide/matching-beats-accuracy.md
+        - labs/lab-04-two-resistors-that-disagree-overview.md
+    - part: "9–10. Capstone"
+      chapters:
+        - guide/from-schematic-to-cross-section.md
+        - labs/capstone-floor-plan-overview.md
+  appendices:
+    - reference/sky130-passive-catalogue.md
+    - reference/ngspice-decks-that-run.md
+
+format:
+  typst:
+    toc: true
+    toc-depth: 1
