@@ -53,8 +53,8 @@ R9 net23 net39 r='2.059'
 There are two inductors of 4.96 nH, one on either side of the centre tap `ct`, so the total is
 **9.92 nH**. Around them are 4.138 Ω of series resistance (2.059 + 2.059 + 0.01 + 0.01); 447.4 fF
 of coupling into the substrate, as two 223.7 fF capacitors each draining through 5.358 kΩ into
-the `sub` terminal; 205 fF directly across the winding; and a 9.064 Ω resistor modelling loss in
-the silicon underneath.
+the `sub` terminal; and 205 fF directly across the winding, in series with a 9.064 Ω resistor
+(`R13`).
 
 Only two of its twelve elements are inductors. The other ten describe the losses and parasitics,
 and the rest of this page is about what they do to the device.
@@ -168,9 +168,10 @@ energy in an electric field across a gap you can make 4 nanometres thick, and a 
 strip whose length you control. A magnetic field has no thin-film equivalent: to get inductance
 you need area enclosed by current, and the only way to get that is to spend square micrometres.
 The field also goes straight down into the silicon substrate, which conducts, so it induces eddy
-currents. Those show up as the 9.064 Ω and 5.358 kΩ resistors in the model. Both problems come
-from the same field, so you can neither make an inductor small nor stop it coupling to the wafer
-it is printed on.
+currents. In the model the substrate is the `sub` terminal, and the only elements connected to it
+are the two 5.358 kΩ resistors, each behind a 223.7 fF capacitor. Both problems come from the
+same field, so you can neither make an inductor small nor stop it coupling to the wafer it is
+printed on.
 
 That's why bond wires and package traces are sometimes used as the inductor instead. A 1 mm bond
 wire is roughly a nanohenry, and because it sits in the package rather than on the die, it costs
