@@ -1,6 +1,6 @@
 # Template bootstrap (UofT ASIC)
 
-Create a course or lab-notes repo from this template under **`uoftasic`**, fill the three course fields, enable Pages.
+Create a course or lab-notes repo from this template under **`uoftasic`**, fill in the three course fields, and enable Pages.
 
 ## Fixed vs fillable
 
@@ -31,7 +31,7 @@ Dry run: add `--dry-run`.
 - [ ] Repo created under `uoftasic` with id matching `ad102`
 - [ ] `scripts/init-template.py` run (or manual replace of the three tokens)
 - [ ] Pushed to `main`
-- [ ] Pages: **Settings → Pages → `main` / `/docs`**
+- [ ] Pages: **Settings → Pages → Source: GitHub Actions** (`.github/workflows/site.yml` builds `docs/` with Quarto)
 - [ ] Live: `https://uoftasic.com/<course-id>/` (org Pages; hub: https://edu.uoftasic.com/)
 - [ ] Sidebar navigates Home → Getting started → Lab 01
 - [ ] Math + sample figure render on the home page
@@ -43,4 +43,4 @@ Prefer course ids already used by the team (`ic###`, `ad###`, `dd###`) or a clea
 
 ## Related
 
-Each course from this template publishes at `https://uoftasic.com/<course-id>/` with zero-build Docsify docs under `docs/` and first-class `labs/` / `scripts/` trees. The education hub is https://edu.uoftasic.com/.
+Each course from this template publishes at `https://uoftasic.com/<course-id>/` with Quarto docs under `docs/` and first-class `labs/` / `scripts/` trees. The education hub is https://edu.uoftasic.com/.

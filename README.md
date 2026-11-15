@@ -29,10 +29,11 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" -w /work \
   bash -c 'cd /work/labs/lab-01-a-resistor-you-designed && make'
 ```
 
-Docs preview (requires Node.js):
+Docs preview (requires [Quarto](https://quarto.org/docs/get-started/) 1.11):
 
 ```bash
-npx docsify-cli serve docs      # -> http://localhost:3000
+quarto preview docs                            # -> http://localhost:4200
+quarto render docs --profile pdf --to typst    # whole course as one PDF in docs/_book/
 ```
 
 Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should use the team workbench that IC101 Lab 03 sets up, rather than bundling Docker in every repo; the course's Lab 01, Part 1 only loads the course into it.
@@ -41,7 +42,7 @@ Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should use the team workben
 
 | Path | On Pages? | Purpose |
 |------|-----------|---------|
-| `docs/` | **Yes** | Human-facing Docsify site |
+| `docs/` | **Yes** | Human-facing Quarto site (`docs/_quarto.yml`) |
 | `docs/guide/` | Yes | Guide pages: reading only |
 | `docs/labs/` | Yes | Lab *writeups*: every command, as numbered parts and steps |
 | `labs/` | No | Runnable packages (HDL, Python, data, graders) |
@@ -53,11 +54,9 @@ Tool-heavy courses that need IIC-OSIC-TOOLS / SKY130 should use the team workben
 
 | Setting | Value |
 |---------|--------|
-| Source | Deploy from a branch |
-| Branch | `main` |
-| Folder | `/docs` |
+| Source | GitHub Actions |
 
-No Actions deploy step is required for the baseline Docsify site.
+`.github/workflows/site.yml` renders `docs/` with Quarto on every push to `main` that changes `docs/`, `scripts/check_site.py` or the workflow itself, and deploys `docs/_site`, which includes a PDF of every page and the whole-course PDF linked from the navbar.
 
 ## Contributing
 
