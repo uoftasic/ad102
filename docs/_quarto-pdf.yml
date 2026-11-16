@@ -8,7 +8,7 @@ project:
 
 book:
   title: "AD102 — Linear Circuits & Fabrication"
-  subtitle: "Linear analysis, folded together with how passives are actually built on a chip."
+  subtitle: "Find out how resistors and capacitors are built on a SKY130 chip, and size your own to hit target values inside an area budget."
   author: "UofT ASIC Team"
   output-file: ad102-course
   chapters:
