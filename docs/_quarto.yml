@@ -20,7 +20,7 @@ project:
 
 website:
   title: "AD102 — Linear Circuits & Fabrication"
-  description: "Linear analysis, folded together with how passives are actually built on a chip."
+  description: "Find out how resistors and capacitors are built on a SKY130 chip, and size your own to hit target values inside an area budget."
   site-url: https://uoftasic.com/ad102/
   repo-url: https://github.com/uoftasic/ad102
   repo-subdir: docs

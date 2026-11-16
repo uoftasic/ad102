@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Replace course placeholders after creating a repo from the UofT ASIC template.
 
-Fills ad102, AD102 — Linear Circuits & Fabrication, and Linear analysis, folded together with how passives are actually built on a chip. only.
+Fills ad102, AD102 — Linear Circuits & Fabrication, and Find out how resistors and capacitors are built on a SKY130 chip, and size your own to hit target values inside an area budget. only.
 Does not scaffold or remove docs pages — keep the published site barebones.
 """
 

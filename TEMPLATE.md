@@ -13,7 +13,7 @@ Create a course or lab-notes repo from this template under **`uoftasic`**, fill 
 |-------|---------|---------|
 | `ad102` | Repo slug / course id | `dd103`, `ic101`, `serdes-lab` |
 | `AD102 — Linear Circuits & Fabrication` | Display name | `DD103 — RTL on FPGAs & ASICs` |
-| `Linear analysis, folded together with how passives are actually built on a chip.` | One-line blurb | `RTL synthesis intro with Yosys` |
+| `Find out how resistors and capacitors are built on a SKY130 chip, and size your own to hit target values inside an area budget.` | One-line blurb | `RTL synthesis intro with Yosys` |
 
 ## Init script
 

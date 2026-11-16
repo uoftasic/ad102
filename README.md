@@ -1,6 +1,6 @@
 # AD102 — Linear Circuits & Fabrication
 
-Linear analysis, folded together with how passives are actually built on a chip.
+Find out how resistors and capacitors are built on a SKY130 chip, and size your own to hit target values inside an area budget.
 
 The second course in the UofT ASIC Team **analog track**. Published docs live under `./docs` and are served by GitHub Pages; the runnable SPICE decks live in `labs/`. Students should start at the Course path on the home page.
 
