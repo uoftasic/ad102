@@ -118,12 +118,13 @@ answers-in-pdf: end
 format:
   html:
     # Widths of the sidebar, the text column and "On this page". Quarto takes
-    # 3em off body-width, so the text column is about 640px: 80 to 90
-    # characters a line at the theme's 17px.
+    # 3em off body-width, so on a screen about 1450px or wider the text column
+    # is about 950px: about 130 characters of text or 106 of code a line. On a
+    # narrower screen the text column gives up width before the sidebars do.
     grid:
-      sidebar-width: 300px
-      margin-width: 300px
-      body-width: 688px
+      sidebar-width: 200px
+      margin-width: 200px
+      body-width: 1000px
     theme:
       light: [cosmo, _light.scss]
       dark: [darkly, _dark.scss]
