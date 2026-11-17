@@ -1,11 +1,19 @@
 # AD102 — Linear Circuits & Fabrication
 
-You already know what a resistor does. This course is about what a resistor, a capacitor and an
-inductor are when they are built on silicon, and what each one costs in chip area.
+In this course you find out how resistors, capacitors and inductors are built on a SKY130 chip,
+measure them in ngspice, and size your own resistors and capacitors to hit target values inside
+an area budget.
+
+A resistor on a chip is a strip of doped polysilicon, and its value depends on the strip's
+length, its width and the layer it's on. A capacitor plate 22 µm on a side covers 484 µm² and
+simulates at 982.5022 fF, a little short of 1 pF. In Lab 02 you fit the formula behind that
+number and size a 1 pF plate exactly. The 4-bit ripple-carry adder that the digital track builds
+in [DD103](https://uoftasic.com/dd103/) is made of twelve SKY130 standard cells and fits in
+110.1056 µm², so that one plate takes the area of 4.4 adders.
 
 The course is part of the **UofT ASIC Team** education materials, and it's published at
 **https://uoftasic.com/ad102/**. The labs run inside the **workbench**, which is the
-IIC-OSIC-TOOLS container you start from the `workspace` repo you set up in
+IIC-OSIC-TOOLS container that you start from the `workspace` repo you set up in
 [IC101](https://uoftasic.com/ic101/).
 
 ## Who this course is for
@@ -14,26 +22,9 @@ AD102 is the second course in the analog track, for 2nd–3rd year ECE students 
 IC101 and AD101.
 
 ECE110 teaches linear circuit analysis: node voltages, mesh currents, $V = IR$, RC time
-constants, impedance. AD102 doesn't teach any of that again, and it isn't a substitute for it. If
-you have taken ECE110 you are ahead, and if you haven't, [AD101](https://uoftasic.com/ad101/)
-already covered everything this course uses.
-
-What ECE110 leaves out is where the components come from. In a lab kit, a resistor comes out of
-a drawer with its value printed on the side. On a chip there's no drawer to take it from: a
-resistor is a strip of doped polysilicon that you draw, and its value follows from the drawing,
-from how long and how wide the strip is and which layer it's on. Changing the shape is the only
-way you have to change the value. The idea that this whole course builds on is that **a
-component value is a geometry, and geometry costs area.**
-
-On a breadboard, component values are free and independent of each other: a 10 kΩ costs the
-same as a 100 Ω, and you can have as many as you like. On silicon neither of those is true. A
-1 pF capacitor is roughly a 22 µm × 22 µm plate: 484 µm² of silicon,
-which simulates at 982.5022 fF, a little short of 1 pF (Lab 02 gives you the formula behind that number, and sizes the
-plate exactly). The 4-bit ripple-carry adder that the digital track builds in
-[DD103](https://uoftasic.com/dd103/), twelve SKY130 standard cells, fits in 110.1056 µm² of the
-same process, so that one capacitor takes the area of 4.4 adders. The analog habits you'll pick
-up here all follow from that comparison: ratios instead of values, unit devices, and keeping
-inductors off the chip below a gigahertz.
+constants, impedance. AD102 doesn't teach that again. Having taken ECE110 helps but isn't
+required. You should know $V = IR$ and series and parallel resistors, and you'll use the RC
+corner frequency from [AD101](https://uoftasic.com/ad101/).
 
 ## At a glance
 
@@ -41,7 +32,7 @@ inductors off the chip below a gigahertz.
 |---|---|
 | **Track** | Analog |
 | **Prerequisites** | [IC101](https://uoftasic.com/ic101/) then [AD101](https://uoftasic.com/ad101/), in that order |
-| **Tools** | ngspice and XSchem, both inside the workbench, plus SiliWiz (a browser layout tool that shows cross-sections) in a browser tab |
+| **Tools** | ngspice in the workbench, and SiliWiz (a layout tool that runs in a browser tab and shows cross-sections). XSchem comes up only in an optional part of Lab 03. |
 | **PDK** | SKY130 (`sky130A`), included in the image |
 | **Time** | About 15.5 hours, self-paced |
 | **Math** | Algebra, $V=IR$, and the $R$, $C$ and frequency material from AD101. No calculus. |
