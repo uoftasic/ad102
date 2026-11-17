@@ -44,7 +44,10 @@ website:
         href: https://github.com/uoftasic/ad102
         aria-label: GitHub
   sidebar:
-    style: docked
+    # Floating centres the sidebar, the page and "On this page" on a wide
+    # screen. Docked pins the sidebar to the left edge and leaves all the
+    # spare width on the right.
+    style: floating
     contents:
       - text: "Home"
         href: index.md
@@ -114,6 +117,13 @@ answers-in-pdf: end
 
 format:
   html:
+    # Widths of the sidebar, the text column and "On this page". Quarto takes
+    # 3em off body-width, so the text column is about 640px: 80 to 90
+    # characters a line at the theme's 17px.
+    grid:
+      sidebar-width: 300px
+      margin-width: 300px
+      body-width: 688px
     theme:
       light: [cosmo, _light.scss]
       dark: [darkly, _dark.scss]
