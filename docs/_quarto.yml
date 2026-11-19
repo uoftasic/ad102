@@ -44,9 +44,9 @@ website:
         href: https://github.com/uoftasic/ad102
         aria-label: GitHub
   sidebar:
-    # Floating centres the sidebar, the page and "On this page" on a wide
-    # screen. Docked pins the sidebar to the left edge and leaves all the
-    # spare width on the right.
+    # From 992px up, floating sets the sidebar 1.5em in from the left edge
+    # of the window, as "On this page" is from the right. Docked puts the
+    # sidebar against the left edge.
     style: floating
     contents:
       - text: "Home"
@@ -117,16 +117,15 @@ answers-in-pdf: end
 
 format:
   html:
-    # Widths of the sidebar, the text column and "On this page". The text
-    # column gets the width the two sidebars leave, so it grows with the
-    # window up to 1020px (Quarto takes 3em off body-width). It reaches that
-    # on a screen about 1520px wide, where it holds about 140 characters of
-    # text or 114 of code a line. A wider screen splits the spare width
-    # equally between the two sides.
+    # sidebar-width and margin-width are the widths of the sidebar and of
+    # "On this page". The text column gets most of the width those two
+    # leave, so it grows with the window. Quarto caps it at body-width minus
+    # 3em, and body-width is set far wider than any screen. To set a
+    # narrower cap, lower body-width.
     grid:
       sidebar-width: 200px
       margin-width: 200px
-      body-width: 1071px
+      body-width: 10000px
     theme:
       light: [cosmo, _light.scss]
       dark: [darkly, _dark.scss]
