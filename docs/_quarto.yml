@@ -29,6 +29,8 @@ website:
   page-navigation: true
   navbar:
     left:
+      - text: "← All courses"
+        href: https://edu.uoftasic.com/
       - text: "Guide"
         href: guide/getting-started.md
       - text: "Labs"
